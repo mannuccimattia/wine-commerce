@@ -8,7 +8,7 @@ import GlobalContext from '../contexts/globalContext';
 
 const Winepage = () => {
     const { id } = useParams();
-    const [wine, setWine] = useState({});
+    const [wines, setWines] = useState({});
     const { setIsLoading } = useContext(GlobalContext);
 
     const fetchWine = () => {
@@ -16,7 +16,7 @@ const Winepage = () => {
         axios.get(`http://127.0.0.1:3000/wines/${id}`, { timeout: 2000 })
             .then((response) => {
                 console.log(response.data);
-                setWine(response.data);
+                setWines(response.data);
                 setIsLoading(false);
             })
             .catch((error) => {
@@ -33,14 +33,15 @@ const Winepage = () => {
         <div className="container py-4">
             <div className="row mb-4">
                 <div className="col-12 col-md-6 col-lg-4 mb-3">
-                    <img src={wine.image} className="img-fluid rounded shadow" alt={wine.title} />
+                    <img src={wines.image} className="img-fluid rounded shadow" alt={wines.name} />
                 </div>
                 <div className="col-12 col-md-6 col-lg-8">
-                    <h1 className="mb-2">{wine.title}</h1>
-                    <h5 className="text-muted">Cantina: {wine.director}</h5>
-                    <Stars vote={wine.average_vote || 0} />
-                    <h6 className="mt-3">Anno: {wine.release_year}</h6>
-                    <p className="mt-3">{wine.description}</p>
+                    <h1 className="mb-2">{wines.name}</h1>
+                    <h5 className="text-muted">:Categoria {wines.category}</h5>
+                    <Stars vote={wines.average_vote || 0} />
+                    <h5 className='mt-3'>Produttore:{wines.winesmaker}</h5>
+                    <h5 className="mt-3">Anno: {wines.price}</h5>
+                    <p className="mt-3">{wines.description}</p>
                 </div>
             </div>
 
@@ -49,9 +50,9 @@ const Winepage = () => {
                     <h3 className="mb-3">Recensioni della community</h3>
                 </div>
 
-                {wine.reviews && wine.reviews.length > 0 ? (
-                    wine.reviews.map((review) => (
-                        <div className="col-12" key={`review-${review.id}`}>
+                {wines.reviews && wines.reviews.length > 0 ? (
+                    wines.reviews.map((review) => (
+                        <div className="col-12" key={`review-${user_review.id}`}>
                             <ReviewCard review={review} />
                         </div>
                     ))
@@ -62,7 +63,7 @@ const Winepage = () => {
                 )}
 
                 <div className="col-12">
-                    <ReviewForm wine_id={wine.id} reloadReviews={fetchWine} />
+                    <ReviewForm wines_id={wines.id} reloadReviews={fetchWine} />
                 </div>
             </div>
         </div>

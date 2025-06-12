@@ -17,7 +17,7 @@ const ReviewForm = ({ movie_id, reloadReviews }) => {
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        axios.post(`http://127.0.0.1:3000/movies/${wine_id}/review`, {
+        axios.post(`http://127.0.0.1:3000/wines/${wine_id}/review`, {
             movie_id,
             ...formData
         }, {
