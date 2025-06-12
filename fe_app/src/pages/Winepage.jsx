@@ -2,9 +2,9 @@ import React, { useContext, useEffect, useState } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import ReviewCard from '../components/ReviewCard';
-import Stars from '../components/Stars';
 import ReviewForm from '../components/ReviewForm';
 import GlobalContext from '../contexts/globalContext';
+import WineGlasses from '../components/WineGlasses';
 
 const Winepage = () => {
     const { id } = useParams();
@@ -38,7 +38,10 @@ const Winepage = () => {
                 <div className="col-12 col-md-6 col-lg-8">
                     <h1 className="mb-2">{wines.name}</h1>
                     <h5 className="text-muted">Categoria: {wines.category}</h5>
-                    <Stars vote={wines.average_vote || 0} />
+                    <WineGlasses
+                        condition={wines.bottle_condition || 0}
+                    />
+
                     <h5 className='mt-3'>Produttore:{wines.winesmaker}</h5>
                     <h5 className="mt-3">Anno: {wines.price}</h5>
                     <p className="mt-3">{wines.description}</p>
