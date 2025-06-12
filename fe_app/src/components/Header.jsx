@@ -6,7 +6,7 @@ const Header = () => {
         <nav className='navbar bg-primary mb-4'>
             <div className="container-fluid">
                 <Link className='navbar-brand'>
-                    Prime Bool
+                    Boolz
                 </Link>
             </div>
         </nav>

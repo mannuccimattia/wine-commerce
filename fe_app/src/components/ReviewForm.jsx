@@ -2,8 +2,8 @@ import React from 'react'
 import { useState } from 'react'
 import axios from 'axios'
 
-const ReviewForm = ({ movie_id, reloadReviews }) => {
-    const initialData = { name: "", text: "", vote: "" };
+const ReviewForm = ({ wine_id, reloadReviews }) => {
+    const initialData = { full_name: "", review_text: "", rating: "", email: "" };
 
 
     const [formData, setFormData] = useState(initialData);
@@ -17,8 +17,8 @@ const ReviewForm = ({ movie_id, reloadReviews }) => {
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        axios.post(`http://127.0.0.1:3000/wines/${wine_id}/review`, {
-            movie_id,
+        axios.post(`http://127.0.0.1:3000/api/wines/${wine_id}/review`, {
+            wine_id,
             ...formData
         }, {
             headers: { "Content-Type": "application/json" },
@@ -41,10 +41,22 @@ const ReviewForm = ({ movie_id, reloadReviews }) => {
                             <input
                                 type="text"
                                 className='form-control'
-                                name='name'
+                                name='full_name'
                                 placeholder='inserisci nome'
                                 required
-                                value={formData.name}
+                                value={formData.full_name}
+                                onChange={setFieldValue}
+                            />
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="" className='control-label'>Email</label>
+                            <input
+                                type="email"
+                                className='form-control'
+                                name='email'
+                                placeholder='inserisci email'
+                                required
+                                value={formData.email}
                                 onChange={setFieldValue}
                             />
                         </div>
@@ -55,16 +67,16 @@ const ReviewForm = ({ movie_id, reloadReviews }) => {
                                 max={5}
                                 type="number"
                                 className='form-control'
-                                name='vote'
+                                name='rating'
                                 placeholder='inserisci voto'
                                 required
-                                value={formData.vote}
+                                value={formData.rating}
                                 onChange={setFieldValue}
                             />
                         </div>
                         <div className="form-group">
                             <label htmlFor="" className='control-label'>Testo</label>
-                            <textarea name="text" id="text" className='form-control' value={formData.text} onChange={setFieldValue}></textarea>
+                            <textarea name="review_text" id="text" className='form-control' value={formData.review_text} onChange={setFieldValue}></textarea>
                         </div>
                         <div className="form-group">
                             <button className='btn btn-main btn-outline-primary mt-2' type='submit'>

@@ -13,7 +13,7 @@ const Winepage = () => {
 
     const fetchWine = () => {
         setIsLoading(true);
-        axios.get(`http://127.0.0.1:3000/wines/${id}`, { timeout: 2000 })
+        axios.get(`http://127.0.0.1:3000/api/wines/${id}`, { timeout: 2000 })
             .then((response) => {
                 console.log(response.data);
                 setWines(response.data);
@@ -37,7 +37,7 @@ const Winepage = () => {
                 </div>
                 <div className="col-12 col-md-6 col-lg-8">
                     <h1 className="mb-2">{wines.name}</h1>
-                    <h5 className="text-muted">:Categoria {wines.category}</h5>
+                    <h5 className="text-muted">Categoria: {wines.category}</h5>
                     <Stars vote={wines.average_vote || 0} />
                     <h5 className='mt-3'>Produttore:{wines.winesmaker}</h5>
                     <h5 className="mt-3">Anno: {wines.price}</h5>
@@ -52,7 +52,7 @@ const Winepage = () => {
 
                 {wines.reviews && wines.reviews.length > 0 ? (
                     wines.reviews.map((review) => (
-                        <div className="col-12" key={`review-${user_review.id}`}>
+                        <div className="col-12" key={`review-${review.id}`}>
                             <ReviewCard review={review} />
                         </div>
                     ))
@@ -63,7 +63,7 @@ const Winepage = () => {
                 )}
 
                 <div className="col-12">
-                    <ReviewForm wines_id={wines.id} reloadReviews={fetchWine} />
+                    <ReviewForm wine_id={wines.id} reloadReviews={fetchWine} />
                 </div>
             </div>
         </div>
