@@ -66,7 +66,7 @@ const storeReview = (req, res) => {
   const { review_text, full_name, email, rating } = req.body;
 
   const sql = `
-  INSERT INTO reviews (review_text, full_name, email, rating, wine_id)
+  INSERT INTO user_review (review_text, full_name, email, rating, wine_id)
   VALUES (?,?,?,?,?)
   `;
 
