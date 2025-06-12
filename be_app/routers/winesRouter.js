@@ -10,6 +10,6 @@ router.get("/", winesController.index);
 
 router.get("/:id", winesController.show);
 
-// router.post("/:id/review", winesController.storeReview);
+router.post("/:id/review", winesController.storeReview);
 
 module.exports = router;
