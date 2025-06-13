@@ -52,6 +52,18 @@ const show = (req, res) => {
   })
 }
 
+// index cart
+const indexCart = (req, res) => {
+
+  const indexCartSql = `
+  SELECT * FROM cart
+  `;
+
+
+}
+
+
+// store item into cart route
 const storeCartItem = (req, res) => {
 
   const { id } = req.params;
@@ -72,6 +84,7 @@ const storeCartItem = (req, res) => {
   })
 }
 
+// delete all from cart route
 const emptyCart = (req, res) => {
   const emptyCartSql = `
   DELETE FROM cart 
