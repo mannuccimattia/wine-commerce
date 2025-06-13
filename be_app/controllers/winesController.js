@@ -17,7 +17,11 @@ const index = (req, res) => {
   connection.query(sql, (err, winesResult) => {
     if (err) return queryFailed(err, res);
     const wines = winesResult.map(wine => {
-      const win = { ...wine, image: req.imagePath + wine.image };
+      const win = {
+        ...wine,
+        image_front_url: req.imagePath + wine.image_front_url,
+        image_back_url: req.imagePath + wine.image_back_url
+      };
 
       return win;
     });
