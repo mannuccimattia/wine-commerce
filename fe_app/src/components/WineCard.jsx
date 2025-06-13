@@ -8,7 +8,11 @@ const WineCard = ({ wine }) => {
     return (
         <div className="col-12 col-md-6 col-lg-4 mb-4">
             <div className="card h-100 shadow-sm">
-                <img src={image} className="card-img-top img-fluid" alt={name} />
+                <img
+                    src={wine.image_front_url}
+                    alt={wine.name}
+                    className='w-100'
+                />
                 <div className="card-body d-flex flex-column">
                     <h5 className="card-title text-primary">{name}</h5>
                     <WineGlasses condition={bottle_condition || 0} />
