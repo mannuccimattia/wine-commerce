@@ -1,10 +1,8 @@
 import React, { useContext, useEffect, useState } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
-import ReviewCard from '../components/ReviewCard';
-import ReviewForm from '../components/ReviewForm';
+import Stars from '../components/Stars';
 import GlobalContext from '../contexts/globalContext';
-import WineGlasses from '../components/WineGlasses';
 
 const Winepage = () => {
     const { id } = useParams();
@@ -38,35 +36,10 @@ const Winepage = () => {
                 <div className="col-12 col-md-6 col-lg-8">
                     <h1 className="mb-2">{wines.name}</h1>
                     <h5 className="text-muted">Categoria: {wines.category}</h5>
-                    <WineGlasses
-                        condition={wines.bottle_condition || 0}
-                    />
-
+                    <Stars vote={wines.average_vote || 0} />
                     <h5 className='mt-3'>Produttore:{wines.winesmaker}</h5>
                     <h5 className="mt-3">Anno: {wines.price}</h5>
                     <p className="mt-3">{wines.description}</p>
-                </div>
-            </div>
-
-            <div className="row gy-4">
-                <div className="col-12">
-                    <h3 className="mb-3">Recensioni della community</h3>
-                </div>
-
-                {wines.reviews && wines.reviews.length > 0 ? (
-                    wines.reviews.map((review) => (
-                        <div className="col-12" key={`review-${review.id}`}>
-                            <ReviewCard review={review} />
-                        </div>
-                    ))
-                ) : (
-                    <div className="col-12">
-                        <p className="text-muted">Nessuna recensione ancora.</p>
-                    </div>
-                )}
-
-                <div className="col-12">
-                    <ReviewForm wine_id={wines.id} reloadReviews={fetchWine} />
                 </div>
             </div>
         </div>
