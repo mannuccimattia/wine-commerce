@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom"
 import Homepage from "./pages/Homepage";
 import Winepage from "./pages/Winepage";
 import NotFoundPage from "./pages/NotFoundPage";
+import SearchPage from "./pages/SearchPage";
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import GlobalContext from "./contexts/globalContext";
 import { useState } from "react";
@@ -18,6 +19,7 @@ function App() {
           <Route element={<DefaultLayout />}>
             <Route index element={<Homepage />}></Route>
             <Route path="/wines/:id" element={<Winepage />}></Route>
+            <Route path="/search" element={<SearchPage />} />
             <Route path="*" element={<NotFoundPage />}></Route>
           </Route>
         </Routes>
