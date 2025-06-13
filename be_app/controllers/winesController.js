@@ -6,6 +6,7 @@ const queryFailed = require("../functions/queryFailed");
 
 // index
 const index = (req, res) => {
+  console.log(req.query)
 
   const sql = (
     !req.query.search
@@ -34,12 +35,6 @@ const show = (req, res) => {
   FROM wines W
   WHERE W.id = ?`;
 
-  const reviewsSql = `
-  SELECT *
-  FROM user_review R
-  WHERE R.wine_id = ?
-  `
-
   // wines query
   connection.query(wineSql, [id], (err, wineResult) => {
     if (err) return queryFailed(err, res);
@@ -49,39 +44,62 @@ const show = (req, res) => {
       });
     const wine = wineResult[0];
 
-    // reviews query
-    connection.query(reviewsSql, [id], (err, reviewsResult) => {
-      if (err) return queryFailed(err, res);
-      wine.reviews = reviewsResult;
-
-      res.json({ ...wine, image: req.imagePath + wine.image });
-    })
+    res.json({
+      ...wine,
+      image_front_url: req.imagePath + wine.image_front_url,
+      image_back_url: req.imagePath + wine.image_back_url
+    });
   })
 }
 
-// store review
-const storeReview = (req, res) => {
-  const { id } = req.params;
+// index cart
+const indexCart = (req, res) => {
 
-  const { review_text, full_name, email, rating } = req.body;
-
-  const sql = `
-  INSERT INTO user_review (review_text, full_name, email, rating, wine_id)
-  VALUES (?,?,?,?,?)
+  const indexCartSql = `
+  SELECT * FROM cart
   `;
 
-  connection.query(sql, [review_text, full_name, email, rating, id], (err, reviewResult) => {
+
+}
+
+
+// store item into cart route
+const storeCartItem = (req, res) => {
+
+  const { id } = req.params;
+  const { quantity, ppu } = req.body;
+
+  const storeCartItemSql = `
+  INSERT INTO cart (wine_id, quantity, price)
+  VALUES (?,?,?)
+  `;
+
+  connection.query(storeCartItemSql, [id, quantity, ppu], (err, itemResult) => {
     if (err) return queryFailed(err, res);
 
     res.status(201).json({
-      message: "Review added successfully",
-      id: reviewResult.insertId
+      message: "Added to cart",
+      id: itemResult.insertId
     });
-  });
-};
+  })
+}
+
+// delete all from cart route
+const emptyCart = (req, res) => {
+  const emptyCartSql = `
+  DELETE FROM cart 
+  `;
+
+  connection.query(emptyCartSql, (err, emptyResult) => {
+    if (err) return queryFailed(err, res);
+
+    res.status(200).json({ message: "Cart emptied" });
+  })
+}
 
 module.exports = {
   index,
   show,
-  storeReview
+  storeCartItem,
+  emptyCart
 }
