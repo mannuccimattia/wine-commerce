@@ -6,6 +6,7 @@ const queryFailed = require("../functions/queryFailed");
 
 // index
 const index = (req, res) => {
+  console.log(req.query)
 
   const sql = (
     !req.query.search
@@ -51,7 +52,41 @@ const show = (req, res) => {
   })
 }
 
+const storeCartItem = (req, res) => {
+
+  const { id } = req.params;
+  const { quantity, ppu } = req.body;
+
+  const storeCartItemSql = `
+  INSERT INTO cart (wine_id, quantity, price)
+  VALUES (?,?,?)
+  `;
+
+  connection.query(storeCartItemSql, [id, quantity, ppu], (err, itemResult) => {
+    if (err) return queryFailed(err, res);
+
+    res.status(201).json({
+      message: "Added to cart",
+      id: itemResult.insertId
+    });
+  })
+}
+
+const emptyCart = (req, res) => {
+  const emptyCartSql = `
+  DELETE FROM cart 
+  `;
+
+  connection.query(emptyCartSql, (err, emptyResult) => {
+    if (err) return queryFailed(err, res);
+
+    res.status(200).json({ message: "Cart emptied" });
+  })
+}
+
 module.exports = {
   index,
-  show
+  show,
+  storeCartItem,
+  emptyCart
 }
