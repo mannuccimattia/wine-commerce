@@ -29,12 +29,14 @@ const Homepage = () => {
 
     return (
         <>
-            <h1 className="text-primary mb-3">Bool Wines</h1>
-            <h2 className="mb-4 fst-italic">The Best Homewine only for you</h2>
-            <div className="row gy-4">
-                {wines.map((wine) => (
-                    <WineCard wine={wine} key={`wine-${wine.id}`} />
-                ))}
+            <div className="homepage-background">
+                <h1 className="text-primary mb-3">Bool Wines</h1>
+                <h2 className="mb-4 fst-italic">The Best Homewine only for you</h2>
+                <div className="row gy-4">
+                    {wines.map((wine) => (
+                        <WineCard wine={wine} key={`wine-${wine.id}`} />
+                    ))}
+                </div>
             </div>
         </>
     );

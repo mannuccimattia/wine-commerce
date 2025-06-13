@@ -31,7 +31,12 @@ const Winepage = () => {
         <div className="container py-4">
             <div className="row mb-4">
                 <div className="col-12 col-md-6 col-lg-4 mb-3">
-                    <img src={wines.image} className="img-fluid rounded shadow" alt={wines.name} />
+                    <img
+                        src={wines.image_front_url}
+                        alt={wines.name}
+                        className='w-100'
+                    />
+
                 </div>
                 <div className="col-12 col-md-6 col-lg-8">
                     <h1 className="mb-2">{wines.name}</h1>
@@ -42,6 +47,8 @@ const Winepage = () => {
                     <h5 className='mt-3'>Produttore:{wines.winesmaker}</h5>
                     <h5 className="mt-3">Anno: {wines.price}</h5>
                     <p className="mt-3">{wines.description}</p>
+                    <button className='btn btn-primary bg-white text-dark border-dark'>Aggiungi al carrello</button>
+                    <i className="fa-solid fa-cart-shopping fs-50 mx-3"></i>
                 </div>
             </div>
         </div>
