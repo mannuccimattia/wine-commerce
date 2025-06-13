@@ -10,7 +10,9 @@ router.get("/", winesController.index);
 
 router.get("/:id", winesController.show);
 
-router.post("/cart/:id", winesController.storeCartItem);
+router.get("/cart", winesController.indexCart);
+
+router.post("/cart/add/:id", winesController.storeCartItem);
 
 router.delete("/cart", winesController.emptyCart);
 

@@ -56,36 +56,62 @@ const show = (req, res) => {
   })
 }
 
+
+
 // index cart
 const indexCart = (req, res) => {
 
-  const indexCartSql = `
-  SELECT * FROM cart
-  `;
+  const initialCart = JSON.parse(localStorage.getItem("carrello"))
+    ? JSON.parse(localStorage.getItem("carrello"))
+    : [];
 
-
+  console.log(initialCart);
 }
 
 
-// store item into cart route
+/* 
+const data = []
+const myData = {id:1, quantity:1, ppu:100}
+data.push(myData)
+
+localStorage.setItem("carrello", JSON.stringify(data));
+
+const carrello = JSON.parse(localStorage.getItem("carrello"));
+
+const myData2 = {id:2,quantity:2,ppu:200};
+carrello.push(myData2)
+
+localStorage.setItem("carrello", JSON.stringify(carrello));
+const finalData = JSON.parse(localStorage.getItem("carrello"))
+
+console.log(finalData) */
+
 const storeCartItem = (req, res) => {
 
+  // store item into cart route
+  const initialCart = JSON.parse(localStorage.getItem("carrello"))
+    ? JSON.parse(localStorage.getItem("carrello"))
+    : [];
+
   const { id } = req.params;
-  const { quantity, ppu } = req.body;
 
-  const storeCartItemSql = `
-  INSERT INTO cart (wine_id, quantity, price)
-  VALUES (?,?,?)
-  `;
+  const item = {
+    id,
+    quantity: 1,
+    ppu: 100
+  }
 
-  connection.query(storeCartItemSql, [id, quantity, ppu], (err, itemResult) => {
-    if (err) return queryFailed(err, res);
+  if (initialCart.length === 0) {
+    localStorage.setItem("carrello", JSON.stringify(item));
 
-    res.status(201).json({
-      message: "Added to cart",
-      id: itemResult.insertId
-    });
-  })
+    const carrello = JSON.parse(localStorage.getItem("carrello"));
+    console.log(carrello)
+  }
+  else {
+    initialCart.push(item);
+    console.log(initialCart);
+    localStorage.setItem("carrello", JSON.stringify(initialCart));
+  }
 }
 
 // delete all from cart route
@@ -104,6 +130,7 @@ const emptyCart = (req, res) => {
 module.exports = {
   index,
   show,
+  indexCart,
   storeCartItem,
   emptyCart
 }
