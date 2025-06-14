@@ -47,6 +47,16 @@
     background-color: #f3eba4;
     border-radius: 0 0 15px 15px;
     padding: 10px;
+    overflow: auto;
+}
+
+.chatbot-body::-webkit-scrollbar {
+    width: 0px;
+    background: transparent;
+}
+
+.chatbot-body::-webkit-scrollbar-thumb {
+    background: transparent;
 }
 
 .chatbot-body > div > p {
