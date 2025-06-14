@@ -1,0 +1,16 @@
+#chatbot{
+    width: 100px;
+    height: 100px;
+    background-color: rgb(211, 193, 193);
+    box-shadow: 3px 3px lightblue;
+    border-radius: 50%;
+    font-size: 50px;
+    position: absolute;
+    bottom: 50px;
+    right: 50px;
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
