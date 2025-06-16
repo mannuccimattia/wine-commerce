@@ -10,6 +10,7 @@ import GlobalContext from "./contexts/globalContext";
 import { useState } from "react";
 import Loader from "./components/Loader";
 import Chatbot from "./components/Chatbot";
+import Footer from './components/Footer';
 
 function App() {
   const [isLoading, setIsLoading] = useState(false);
