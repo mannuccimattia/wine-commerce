@@ -16,7 +16,6 @@ const Homepage = () => {
         setIsLoading(true);
         axios.get('http://localhost:3000/api/wines', { timeout: 20000 })
             .then((response) => {
-                console.log(response.data);
                 setWines(response.data);
                 setIsLoading(false);
             })
