@@ -1,26 +1,39 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Container, Row, Col, Form } from "react-bootstrap";
 import axios from "axios";
 import WineCard from "../components/WineCard";
+import { SearchContext } from '../contexts/SearchContext';
 
 const SearchPage = () => {
-    const [searchTerm, setSearchTerm] = useState("");
-    const [categoryFilter, setCategoryFilter] = useState("");
-    const [sortBy, setSortBy] = useState("");
-    const [wines, setWines] = useState([]);
+    const { searchState, setSearchState } = useContext(SearchContext);
+    const { searchTerm, categoryFilter, sortBy, wines } = searchState;
 
     useEffect(() => {
         const fetchWines = async () => {
             try {
                 const response = await axios.get('http://localhost:3000/api/wines');
-                setWines(response.data);
+                setSearchState(prev => ({ ...prev, wines: response.data }));
             } catch (error) {
                 console.error('Error:', error);
             }
         };
 
-        fetchWines();
+        if (wines.length === 0) {
+            fetchWines();
+        }
     }, []);
+
+    const handleSearchChange = (e) => {
+        setSearchState(prev => ({ ...prev, searchTerm: e.target.value }));
+    };
+
+    const handleCategoryChange = (e) => {
+        setSearchState(prev => ({ ...prev, categoryFilter: e.target.value }));
+    };
+
+    const handleSortChange = (e) => {
+        setSearchState(prev => ({ ...prev, sortBy: e.target.value }));
+    };
 
     const filteredWines = wines.filter(wine => {
         const matchesSearch = wine.name.toLowerCase().includes(searchTerm.toLowerCase());
@@ -33,6 +46,8 @@ const SearchPage = () => {
         if (sortBy === 'price_desc') return b.price - a.price;
         if (sortBy === 'name_asc') return a.name.localeCompare(b.name);
         if (sortBy === 'name_desc') return b.name.localeCompare(a.name);
+        if (sortBy === 'year_desc') return b.vintage - a.vintage; // Più recenti prima
+        if (sortBy === 'year_asc') return a.vintage - b.vintage;  // Più vecchi prima
         return 0;
     });
 
@@ -46,13 +61,13 @@ const SearchPage = () => {
                         type="text"
                         placeholder="Cerca per nome..."
                         value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
+                        onChange={handleSearchChange}
                     />
                 </div>
                 <div className="col-md-4 mb-3">
                     <Form.Select
                         value={categoryFilter}
-                        onChange={(e) => setCategoryFilter(e.target.value)}
+                        onChange={handleCategoryChange}
                     >
                         <option value="">Categoria</option>
                         <option value="1">Vini Rossi</option>
@@ -64,13 +79,14 @@ const SearchPage = () => {
                 <div className="col-md-4 mb-3">
                     <Form.Select
                         value={sortBy}
-                        onChange={(e) => setSortBy(e.target.value)}
+                        onChange={handleSortChange}
                     >
                         <option value="">Ordina per...</option>
                         <option value="price_asc">Prezzo: dal più basso</option>
                         <option value="price_desc">Prezzo: dal più alto</option>
                         <option value="name_asc">Nome: A-Z</option>
                         <option value="name_desc">Nome: Z-A</option>
+                        <option value="year_desc">Recenti</option>
                     </Form.Select>
                 </div>
             </Row>

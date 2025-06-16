@@ -5,6 +5,7 @@ import Winepage from "./pages/Winepage";
 import NotFoundPage from "./pages/NotFoundPage";
 import SearchPage from "./pages/SearchPage";
 import CategoryPage from './pages/CategoryPage';
+import CheckoutPage from './pages/CheckoutPage';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import GlobalContext from "./contexts/globalContext";
 import { useState } from "react";
@@ -25,6 +26,7 @@ function App() {
             <Route path="/wine/:id" element={<Winepage />}></Route>
             <Route path="/search" element={<SearchPage />} />
             <Route path="/categoria/:id" element={<CategoryPage />} />
+            <Route path="/checkout" element={<CheckoutPage />} />
             <Route path="*" element={<NotFoundPage />}></Route>
           </Route>
         </Routes>
