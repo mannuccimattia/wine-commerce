@@ -41,7 +41,17 @@ body {
 }
 
 .carousel {
+    width: 100%;
+    max-width: 1300px;
+    margin: 0 auto;
     margin-bottom: 2rem;
+    border-radius: 20px;
+}
+
+.carousel-item img {
+    height: 80vh;
+    object-fit: cover;
+    width: 100%;
 }
 
 .carousel-content {
@@ -276,4 +286,29 @@ body {
     border-radius: 15px 15px 0 15px;
     padding: 10px 15px;
     margin-bottom: 10px;
+}
+
+.app-wrapper {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1 0 auto;
+}
+
+footer {
+    flex-shrink: 0;
+    margin-top: auto;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+footer a:hover {
+    opacity: 0.8;
+}
+
+footer .social-icons {
+    display: flex;
+    gap: 1rem;
 }
