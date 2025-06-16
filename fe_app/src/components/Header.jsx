@@ -9,7 +9,7 @@ const Header = () => {
                     height="40"
                     className="me-2" />
                 </Link>
-                <Link className="btn btn-light" to="/search">
+                <Link className="btn" to="/search">
                     Cerca Vino
                 </Link>
             </div>

@@ -1,29 +1,36 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Card } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
 import WineGlasses from './WineGlasses';
 
 const WineCard = ({ wine }) => {
-    const { id, name, category, price, image, bottle_condition } = wine;
+    const navigate = useNavigate();
+
+    const handleClick = () => {
+        navigate(`/wine/${wine.id}`);
+    };
 
     return (
-        <div className="col-12 col-md-6 col-lg-4 mb-4">
-            <div className="card h-100 shadow-sm">
-                <img
-                    src={wine.image_front_url}
-                    alt={wine.name}
-                    className='w-100'
-                />
-                <div className="card-body d-flex flex-column">
-                    <h5 className="card-title text-primary">{name}</h5>
-                    <WineGlasses condition={bottle_condition || 0} />
-                    <h6 className="card-subtitle mb-2 text-muted fst-italic">{category}</h6>
-                    <p className="card-text flex-grow-1">{price}</p>
-                    <Link to={`/wines/${id}`} className="btn btn-primary mt-auto">
-                        Leggi tutto
-                    </Link>
+        <Card className="h-100 wine-card" onClick={handleClick} style={{ cursor: 'pointer' }}>
+            <Card.Img
+                variant="top"
+                src={wine.image_front_url}
+                alt={wine.name}
+                style={{ height: '300px', objectFit: 'cover' }}
+            />
+            <Card.Body className="d-flex flex-column">
+                <Card.Title className="text-white">{wine.name}</Card.Title>
+                <Card.Text className="text-white-50">
+                    {wine.description}
+                </Card.Text>
+                <div className="mb-2">
+                    <WineGlasses condition={wine.condition || "Good"} />
                 </div>
-            </div>
-        </div>
+                <div className="mt-auto">
+                    <p className="text-white mb-2">€ {wine.price}</p>
+                </div>
+            </Card.Body>
+        </Card>
     );
 };
 

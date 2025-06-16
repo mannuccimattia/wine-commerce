@@ -1,57 +1,113 @@
-import React, { useContext, useEffect, useState } from 'react';
-import axios from 'axios';
+import React, { useState, useEffect, useContext } from 'react';
 import { useParams } from 'react-router-dom';
-import WineGlasses from '../components/WineGlasses';
+import { Container, Row, Col, Image } from 'react-bootstrap';
+import axios from 'axios';
 import GlobalContext from '../contexts/globalContext';
+import WineGlasses from '../components/WineGlasses';
 
 const Winepage = () => {
     const { id } = useParams();
-    const [wines, setWines] = useState({});
+    const [wine, setWine] = useState(null);
     const { setIsLoading } = useContext(GlobalContext);
 
-    const fetchWine = () => {
-        setIsLoading(true);
-        axios.get(`http://127.0.0.1:3000/api/wines/${id}`, { timeout: 2000 })
-            .then((response) => {
-                console.log(response.data);
-                setWines(response.data);
-                setIsLoading(false);
-            })
-            .catch((error) => {
-                console.log(error);
-                setIsLoading(false);
-            });
-    };
-
     useEffect(() => {
+        const fetchWine = async () => {
+            setIsLoading(true);
+            try {
+                const response = await axios.get(`http://localhost:3000/api/wines/${id}`);
+                setWine(response.data);
+            } catch (error) {
+                console.error('Error:', error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
         fetchWine();
-    }, []);
+    }, [id]);
+
+    if (!wine) {
+        return <div className="text-white text-center">Caricamento...</div>;
+    }
 
     return (
-        <div className="container py-4">
-            <div className="row mb-4">
-                <div className="col-12 col-md-6 col-lg-4 mb-3">
-                    <img
-                        src={wines.image_front_url}
-                        alt={wines.name}
-                        className='w-100'
-                    />
-
-                </div>
-                <div className="col-12 col-md-6 col-lg-8">
-                    <h1 className="mb-2">{wines.name}</h1>
-                    <h5 className="text-muted">Categoria: {wines.category}</h5>
-                    <WineGlasses
-                        condition={wines.bottle_condition || 0}
-                    />
-                    <h5 className='mt-3'>Produttore:{wines.winesmaker}</h5>
-                    <h5 className="mt-3">Anno: {wines.price}</h5>
-                    <p className="mt-3">{wines.description}</p>
-                    <button className='btn btn-primary bg-white text-dark border-dark'>Aggiungi al carrello</button>
-                    <i className="fa-solid fa-cart-shopping fs-50 mx-3"></i>
-                </div>
-            </div>
-        </div>
+        <Container className="py-5">
+            <Row className="g-4">
+                <Col lg={6}>
+                    <div className="position-sticky" style={{ top: '2rem' }}>
+                        <Image
+                            src={wine.image_front_url}
+                            alt={wine.name}
+                            fluid
+                            className="rounded shadow-lg mb-3"
+                            style={{ maxHeight: '600px', width: '100%', objectFit: 'cover' }}
+                        />
+                        <Image
+                            src={wine.image_back_url}
+                            alt={`${wine.name} retro`}
+                            fluid
+                            className="rounded shadow-lg"
+                            style={{ maxHeight: '600px', width: '100%', objectFit: 'cover' }}
+                        />
+                    </div>
+                </Col>
+                <Col lg={6}>
+                    <div className="text-white">
+                        <h1 className="display-4 mb-3">{wine.name}</h1>
+                        <div className="mb-4">
+                            <WineGlasses condition={wine.bottle_condition} />
+                        </div>
+                        <div className="mb-4">
+                            <h5 className="text-white-50">Dettagli</h5>
+                            <div className="fs-5">
+                                <p><strong>Produttore:</strong> {wine.winemaker_name}</p>
+                                <p><strong>Regione:</strong> {wine.region}</p>
+                                <p><strong>Categoria:</strong> {wine.category_name}</p>
+                                <p><strong>Denominazione:</strong> {wine.denomination.name}</p>
+                                <p><strong>Annata:</strong> {wine.vintage}</p>
+                                <p><strong>Uvaggio:</strong> {wine.grape_type}</p>
+                                <p><strong>Gradazione:</strong> {wine.alcol}%</p>
+                                <p><strong>Formato:</strong> {wine.bottle_size}L</p>
+                                <p><strong>Temperatura di servizio:</strong> {wine.temperature}°C</p>
+                            </div>
+                        </div>
+                        <div className="mb-4">
+                            <h5 className="text-white-50">Condizioni</h5>
+                            <div className="fs-5">
+                                <p><strong>Bottiglia:</strong> {wine.bottle_condition_name}</p>
+                                <p><strong>Etichetta:</strong> {wine.label_condition_name}</p>
+                            </div>
+                        </div>
+                        <div className="mb-4">
+                            <h5 className="text-white-50">Descrizione</h5>
+                            <p className="fs-5">{wine.description}</p>
+                        </div>
+                        <div className="border-top border-white-50 pt-4 mt-4">
+                            <div className="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h3 className="mb-0">Prezzo</h3>
+                                    <p className="display-4 mb-0">€ {wine.price}</p>
+                                </div>
+                                {wine.stock > 0 ? (
+                                    <button className="btn btn-outline-light btn-lg">
+                                        Aggiungi al carrello
+                                    </button>
+                                ) : (
+                                    <button className="btn btn-outline-danger btn-lg" disabled>
+                                        Non disponibile
+                                    </button>
+                                )}
+                            </div>
+                            {wine.stock > 0 && (
+                                <small className="text-white-50">
+                                    Disponibilità: {wine.stock} bottiglie
+                                </small>
+                            )}
+                        </div>
+                    </div>
+                </Col>
+            </Row>
+        </Container>
     );
 };
 

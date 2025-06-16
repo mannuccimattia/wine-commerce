@@ -4,6 +4,9 @@ import { Link } from 'react-router-dom'
 import { useState, useEffect, useContext } from 'react'
 import WineCard from '../components/WineCard'
 import GlobalContext from '../contexts/globalContext'
+import CategoriesCard from '../components/CategoriesCard'
+import HeroCarousel from '../components/HeroCarousel';
+import BestSellers from '../components/BestSellers';
 
 const Homepage = () => {
     const [wines, setWines] = useState([]);
@@ -29,14 +32,10 @@ const Homepage = () => {
 
     return (
         <>
+            <HeroCarousel />
             <div className="homepage-background">
-                <h1 className="text-primary mb-3">Bool Wines</h1>
-                <h2 className="mb-4 fst-italic">The Best Homewine only for you</h2>
-                <div className="row gy-4">
-                    {wines.map((wine) => (
-                        <WineCard wine={wine} key={`wine-${wine.id}`} />
-                    ))}
-                </div>
+                <CategoriesCard />
+                <BestSellers />
             </div>
         </>
     );

@@ -1,129 +1,89 @@
-import React, { useEffect, useState, useContext } from 'react'; // Hook di React
-import axios from 'axios'; // Libreria per le chiamate HTTP
-import WineCard from '../components/WineCard'; // Componente per visualizzare il singolo vino
-import GlobalContext from '../contexts/globalContext'; // Context per lo stato globale
+import React, { useState, useEffect } from "react";
+import { Container, Row, Col, Form } from "react-bootstrap";
+import axios from "axios";
+import WineCard from "../components/WineCard";
 
-// Definizione del componente principale SearchPage
 const SearchPage = () => {
-    // Dichiarazione degli stati usando useState
-    const [search, setSearch] = useState(''); // Stato per il testo di ricerca
-    const [category, setCategory] = useState(''); // Stato per la categoria selezionata
-    const [wines, setWines] = useState([]); // Array dei vini dal database
-    const [sortBy, setSortBy] = useState(''); // Criterio di ordinamento selezionato
-    const { setIsLoading } = useContext(GlobalContext); // Stato globale per il loading
+    const [searchTerm, setSearchTerm] = useState("");
+    const [categoryFilter, setCategoryFilter] = useState("");
+    const [sortBy, setSortBy] = useState("");
+    const [wines, setWines] = useState([]);
 
-    // Funzione per recuperare i vini dal server
-    const fetchWines = () => {
-        setIsLoading(true); // Attiva l'indicatore di caricamento
-        axios.get('http://localhost:3000/api/wines')
-            .then((res) => {
-                setWines(res.data); // Salva i vini nello state
-                setIsLoading(false); // Disattiva l'indicatore di caricamento
-            })
-            .catch(() => setIsLoading(false)); // Gestione degli errori
-    };
-
-    // Hook useEffect per caricare i vini al mount del componente
     useEffect(() => {
-        fetchWines();
-    }, []); // Array vuoto significa che viene eseguito solo al mount
-
-    // Funzione per ordinare i vini in base al criterio selezionato
-    const sortWines = (wines) => {
-        if (!sortBy) return wines; // Se non c'è criterio, ritorna l'array originale
-
-        return [...wines].sort((a, b) => {
-            switch (sortBy) {
-                case 'price-asc': // Ordine crescente di prezzo
-                    return a.price - b.price;
-                case 'price-desc': // Ordine decrescente di prezzo
-                    return b.price - a.price;
-                case 'name-asc': // Ordine alfabetico A-Z
-                    return a.name.localeCompare(b.name);
-                case 'name-desc': // Ordine alfabetico Z-A
-                    return b.name.localeCompare(a.name);
-                case 'recent': // Dal più recente (anno del vino)
-                    return b.vintage - a.vintage; // Assumendo che il campo si chiami 'year'
-                default:
-                    return 0;
+        const fetchWines = async () => {
+            try {
+                const response = await axios.get('http://localhost:3000/api/wines');
+                setWines(response.data);
+            } catch (error) {
+                console.error('Error:', error);
             }
-        });
-    };
+        };
 
-    // Filtra i vini in base al testo di ricerca e alla categoria
-    const filteredWines = wines.filter((wine) =>
-        wine.name.toLowerCase().includes(search.toLowerCase()) && // Filtra per nome
-        (category ? wine.category === category : true) // Filtra per categoria se selezionata
-    );
+        fetchWines();
+    }, []);
 
-    // Applica l'ordinamento ai vini già filtrati
-    const sortedAndFilteredWines = sortWines(filteredWines);
+    const filteredWines = wines.filter(wine => {
+        const matchesSearch = wine.name.toLowerCase().includes(searchTerm.toLowerCase());
+        const matchesCategory = !categoryFilter || wine.category == categoryFilter;
+        return matchesSearch && matchesCategory;
+    });
 
-    // Estrae le categorie uniche per il menu a tendina
-    const uniqueCategories = [...new Set(wines.map(w => w.category))];
+    const sortedWines = [...filteredWines].sort((a, b) => {
+        if (sortBy === 'price_asc') return a.price - b.price;
+        if (sortBy === 'price_desc') return b.price - a.price;
+        if (sortBy === 'name_asc') return a.name.localeCompare(b.name);
+        if (sortBy === 'name_desc') return b.name.localeCompare(a.name);
+        return 0;
+    });
 
-    // Rendering del componente
     return (
-        <div className="container">
-            <h1 className="text-primary mb-3">Cerca un vino</h1>
+        <Container className="py-4">
+            <h1 className="text-white mb-4">Cerca un vino</h1>
 
-            {/* Sezione dei filtri di ricerca */}
-            <div className="mb-4 row">
-                {/* Input per la ricerca testuale */}
-                <div className="col-md-4">
-                    <input
+            <Row className="mb-4">
+                <div className="col-md-4 mb-3">
+                    <Form.Control
                         type="text"
                         placeholder="Cerca per nome..."
-                        className="form-control"
-                        value={search}
-                        onChange={(e) => setSearch(e.target.value)}
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
                     />
                 </div>
-                {/* Select per il filtro delle categorie */}
-                <div className="col-md-4">
-                    <select
-                        className="form-select"
-                        value={category}
-                        onChange={(e) => setCategory(e.target.value)}
+                <div className="col-md-4 mb-3">
+                    <Form.Select
+                        value={categoryFilter}
+                        onChange={(e) => setCategoryFilter(e.target.value)}
                     >
                         <option value="">Categoria</option>
-                        {uniqueCategories.map((cat, i) => (
-                            <option key={i} value={cat}>{cat}</option>
-                        ))}
-                    </select>
+                        <option value="1">Vini Rossi</option>
+                        <option value="2">Vini Bianchi</option>
+                        <option value="3">Spumanti</option>
+                        <option value="4">Champagne</option>
+                    </Form.Select>
                 </div>
-                {/* Select per l'ordinamento */}
-                <div className="col-md-4">
-                    <select
-                        className="form-select"
+                <div className="col-md-4 mb-3">
+                    <Form.Select
                         value={sortBy}
                         onChange={(e) => setSortBy(e.target.value)}
                     >
                         <option value="">Ordina per...</option>
-                        <option value="price-asc">Prezzo: dal più basso</option>
-                        <option value="price-desc">Prezzo: dal più alto</option>
-                        <option value="name-asc">Nome: A-Z</option>
-                        <option value="name-desc">Nome: Z-A</option>
-                        <option value="recent">Più recenti</option>
-                    </select>
+                        <option value="price_asc">Prezzo: dal più basso</option>
+                        <option value="price_desc">Prezzo: dal più alto</option>
+                        <option value="name_asc">Nome: A-Z</option>
+                        <option value="name_desc">Nome: Z-A</option>
+                    </Form.Select>
                 </div>
-            </div>
+            </Row>
 
-            {/* Griglia dei risultati */}
-            <div className="row gy-4">
-                {sortedAndFilteredWines.length ? (
-                    // Mappa i vini filtrati e ordinati in cards
-                    sortedAndFilteredWines.map(wine => (
-                        <WineCard key={`wine-${wine.id}`} wine={wine} />
-                    ))
-                ) : (
-                    // Messaggio se non ci sono risultati
-                    <p>Nessun vino trovato.</p>
-                )}
-            </div>
-        </div>
+            <Row className="g-4">
+                {sortedWines.map((wine) => (
+                    <Col key={wine.id} xs={12} sm={6} md={4} lg={3}>
+                        <WineCard wine={wine} />
+                    </Col>
+                ))}
+            </Row>
+        </Container>
     );
 };
 
-// Esporta il componente per l'uso in altre parti dell'applicazione
 export default SearchPage;
