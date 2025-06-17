@@ -65,12 +65,12 @@ const Winepage = () => {
   };
 
   if (!wine) {
-    return <div className="text-white text-center">Caricamento...</div>;
+    return <div className="text-white text-center">Loading...</div>;
   }
 
   return (
-    <Container className="py-5">
-      <Row className="g-4">
+    <Container className="py-5" id="winepage-container">
+      <Row className="gx-4">
         <Col lg={6}>
           <div className="position-sticky" style={{ top: "2rem" }}>
             <Image
@@ -91,13 +91,23 @@ const Winepage = () => {
         </Col>
         <Col lg={6}>
           <div className="text-white">
-            <h1 className="display-4 mb-3">{wine.name}</h1>
-            <div className="mb-4">
+            <h1 className="fw-semibold">
+              {`${wine.winemaker.name} ${wine.vintage} ${wine.name} ${wine.denomination.name} `}
+            </h1>
+            <div className="my-5">
               <WineGlasses rating={wine.label_condition?.rating} />
+              <div className="my-5">
+                <span className="fw-bold" id="price-tag">€ {wine.price}</span>
+              </div>
+              {wine.stock > 0 && (
+                <small className="text-white-50">
+                  Disponibilità: {wine.stock} bottiglie
+                </small>
+              )}
             </div>
+
             <div className="mb-4">
-              <h5 className="text-white-50">Dettagli</h5>
-              <div className="fs-5">
+              <div className="fs-5" id="details">
                 <p>
                   <strong>Produttore:</strong> {wine.winemaker.name}
                 </p>
@@ -128,8 +138,7 @@ const Winepage = () => {
               </div>
             </div>
             <div className="mb-4">
-              <h5 className="text-white-50">Condizioni</h5>
-              <div className="fs-5">
+              <div className="fs-5" id="condizioni">
                 <p>
                   <strong>Bottiglia:</strong> {wine.bottle_condition.name}
                 </p>
@@ -139,7 +148,6 @@ const Winepage = () => {
               </div>
             </div>
             <div className="mb-4">
-              <h5 className="text-white-50">Descrizione</h5>
               <p className="fs-5">{wine.description}</p>
             </div>
             <div className="border-top border-white-50 pt-4 mt-4" style={{position: 'relative'}}>
@@ -182,11 +190,6 @@ const Winepage = () => {
                   )}
                 </div>
               </div>
-              {wine.stock > 0 && (
-                <small className="text-white-50">
-                  Disponibilità: {wine.stock} bottiglie
-                </small>
-              )}
             </div>
           </div>
         </Col>

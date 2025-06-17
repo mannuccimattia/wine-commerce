@@ -53,13 +53,13 @@ const SearchPage = () => {
 
     return (
         <Container className="py-4">
-            <h1 className="text-white mb-4">Cerca un vino</h1>
+            <h1 className="text-white mb-4">Search</h1>
 
             <Row className="mb-4">
                 <div className="col-md-4 mb-3">
                     <Form.Control
                         type="text"
-                        placeholder="Cerca per nome..."
+                        placeholder="Search by name..."
                         value={searchTerm}
                         onChange={handleSearchChange}
                     />
@@ -69,9 +69,9 @@ const SearchPage = () => {
                         value={categoryFilter}
                         onChange={handleCategoryChange}
                     >
-                        <option value="">Categoria</option>
-                        <option value="1">Vini Rossi</option>
-                        <option value="2">Vini Bianchi</option>
+                        <option value="">Categories</option>
+                        <option value="1">Red Wines</option>
+                        <option value="2">White Wines</option>
                         <option value="3">Spumanti</option>
                         <option value="4">Champagne</option>
                     </Form.Select>
@@ -81,12 +81,12 @@ const SearchPage = () => {
                         value={sortBy}
                         onChange={handleSortChange}
                     >
-                        <option value="">Ordina per...</option>
-                        <option value="price_asc">Prezzo: dal più basso</option>
-                        <option value="price_desc">Prezzo: dal più alto</option>
-                        <option value="name_asc">Nome: A-Z</option>
-                        <option value="name_desc">Nome: Z-A</option>
-                        <option value="year_desc">Recenti</option>
+                        <option value="">Sort by</option>
+                        <option value="price_asc">Price (asc)</option>
+                        <option value="price_desc">Price (desc)</option>
+                        <option value="name_asc">Name: A-Z</option>
+                        <option value="name_desc">Name: Z-A</option>
+                        <option value="year_desc">Most Recent</option>
                     </Form.Select>
                 </div>
             </Row>

@@ -10,30 +10,30 @@ const CategoriesCard = () => {
     const categories = [
         {
             id: 1,                                     // ID univoco della categoria
-            name: 'Vini Rossi',                       // Nome visualizzato
+            name: 'Red Wines',                       // Nome visualizzato
             image: '/imgs/categories/Red-Wine.jpg',    // Percorso immagine
-            description: 'Scopri la nostra selezione di vini rossi pregiati',
+            description: 'Discover our premium red wines cellar selection',
             link: '/categoria/1'                       // Link alla pagina della categoria
         },
         {
             id: 2,
-            name: 'Vini Bianchi',
+            name: 'White Wines',
             image: '/imgs/categories/White-wine.jpg',
-            description: 'Esplora i nostri vini bianchi freschi e aromatici',
+            description: 'Explore our tasty white wines collection',
             link: '/categoria/2'
         },
         {
             id: 3,
             name: 'Spumanti',
             image: '/imgs/categories/Spumante.jpg',
-            description: 'Le migliori bollicine per i tuoi momenti speciali',
+            description: 'Elevate every occasion with the best italian sparkles',
             link: '/categoria/3'
         },
         {
             id: 4,
             name: 'Champagne',
             image: '/imgs/categories/Champagne.jpg',
-            description: 'L\'eccellenza delle bollicine francesi',
+            description: 'Premium Champagnes, crafted for excellence',
             link: '/categoria/4'
         }
     ];
@@ -42,7 +42,7 @@ const CategoriesCard = () => {
         // Contenitore principale con margini verticali
         <div className="container my-5">
             {/* Titolo della sezione categorie */}
-            <h2 className="text-center mb-4 text-white">Le Nostre Categorie</h2>
+            <h2 className="text-center mb-4 text-white">Our Collections</h2>
 
             {/* Grid system di Bootstrap per layout responsive */}
             <Row>

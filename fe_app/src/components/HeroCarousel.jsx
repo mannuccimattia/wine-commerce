@@ -16,8 +16,8 @@ const HeroCarousel = () => {
                         }}
                     />
                     <Carousel.Caption>
-                        <h3>Boolze: dove inizia il viaggio del vino</h3>
-                        <p>Tra filari baciati dal sole e uve selezionate nasce la nostra passione. Boolze parte dalla terra, dalla tradizione, per portarti vini autentici, scelti con cura, direttamente a casa tua.</p>
+                        <h3>Boolze: where wine journey beigns.</h3>
+                        <p>Between sun-kissed rows and selected grapes, our passion is born. Boolze starts from the earth, from tradition, to bring you authentic, carefully chosen wines straight to your door.</p>
                     </Carousel.Caption>
                 </Carousel.Item>
 
@@ -32,8 +32,8 @@ const HeroCarousel = () => {
                         }}
                     />
                     <Carousel.Caption>
-                        <h3>Ogni bottiglia ha una storia. Noi te la raccontiamo.</h3>
-                        <p>Le nostre cantine custodiscono tempo, sapere e identità. Su Boolze trovi vini che parlano di territori veri, con il profumo del legno e la magia dell’attesa.</p>
+                        <h3>Every bottle has a story. We tell it to you.</h3>
+                        <p>Our wineries guard time, knowledge and identity. On Boolze you find wines that speak of real territories, with the scent of wood and the magic of waiting.</p>
                     </Carousel.Caption>
                 </Carousel.Item>
 
@@ -48,8 +48,8 @@ const HeroCarousel = () => {
                         }}
                     />
                     <Carousel.Caption>
-                        <h3>Il momento è ora. Il vino, su Boolze.</h3>
-                        <p>Rosso o bianco? Liscio o frizzante? Qualunque sia il tuo gusto, su Boolze trovi il calice perfetto per ogni occasione. Perché scegliere un vino deve essere semplice. E speciale.</p>
+                        <h3>The moment is now. Wine, on Boolze.</h3>
+                        <p>Red or white? Straight or sparkling? Whatever your taste, you'll find the perfect goblet for every occasion at Boolze. Because choosing a wine should be simple. And special.</p>
                     </Carousel.Caption>
                 </Carousel.Item>
             </Carousel>
