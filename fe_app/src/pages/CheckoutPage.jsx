@@ -142,7 +142,12 @@ const CheckoutPage = () => {
               </Row>
 
               {/* Pulsante invio ordine */}
-              <Button variant="primary" type="submit" className="w-100 mt-4">
+              <Button
+                variant="primary"
+                type="submit"
+                className="w-100 mt-4"
+                disabled={!subtotale}
+              >
                 Completa Ordine
               </Button>
             </Form>
@@ -163,12 +168,12 @@ const CheckoutPage = () => {
               {/* Spese di spedizione */}
               <div className="d-flex justify-content-between mb-2">
                 <span>Spedizione</span>
-                <span>{shipping}</span>
+                <span>{subtotale ? shipping : 0}</span>
               </div>
               {/* Totale finale */}
               <div className="d-flex justify-content-between mt-3 pt-3 border-top">
                 <strong>Totale</strong>
-                <strong>€{totale}</strong>
+                <strong>€{subtotale ? totale : 0}</strong>
               </div>
             </div>
           </Card>
