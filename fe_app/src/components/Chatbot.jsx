@@ -54,7 +54,7 @@ const Chatbot = () => {
     <>
       {/* icon */}
       <div id='chatbot' onClick={() => setIsActive(!isActive)}>
-        <i className="fa-regular fa-comment-dots"></i>
+        <i className="fa-regular fa-comment-dots  icon"></i>
       </div>
 
       {/* chat */}
