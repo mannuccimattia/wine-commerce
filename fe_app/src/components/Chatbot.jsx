@@ -53,8 +53,8 @@ const Chatbot = () => {
   return (
     <>
       {/* icon */}
-      <div id='chatbot' onClick={() => setIsActive(!isActive)}>
-        <i className="fa-regular fa-comment-dots  icon"></i>
+      <div id='chatbot' className='p-3' onClick={() => setIsActive(!isActive)}>
+        <i className="fa-regular fa-comment-dots" id='chatbot-icon'></i>
       </div>
 
       {/* chat */}
@@ -62,7 +62,7 @@ const Chatbot = () => {
         isActive &&
         <div id='chatbot-modal' className='p-2'>
           <div className='chatbot-header d-flex justify-content-between p-2 align-items-center'>
-            <h2> Chat with Us</h2>
+            <h4> Chat with Us</h4>
             <i className="fa-solid fa-xmark cursor-pointer" onClick={() => setIsActive(false)}></i>
           </div>
 

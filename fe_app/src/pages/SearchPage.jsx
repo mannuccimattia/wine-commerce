@@ -37,7 +37,7 @@ const SearchPage = () => {
 
     const filteredWines = wines.filter(wine => {
         const matchesSearch = wine.name.toLowerCase().includes(searchTerm.toLowerCase());
-        const matchesCategory = !categoryFilter || wine.category == categoryFilter;
+        const matchesCategory = !categoryFilter || wine.category.id == Number(categoryFilter);
         return matchesSearch && matchesCategory;
     });
 
@@ -69,9 +69,9 @@ const SearchPage = () => {
                         value={categoryFilter}
                         onChange={handleCategoryChange}
                     >
-                        <option value="">Categories</option>
-                        <option value="1">Red Wines</option>
-                        <option value="2">White Wines</option>
+                        <option value="">Categorie</option>
+                        <option value="1">Rossi</option>
+                        <option value="2">Bianchi</option>
                         <option value="3">Spumanti</option>
                         <option value="4">Champagne</option>
                     </Form.Select>

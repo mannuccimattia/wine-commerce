@@ -51,7 +51,9 @@ router.post('/', async (req, res) => {
       const fullName = `${w.winemaker} ${w.vintage} ${w.name} ${w.denomination}`;
 
       return (
-        `${fullName}: 
+        `
+        DETAILS OF WINE ${w.id}:
+        wine full name: ${fullName}, 
         wine category: ${w.category}, 
         wine region: ${w.region},
         wine denomination: ${w.denomination},
