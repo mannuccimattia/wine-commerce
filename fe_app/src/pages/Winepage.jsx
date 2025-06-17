@@ -29,24 +29,36 @@ const Winepage = () => {
     fetchWine();
   }, [id]);
 
-  //Aggiunta al carrello
-  const aggiungiAlCarrello = (vino) => {
+  //Aggiunta al carrello + subtotale
+  const aggiungiAlCarrello = (wine) => {
     const carrello = JSON.parse(localStorage.getItem("carrello")) || [];
 
-    const prodottoEsistente = carrello.find((item) => item.id === vino.id);
+    const prodottoEsistente = carrello.find((item) => item.id === wine.id);
 
     if (prodottoEsistente) {
       prodottoEsistente.qty += 1;
       console.log(
-        `✔️ Aumentata quantità di "${vino.name}" a ${prodottoEsistente.qty}`
+        `✔️ Aumentata quantità di "${wine.name}" a ${prodottoEsistente.qty}`
       );
     } else {
-      carrello.push({ id: vino.id, nome: vino.name, qty: 1 });
-      console.log(`🆕 Aggiunto "${vino.name}" al carrello`);
+      carrello.push({
+        id: wine.id,
+        nome: wine.name,
+        prezzo: wine.price,
+        qty: 1,
+      });
+      console.log(`🆕 Aggiunto "${wine.name}" al carrello`);
     }
 
+    const subtotale = carrello.reduce((acc, item) => {
+      return acc + item.qty * (item.prezzo || 0);
+    }, 0);
+
     localStorage.setItem("carrello", JSON.stringify(carrello));
+    localStorage.setItem("subtotale", subtotale.toFixed(2));
+
     console.log("🛒 Carrello attuale:", carrello);
+    console.log("💰 Subtotale aggiornato:", subtotale.toFixed(2));
   };
 
   if (!wine) {
