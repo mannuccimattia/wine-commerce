@@ -176,10 +176,10 @@ body {
 }
 
 #chatbot {
-    width: 100px;
-    height: 100px;
-    background-color: #f3eba4;
-    box-shadow: 3px 3px rgba(0, 0, 0, 0.08);
+    width: 80px;
+    height: 80px;
+    background-color: #a3834e;
+    box-shadow: 3px 3px rgba(0, 0, 0, 0.8);
     border-radius: 50%;
     font-size: 50px;
     position: fixed;
@@ -198,7 +198,7 @@ body {
     right: 50px;
     width: 350px;
     height: 600px;
-    background-color: rgba(0, 0, 0, 0.8);
+    background-color: rgba(0, 0, 0, 1);
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
     z-index: 9999;
@@ -311,4 +311,8 @@ footer a:hover {
 footer .social-icons {
     display: flex;
     gap: 1rem;
+}
+.icon{
+    color: black;
+    
 }
