@@ -103,6 +103,83 @@ const show = (req, res) => {
   });
 };
 
+// get best sellers
+const getBestSellers = (req, res) => {
+  console.log("BESTSELLER");
+  const bestSellersSql = `
+    SELECT 
+      W.*,
+      D.name AS denomination_name,
+      C.name AS category_name,
+      R.name AS region_name,
+      WN.name AS winemaker_name,
+      LC.name AS label_condition_name,
+      LC.rating AS label_condition_rating,
+      BC.name AS bottle_condition_name,
+      BC.rating AS bottle_condition_rating,
+      SUM(OI.quantity) AS total_sold
+    FROM wines W
+    LEFT JOIN denominations D ON W.denomination = D.id
+    LEFT JOIN categories C ON W.category = C.id
+    LEFT JOIN regions R ON W.region = R.id
+    LEFT JOIN winemakers WN ON W.winemaker = WN.id
+    LEFT JOIN label_conditions LC ON W.label_condition = LC.id
+    LEFT JOIN bottle_conditions BC ON W.bottle_condition = BC.id
+    INNER JOIN order_items OI ON W.id = OI.wine_id
+    GROUP BY W.id
+    ORDER BY total_sold DESC
+    LIMIT 4
+  `;
+
+  connection.query(bestSellersSql, (err, winesResult) => {
+    if (err) return queryFailed(err, res);
+
+    const wines = winesResult.map((wine) => ({
+      id: wine.id,
+      name: wine.name,
+      category: {
+        id: wine.category,
+        name: wine.category_name,
+      },
+      price: wine.price,
+      alcol: wine.alcol,
+      bottle_size: wine.bottle_size,
+      vintage: wine.vintage,
+      stock: wine.stock,
+      image_front_url: req.imagePath + wine.image_front_url,
+      image_back_url: req.imagePath + wine.image_back_url,
+      grape_type: wine.grape_type,
+      label_condition: {
+        id: wine.label_condition,
+        name: wine.label_condition_name,
+        rating: wine.label_condition_rating,
+      },
+      bottle_condition: {
+        id: wine.bottle_condition,
+        name: wine.bottle_condition_name,
+        rating: wine.bottle_condition_rating,
+      },
+      region: {
+        id: wine.region,
+        name: wine.region_name,
+      },
+      temperature: wine.temperature,
+      winemaker: {
+        id: wine.winemaker,
+        name: wine.winemaker_name,
+      },
+      description: wine.description,
+      denomination: {
+        id: wine.denomination,
+        name: wine.denomination_name,
+      },
+      total_sold: wine.total_sold,
+    }));
+
+    res.json(wines);
+  });
+};
+
 // index cart
 const indexCart = (req, res) => {
   const indexCartSql = `
@@ -175,6 +252,7 @@ const getWineFromCategory = (req, res) => {
 module.exports = {
   index,
   show,
+  getBestSellers,
   storeCartItem,
   emptyCart,
   getWineFromCategory,

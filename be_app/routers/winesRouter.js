@@ -7,6 +7,8 @@ const winesController = require("../controllers/winesController");
 // routes
 router.get("/", winesController.index);
 
+router.get("/bestseller", winesController.getBestSellers);
+
 router.get("/:id", winesController.show);
 
 router.post("/cart/:id", winesController.storeCartItem);
