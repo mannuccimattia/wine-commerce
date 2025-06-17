@@ -12,6 +12,7 @@ const cors = require("cors");
 
 // import router
 const winesRouter = require("./routers/winesRouter");
+const chatRouter = require('./routers/chatRouter');
 
 // import middlewares
 const errorsHandler = require("./middlewares/errorsHandler");
@@ -38,6 +39,7 @@ app.get("/", (req, res) => {
 
 // use router
 app.use("/api/wines", winesRouter);
+app.use('/api/chat', chatRouter);
 
 // use middlewares
 app.use(errorsHandler);
