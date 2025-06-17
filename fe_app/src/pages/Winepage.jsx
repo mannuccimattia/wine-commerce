@@ -29,6 +29,26 @@ const Winepage = () => {
     fetchWine();
   }, [id]);
 
+  //Aggiunta al carrello
+  const aggiungiAlCarrello = (vino) => {
+    const carrello = JSON.parse(localStorage.getItem("carrello")) || [];
+
+    const prodottoEsistente = carrello.find((item) => item.id === vino.id);
+
+    if (prodottoEsistente) {
+      prodottoEsistente.qty += 1;
+      console.log(
+        `✔️ Aumentata quantità di "${vino.name}" a ${prodottoEsistente.qty}`
+      );
+    } else {
+      carrello.push({ id: vino.id, nome: vino.name, qty: 1 });
+      console.log(`🆕 Aggiunto "${vino.name}" al carrello`);
+    }
+
+    localStorage.setItem("carrello", JSON.stringify(carrello));
+    console.log("🛒 Carrello attuale:", carrello);
+  };
+
   if (!wine) {
     return <div className="text-white text-center">Caricamento...</div>;
   }
@@ -114,7 +134,10 @@ const Winepage = () => {
                   <p className="display-4 mb-0">€ {wine.price}</p>
                 </div>
                 {wine.stock > 0 ? (
-                  <button className="btn btn-outline-light btn-lg">
+                  <button
+                    className="btn btn-outline-light btn-lg"
+                    onClick={() => aggiungiAlCarrello(wine)}
+                  >
                     Aggiungi al carrello
                   </button>
                 ) : (
