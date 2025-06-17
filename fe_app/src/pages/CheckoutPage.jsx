@@ -1,11 +1,11 @@
 // Importazione delle dipendenze necessarie
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Container, Row, Col, Form, Button, Card } from "react-bootstrap";
 
 const CheckoutPage = () => {
   //Define state variabiles for cart
   const [subtotale, setSubtotale] = useState(0);
-  const [spedizione, setSpedizione] = useState(0);
+  const [shipping, setShipping] = useState(0);
   const [totale, setTotale] = useState(0);
 
   useEffect(() => {
@@ -14,7 +14,7 @@ const CheckoutPage = () => {
     const shippingCost = storedSubtotale > 300 ? 0 : 10;
     const totalAmount = storedSubtotale + shippingCost;
     setSubtotale(storedSubtotale);
-    setSpedizione(shippingCost);
+    setShipping(shippingCost);
     setTotale(totalAmount);
   }, []);
 
@@ -195,17 +195,17 @@ const CheckoutPage = () => {
               {/* Subtotale */}
               <div className="d-flex justify-content-between mb-2">
                 <span>Subtotale</span>
-                <span>€ 150.00</span>
+                <span>{subtotale}</span>
               </div>
               {/* Spese di spedizione */}
               <div className="d-flex justify-content-between mb-2">
                 <span>Spedizione</span>
-                <span>€ 10.00</span>
+                <span>{shipping}</span>
               </div>
               {/* Totale finale */}
               <div className="d-flex justify-content-between mt-3 pt-3 border-top">
                 <strong>Totale</strong>
-                <strong>€ 160.00</strong>
+                <strong>€{totale}</strong>
               </div>
             </div>
           </Card>
