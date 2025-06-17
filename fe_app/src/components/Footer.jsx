@@ -14,6 +14,11 @@ const Footer = () => {
                         <p className="mb-1">P.IVA: 12345678901</p>
                     </Col>
                     <Col md={4} className="text-center">
+                        <img
+                            src="/imgs/logo/boolze-high-resolution-logo-grayscale-transparent-cut.png"
+                            alt="logo-footer"
+                            className="img-fluid"
+                        />
                         <h5 className="mb-3">Boolze Commerce</h5>
                         <p className="small">
                             © {new Date().getFullYear()} Boolze Commerce.
