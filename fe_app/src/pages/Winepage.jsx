@@ -9,6 +9,7 @@ const Winepage = () => {
   const { id } = useParams();
   const [wine, setWine] = useState(null);
   const { setIsLoading } = useContext(GlobalContext);
+  const [alertMsg, setAlertMsg] = useState("");
 
   useEffect(() => {
     const fetchWine = async () => {
@@ -37,9 +38,7 @@ const Winepage = () => {
 
     if (prodottoEsistente) {
       prodottoEsistente.qty += 1;
-      console.log(
-        `✔️ Aumentata quantità di "${wine.name}" a ${prodottoEsistente.qty}`
-      );
+      setAlertMsg(` ${wine.name} aumentata a ${prodottoEsistente.qty}`);
     } else {
       carrello.push({
         id: wine.id,
@@ -47,10 +46,12 @@ const Winepage = () => {
         prezzo: wine.price,
         qty: 1,
         img: wine.image_front_url,
-        
       });
-      console.log(`🆕 Aggiunto "${wine.name}" al carrello`);
+      setAlertMsg(`${wine.name} aggiunto al carrello!`);
     }
+
+    // Nascondi l'alert dopo 3 secondi
+    setTimeout(() => setAlertMsg("") , 3000);
 
     const subtotale = carrello.reduce((acc, item) => {
       return acc + item.qty * (item.prezzo || 0);
@@ -141,24 +142,45 @@ const Winepage = () => {
               <h5 className="text-white-50">Descrizione</h5>
               <p className="fs-5">{wine.description}</p>
             </div>
-            <div className="border-top border-white-50 pt-4 mt-4">
-              <div className="d-flex justify-content-between align-items-center">
-                <div>
-                  <h3 className="mb-0">Prezzo</h3>
-                  <p className="display-4 mb-0">€ {wine.price}</p>
+            <div className="border-top border-white-50 pt-4 mt-4" style={{position: 'relative'}}>
+              {/* Alert assoluto sopra il bordo */}
+              {alertMsg && (
+                <div style={{
+                  position: 'absolute',
+                  top: '150px', // regola questa distanza per posizionare l'alert sopra il bordo
+                  right: '0',
+                  background: '#B1A44B',
+                  color: '#ffffff',
+                  border: '1px solid #ffffff',
+                  borderRadius: '8px',
+                  padding: '8px 16px',
+                  fontSize: '0.95rem',
+                  boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
+                  maxWidth: '300px',
+                  zIndex: 10
+                }}>
+                  {alertMsg}
                 </div>
-                {wine.stock > 0 ? (
-                  <button
-                    className="btn btn-outline-light btn-lg"
-                    onClick={() => aggiungiAlCarrello(wine)}
-                  >
-                    Aggiungi al carrello
-                  </button>
-                ) : (
-                  <button className="btn btn-outline-danger btn-lg" disabled>
-                    Non disponibile
-                  </button>
-                )}
+              )}
+              <div className="d-flex flex-column align-items-end">
+                <div className="d-flex justify-content-between align-items-center w-100">
+                  <div>
+                    <h3 className="mb-0">Prezzo</h3>
+                    <p className="display-4 mb-0">€ {wine.price}</p>
+                  </div>
+                  {wine.stock > 0 ? (
+                    <button
+                      className="btn btn-outline-light btn-lg"
+                      onClick={() => aggiungiAlCarrello(wine)}
+                    >
+                      Aggiungi al carrello
+                    </button>
+                  ) : (
+                    <button className="btn btn-outline-danger btn-lg" disabled>
+                      Non disponibile
+                    </button>
+                  )}
+                </div>
               </div>
               {wine.stock > 0 && (
                 <small className="text-white-50">
