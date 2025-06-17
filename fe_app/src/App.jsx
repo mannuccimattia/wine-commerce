@@ -14,9 +14,15 @@ import { useState } from "react";
 
 function App() {
   const [isLoading, setIsLoading] = useState(false);
+  const [toDisable, setToDisable] = useState(false);
 
   return (
-    <GlobalContext.Provider value={{ isLoading, setIsLoading }}>
+    <GlobalContext.Provider value={{
+      isLoading,
+      setIsLoading,
+      toDisable,
+      setToDisable
+    }}>
       <BrowserRouter>
         <Routes>
           <Route element={<DefaultLayout />}>

@@ -1,9 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import { Card } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import WineGlasses from "./WineGlasses";
 
 const WineCard = ({ wine }) => {
+
+  const [activeImage, setActiveImage] = useState(wine.image_front_url);
+
   const navigate = useNavigate();
 
   const handleClick = () => {
@@ -18,12 +21,14 @@ const WineCard = ({ wine }) => {
     >
       <Card.Img
         variant="top"
-        src={wine.image_front_url}
+        src={activeImage}
         alt={wine.name}
         style={{ height: "300px", objectFit: "cover" }}
+        onMouseOver={() => setActiveImage(wine.image_back_url)}
+        onMouseOut={() => { setActiveImage(wine.image_front_url) }}
       />
       <Card.Body className="d-flex flex-column">
-        <Card.Title className="text-white">{wine.name}</Card.Title>
+        <Card.Title className="text-white">{`${wine.winemaker.name} ${wine.vintage} ${wine.name} ${wine.denomination.name}`}</Card.Title>
         <Card.Text className="text-white-50">{wine.description}</Card.Text>
         <div className="mb-2">
           <WineGlasses rating={wine.label_condition?.rating} />
