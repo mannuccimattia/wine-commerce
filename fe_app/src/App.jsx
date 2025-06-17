@@ -7,6 +7,7 @@ import SearchPage from "./pages/SearchPage";
 import CategoryPage from './pages/CategoryPage';
 import CheckoutPage from './pages/CheckoutPage';
 import CartPage from './pages/CartPage';
+import SuccessPage from './pages/SuccessPage';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import GlobalContext from "./contexts/globalContext";
 import { useState } from "react";
@@ -25,6 +26,7 @@ function App() {
             <Route path="/categoria/:id" element={<CategoryPage />} />
             <Route path="/checkout" element={<CheckoutPage />} />
             <Route path="/cart" element={<CartPage />} />
+            <Route path="/success" element={<SuccessPage />} />
             <Route path="*" element={<NotFoundPage />}></Route>
           </Route>
         </Routes>

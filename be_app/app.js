@@ -20,6 +20,9 @@ const errorsHandler = require("./middlewares/errorsHandler");
 const notFound = require("./middlewares/notFound");
 const imagePathMiddleware = require("./middlewares/imagePath");
 
+// import stripe
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+
 // use CORS
 app.use(cors({ origin: FE_APP }));
 

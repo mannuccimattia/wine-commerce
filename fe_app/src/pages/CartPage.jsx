@@ -5,6 +5,8 @@ import { Link } from 'react-router-dom';
 const CartPage = () => {
     // Stato per gestire gli elementi del carrello
     const [cartItems, setCartItems] = useState([]);
+    const SPESE_SPEDIZIONE = 8.9;
+    const SOGLIA_SPEDIZIONE = 300;
 
     // Al mount del componente, carica il carrello dal localStorage
     useEffect(() => {
@@ -61,17 +63,29 @@ const CartPage = () => {
      * @returns {number} Subtotale calcolato
      */
     const calculateSubtotal = () => {
-        return cartItems.reduce((acc, item) => acc + (item.qty * item.prezzo), 0);
+        const subtotal = cartItems.reduce((acc, item) => acc + (item.qty * item.prezzo), 0);
+        localStorage.setItem('subtotale', subtotal.toFixed(2));
+        return subtotal;
     };
 
-    // Costo fisso di spedizione
-    const shippingPrice = 10.00;
+    /**
+     * Calcola le spese di spedizione in base al subtotale
+     * @returns {number} Spese di spedizione calcolate
+     */
+    const calculateShipping = () => {
+        const subtotal = calculateSubtotal();
+        return subtotal > SOGLIA_SPEDIZIONE ? 0 : SPESE_SPEDIZIONE;
+    };
 
     /**
-     * Calcola il totale includendo le spese di spedizione
+     * Calcola il totale dell'ordine
      * @returns {number} Totale calcolato
      */
-    const calculateTotal = () => calculateSubtotal() + shippingPrice;
+    const calculateTotal = () => {
+        const subtotal = calculateSubtotal();
+        const shipping = calculateShipping();
+        return subtotal + shipping;
+    };
 
     // Rendering condizionale per carrello vuoto
     if (cartItems.length === 0) {
@@ -156,39 +170,31 @@ const CartPage = () => {
 
                 {/* Colonna destra - Riepilogo ordine */}
                 <Col lg={4}>
-                    <Card className="bg-dark text-white">
-                        <Card.Body>
-                            <h4 className="mb-4">Riepilogo Ordine</h4>
-
-                            {/* Subtotale */}
-                            <div className="d-flex justify-content-between mb-2">
-                                <span>Subtotale</span>
-                                <span>€ {calculateSubtotal().toFixed(2)}</span>
-                            </div>
-
-                            {/* Spese di spedizione */}
-                            <div className="d-flex justify-content-between mb-2">
-                                <span>Spedizione</span>
-                                <span>€ {shippingPrice.toFixed(2)}</span>
-                            </div>
-
-                            <hr className="my-3" />
-
-                            {/* Totale finale */}
-                            <div className="d-flex justify-content-between mb-4">
-                                <strong>Totale</strong>
-                                <strong>€ {calculateTotal().toFixed(2)}</strong>
-                            </div>
-
-                            {/* Pulsante checkout */}
-                            <Link
-                                to="/checkout"
-                                className="btn btn-outline-light w-100"
-                                state={{ cartItems, total: calculateTotal() }}
-                            >
-                                Procedi al Checkout
-                            </Link>
-                        </Card.Body>
+                    <Card className="bg-dark text-white p-4">
+                        <h4 className="mb-4">Riepilogo Ordine</h4>
+                        <div className="d-flex justify-content-between mb-2">
+                            <span>Subtotale</span>
+                            <span>€{calculateSubtotal().toFixed(2)}</span>
+                        </div>
+                        <div className="d-flex justify-content-between mb-2">
+                            <span>Spedizione</span>
+                            <span>€{calculateShipping().toFixed(2)}</span>
+                        </div>
+                        <div className="d-flex justify-content-between mt-3 pt-3 border-top">
+                            <strong>Totale</strong>
+                            <strong>€{calculateTotal().toFixed(2)}</strong>
+                        </div>
+                        {calculateSubtotal() > 0 && calculateShipping() > 0 && (
+                            <small className="text-muted d-block mt-2">
+                                Spedizione gratuita per ordini superiori a €{SOGLIA_SPEDIZIONE}
+                            </small>
+                        )}
+                        <Link
+                            to="/checkout"
+                            className="btn btn-outline-light w-100 mt-3"
+                        >
+                            Procedi al Checkout
+                        </Link>
                     </Card>
                 </Col>
             </Row>
