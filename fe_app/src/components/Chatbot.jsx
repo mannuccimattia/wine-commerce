@@ -62,7 +62,7 @@ const Chatbot = () => {
         isActive &&
         <div id='chatbot-modal' className='p-2'>
           <div className='chatbot-header d-flex justify-content-between p-2 align-items-center'>
-            <h2> Parla con noi</h2>
+            <h2> Chat with Us</h2>
             <i className="fa-solid fa-xmark cursor-pointer" onClick={() => setIsActive(false)}></i>
           </div>
 

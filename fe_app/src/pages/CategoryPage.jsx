@@ -23,7 +23,7 @@ const CategoryPage = () => {
                 setIsLoading(false);
             })
             .catch(error => {
-                console.error('Errore nel caricamento dei vini:', error);
+                console.error('Error loading products:', error);
                 setIsLoading(false);
             });
     }, [id]);
@@ -45,7 +45,7 @@ const CategoryPage = () => {
                         </div>
                     ))
                 ) : (
-                    <p className="text-center">Nessun vino trovato in questa categoria.</p>
+                    <p className="text-center">No product found.</p>
                 )}
             </div>
         </div>

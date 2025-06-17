@@ -313,3 +313,29 @@ footer .social-icons {
     display: flex;
     gap: 1rem;
 }
+
+footer a>i {
+    color: #AEB2B6
+}
+
+footer img {
+    max-height: 200px;
+}
+
+.color-wine {
+    color: #79434f;
+}
+
+#details p>strong,
+#condizioni p>strong {
+    color: gray;
+}
+
+#price-tag {
+    font-family: monospace;
+    font-size: 20px;
+}
+
+#winepage-container {
+    max-width: 988px;
+}
