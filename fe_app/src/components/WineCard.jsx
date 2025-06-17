@@ -26,7 +26,7 @@ const WineCard = ({ wine }) => {
         <Card.Title className="text-white">{wine.name}</Card.Title>
         <Card.Text className="text-white-50">{wine.description}</Card.Text>
         <div className="mb-2">
-          <WineGlasses rating={wine.label_condition.rating || "Good"} />
+          <WineGlasses rating={wine.label_condition?.rating} />
         </div>
         <div className="mt-auto">
           <p className="text-white mb-2">€ {wine.price}</p>

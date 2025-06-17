@@ -183,7 +183,7 @@ body {
     border-radius: 50%;
     font-size: 50px;
     position: fixed;
-    bottom: 50px;
+    bottom: 30px;
     right: 50px;
     z-index: 1000;
     display: flex;
@@ -194,14 +194,15 @@ body {
 
 #chatbot-modal {
     position: fixed;
-    bottom: 50px;
+    bottom: 30px;
     right: 50px;
     width: 350px;
     height: 600px;
-    background-color: rgba(0, 0, 0, 0.8);
+    background-color: rgba(0, 0, 0, 1);
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
     z-index: 9999;
+    transition: 0.3s;
 }
 
 .fa-xmark {
