@@ -46,6 +46,8 @@ const Winepage = () => {
         nome: wine.name,
         prezzo: wine.price,
         qty: 1,
+        img: wine.image_front_url,
+        
       });
       console.log(`🆕 Aggiunto "${wine.name}" al carrello`);
     }
