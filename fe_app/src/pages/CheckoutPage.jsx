@@ -1,66 +1,97 @@
-// Importazione delle dipendenze necessarie
+import axios from "axios";
 import React, { useState, useEffect } from "react";
-import { Container, Row, Col, Form, Button, Card } from "react-bootstrap";
+import { Container, Row, Col, Form, Card } from "react-bootstrap";
 
 const CheckoutPage = () => {
   const SPESE_SPEDIZIONE = 8.9;
   const SOGLIA_SPEDIZIONE = 300;
 
-  //Define state variabiles for cart
+  // Stato per riepilogo ordine
   const [subtotale, setSubtotale] = useState(0);
   const [shipping, setShipping] = useState(0);
   const [totale, setTotale] = useState(0);
 
+  // Stato form
+  const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    address: "",
+    city: "",
+    zip_code: "",
+  });
+
   useEffect(() => {
-    //importing localstorage variabiles + logical shipping cost
     const storedSubtotale = parseFloat(localStorage.getItem("subtotale")) || 0;
     const shippingCost =
       storedSubtotale > SOGLIA_SPEDIZIONE ? 0 : SPESE_SPEDIZIONE;
     const totalAmount = storedSubtotale + shippingCost;
+
     setSubtotale(storedSubtotale);
     setShipping(shippingCost);
     setTotale(totalAmount);
   }, []);
 
-  // Stato del form con tutti i campi necessari
-  const [formData, setFormData] = useState({
-    firstName: "", // Nome cliente
-    lastName: "", // Cognome cliente
-    email: "", // Email per conferma ordine
-    address: "", // Indirizzo di spedizione
-    city: "", // Città
-    zip_code: "", // Codice postale
-  });
-
-  // Gestore invio form
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // TODO: Implementare logica invio ordine al backend
-    console.log("Order data:", formData);
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
-  // Gestore modifiche campi form
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    // shipping data
+    const cliente = { ...formData };
+
+    // localStorage cart
+    const carrello = JSON.parse(localStorage.getItem("carrello")) || [];
+    const subtotale = parseFloat(localStorage.getItem("subtotale")) || 0;
+
+    // shipping cost
+    const shipping = subtotale > SOGLIA_SPEDIZIONE ? 0 : SPESE_SPEDIZIONE;
+
+    // total
+    const totale = subtotale + shipping;
+    // console log
+    console.log("Dati dell'ordine");
+    console.log("Cliente:", cliente);
+    console.log("Carrello:", carrello);
+    console.log("Subtotale:", subtotale.toFixed(2));
+    console.log("Spedizione:", shipping.toFixed(2));
+    console.log("Totale:", totale.toFixed(2));
+
+    //axios
+    const orderDetail = {
+      cliente,
+      carrello,
+      subtotale: subtotale.toFixed(2),
+      shippingCost: shipping.toFixed(2),
+    };
+
+    axios
+      .post("http://localhost:3000/api/order", orderDetail)
+      .then((response) => {
+        console.log("Risposta dal server:", response.data);
+      })
+      .catch((error) => {
+        console.log("Errore nella richiesta: ", error);
+      });
   };
 
   return (
     <Container className="py-5">
       <h2 className="text-white mb-4">Checkout</h2>
       <Row>
-        {/* Colonna sinistra - Form dati cliente */}
         <Col md={8}>
           <Card className="bg-dark text-white p-4 mb-4">
-            <Form onSubmit={handleSubmit}>
-              {/* Sezione dati personali */}
+            <Form>
               <h4 className="mb-4">Dati di Spedizione</h4>
               <Row>
-                {/* Campo Nome */}
                 <Col md={6}>
-                  <Form.Group className="mb-3">
+                  <Form.Group className="mb-3" controlId="firstName">
                     <Form.Label>Nome</Form.Label>
                     <Form.Control
                       type="text"
@@ -71,9 +102,8 @@ const CheckoutPage = () => {
                     />
                   </Form.Group>
                 </Col>
-                {/* Campo Cognome */}
                 <Col md={6}>
-                  <Form.Group className="mb-3">
+                  <Form.Group className="mb-3" controlId="lastName">
                     <Form.Label>Cognome</Form.Label>
                     <Form.Control
                       type="text"
@@ -86,8 +116,7 @@ const CheckoutPage = () => {
                 </Col>
               </Row>
 
-              {/* Campo Email */}
-              <Form.Group className="mb-3">
+              <Form.Group className="mb-3" controlId="email">
                 <Form.Label>Email</Form.Label>
                 <Form.Control
                   type="email"
@@ -98,8 +127,7 @@ const CheckoutPage = () => {
                 />
               </Form.Group>
 
-              {/* Indirizzo di spedizione */}
-              <Form.Group className="mb-3">
+              <Form.Group className="mb-3" controlId="address">
                 <Form.Label>Indirizzo</Form.Label>
                 <Form.Control
                   type="text"
@@ -110,10 +138,9 @@ const CheckoutPage = () => {
                 />
               </Form.Group>
 
-              {/* Città e CAP */}
               <Row>
                 <Col md={8}>
-                  <Form.Group className="mb-3">
+                  <Form.Group className="mb-3" controlId="city">
                     <Form.Label>Città</Form.Label>
                     <Form.Control
                       type="text"
@@ -125,12 +152,12 @@ const CheckoutPage = () => {
                   </Form.Group>
                 </Col>
                 <Col md={4}>
-                  <Form.Group className="mb-3">
+                  <Form.Group className="mb-3" controlId="zip_code">
                     <Form.Label>CAP</Form.Label>
                     <Form.Control
                       type="text"
-                      name="cap"
-                      value={formData.cap}
+                      name="zip_code"
+                      value={formData.zip_code}
                       onChange={handleChange}
                       required
                       pattern="\d{5}"
@@ -140,40 +167,28 @@ const CheckoutPage = () => {
                   </Form.Group>
                 </Col>
               </Row>
-
-              {/* Pulsante invio ordine */}
-              <Button
-                variant="primary"
-                type="submit"
-                className="w-100 mt-4"
-                disabled={!subtotale}
-              >
-                Completa Ordine
-              </Button>
+              <Row>
+                <button onClick={handleSubmit}>Completa l ordine</button>
+              </Row>
             </Form>
           </Card>
         </Col>
 
-        {/* Colonna destra - Riepilogo ordine */}
         <Col md={4}>
           <Card className="bg-dark text-white p-4">
             <h4 className="mb-4">Riepilogo Ordine</h4>
-            {/* TODO: Integrare con il componente Carrello */}
             <div className="border-top pt-3 mt-3">
-              {/* Subtotale */}
               <div className="d-flex justify-content-between mb-2">
                 <span>Subtotale</span>
-                <span>{subtotale}</span>
+                <span>€{subtotale.toFixed(2)}</span>
               </div>
-              {/* Spese di spedizione */}
               <div className="d-flex justify-content-between mb-2">
                 <span>Spedizione</span>
-                <span>{subtotale ? shipping : 0}</span>
+                <span>€{subtotale ? shipping.toFixed(2) : "0.00"}</span>
               </div>
-              {/* Totale finale */}
               <div className="d-flex justify-content-between mt-3 pt-3 border-top">
                 <strong>Totale</strong>
-                <strong>€{subtotale ? totale : 0}</strong>
+                <strong>€{subtotale ? totale.toFixed(2) : "0.00"}</strong>
               </div>
             </div>
           </Card>
