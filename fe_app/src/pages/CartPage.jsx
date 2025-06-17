@@ -100,7 +100,16 @@ const CartPage = () => {
                                 <Row className="align-items-center">
                                     {/* Nome prodotto */}
                                     <Col xs={9} md={6}>
-                                        <h5>{item.nome}</h5>
+                                        <div className="d-flex align-items-center">
+                                            {item.img && (
+                                                <img
+                                                    src={item.img}
+                                                    alt={item.nome}
+                                                    style={{ width: '100px', height: '100px', objectFit: 'cover', marginRight: '15px', borderRadius: '4px' }}
+                                                />
+                                            )}
+                                            <h5 className="mb-0">{item.nome}</h5>
+                                        </div>
                                     </Col>
 
                                     {/* Controlli quantità */}
