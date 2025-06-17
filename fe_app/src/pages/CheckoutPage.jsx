@@ -3,6 +3,9 @@ import React, { useState, useEffect } from "react";
 import { Container, Row, Col, Form, Button, Card } from "react-bootstrap";
 
 const CheckoutPage = () => {
+  const SPESE_SPEDIZIONE = 8.9;
+  const SOGLIA_SPEDIZIONE = 300;
+
   //Define state variabiles for cart
   const [subtotale, setSubtotale] = useState(0);
   const [shipping, setShipping] = useState(0);
@@ -11,7 +14,8 @@ const CheckoutPage = () => {
   useEffect(() => {
     //importing localstorage variabiles + logical shipping cost
     const storedSubtotale = parseFloat(localStorage.getItem("subtotale")) || 0;
-    const shippingCost = storedSubtotale > 300 ? 0 : 10;
+    const shippingCost =
+      storedSubtotale > SOGLIA_SPEDIZIONE ? 0 : SPESE_SPEDIZIONE;
     const totalAmount = storedSubtotale + shippingCost;
     setSubtotale(storedSubtotale);
     setShipping(shippingCost);
@@ -25,10 +29,7 @@ const CheckoutPage = () => {
     email: "", // Email per conferma ordine
     address: "", // Indirizzo di spedizione
     city: "", // Città
-    cap: "", // Codice postale
-    cardNumber: "", // Numero carta di credito
-    cardExpiry: "", // Data scadenza carta
-    cardCVV: "", // Codice sicurezza carta
+    zip_code: "", // Codice postale
   });
 
   // Gestore invio form
@@ -132,47 +133,9 @@ const CheckoutPage = () => {
                       value={formData.cap}
                       onChange={handleChange}
                       required
-                    />
-                  </Form.Group>
-                </Col>
-              </Row>
-
-              {/* Sezione dati pagamento */}
-              <h4 className="mb-4 mt-5">Dati di Pagamento</h4>
-              <Form.Group className="mb-3">
-                <Form.Label>Numero Carta</Form.Label>
-                <Form.Control
-                  type="text"
-                  name="cardNumber"
-                  value={formData.cardNumber}
-                  onChange={handleChange}
-                  required
-                />
-              </Form.Group>
-
-              {/* Data scadenza e CVV */}
-              <Row>
-                <Col md={6}>
-                  <Form.Group className="mb-3">
-                    <Form.Label>Scadenza (MM/AA)</Form.Label>
-                    <Form.Control
-                      type="text"
-                      name="cardExpiry"
-                      value={formData.cardExpiry}
-                      onChange={handleChange}
-                      required
-                    />
-                  </Form.Group>
-                </Col>
-                <Col md={6}>
-                  <Form.Group className="mb-3">
-                    <Form.Label>CVV</Form.Label>
-                    <Form.Control
-                      type="text"
-                      name="cardCVV"
-                      value={formData.cardCVV}
-                      onChange={handleChange}
-                      required
+                      pattern="\d{5}"
+                      inputMode="numeric"
+                      maxLength={5}
                     />
                   </Form.Group>
                 </Col>
