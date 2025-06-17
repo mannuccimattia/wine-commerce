@@ -5,6 +5,7 @@ import Footer from '../components/Footer'
 import GlobalContext from '../contexts/globalContext'
 import Loader from '../components/Loader'
 import { SearchProvider } from '../contexts/SearchContext';
+import Chatbot from '../components/Chatbot'
 
 const DefaultLayout = () => {
     const { isLoading } = useContext(GlobalContext)
@@ -14,6 +15,7 @@ const DefaultLayout = () => {
                 <Header />
                 <main className="flex-grow-1">
                     <Outlet />
+                    <Chatbot />
                 </main>
                 <Footer />
                 {isLoading && <Loader />}

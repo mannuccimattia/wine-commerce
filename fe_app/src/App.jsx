@@ -9,16 +9,12 @@ import CheckoutPage from './pages/CheckoutPage';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import GlobalContext from "./contexts/globalContext";
 import { useState } from "react";
-import Loader from "./components/Loader";
-import Chatbot from "./components/Chatbot";
-import Footer from './components/Footer';
 
 function App() {
   const [isLoading, setIsLoading] = useState(false);
 
   return (
     <GlobalContext.Provider value={{ isLoading, setIsLoading }}>
-      <Chatbot />
       <BrowserRouter>
         <Routes>
           <Route element={<DefaultLayout />}>
