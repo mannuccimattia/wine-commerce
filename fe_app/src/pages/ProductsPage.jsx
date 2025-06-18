@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useContext } from "react";
+import { useEffect, useContext } from "react";
 import { Container, Row, Col, Form } from "react-bootstrap";
 import axios from "axios";
 import WineCard from "../components/WineCard";
 import { SearchContext } from '../contexts/SearchContext';
 import GlobalContext from "../contexts/globalContext";
 
-const SearchPage = () => {
+const ProductsPage = () => {
     const { searchState, setSearchState } = useContext(SearchContext);
     const { searchTerm, categoryFilter, sortBy, wines } = searchState;
 
@@ -109,4 +109,4 @@ const SearchPage = () => {
     );
 };
 
-export default SearchPage;
+export default ProductsPage;

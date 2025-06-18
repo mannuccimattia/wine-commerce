@@ -12,7 +12,9 @@ const Header = () => {
     const handleClick = (e) => {
         e.preventDefault();
         const target = e.target.value;
-        setToDisable(target === toDisable ? null : target); // Toggle disable state
+        // Toggle disable state
+        setToDisable(target === toDisable ? null : target);
+        // If click on view all, edit path to /search/all  
         navigate(`/${target}`);
     }
 
@@ -34,13 +36,13 @@ const Header = () => {
                 <div className="d-flex gap-3">
                     <button
                         className="btn btn-outline-light"
-                        id='search'
-                        value="search"
+                        id='products'
+                        value="products"
                         onClick={handleClick}
-                        disabled={toDisable === "search"}
+                        disabled={toDisable === "products"}
                     >
 
-                        <i className="fa-solid fa-magnifying-glass me-1"></i> Search
+                        <i className="fa-solid fa-eye me-1"></i> View All
                     </button>
                     <button
                         className='btn btn-outline-light'

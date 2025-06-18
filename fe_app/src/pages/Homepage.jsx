@@ -40,8 +40,8 @@ const Homepage = () => {
     const handleHomeSearchSubmit = (e) => {
         e.preventDefault();
         // fetchWines();
-        navigate("/search");
         console.log(homeSearch)
+        navigate("products/search");
     }
 
     // useEffect(() => {
