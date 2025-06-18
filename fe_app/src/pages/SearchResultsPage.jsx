@@ -1,8 +1,8 @@
 import { useEffect, useContext } from "react";
 import { Container, Row, Col, Form } from "react-bootstrap";
+import { SearchContext } from '../contexts/SearchContext';
 import axios from "axios";
 import WineCard from "../components/WineCard";
-import { SearchContext } from '../contexts/SearchContext';
 import GlobalContext from "../contexts/globalContext";
 
 const SearchResultsPage = () => {

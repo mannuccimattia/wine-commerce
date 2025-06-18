@@ -1,7 +1,8 @@
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import GlobalContext from '../contexts/globalContext';
+import { Tab } from 'react-bootstrap';
 
 const Header = () => {
 
@@ -21,6 +22,12 @@ const Header = () => {
     const handleLogoClick = () => {
         setToDisable(null); // Clear disable state when clicking logo
     }
+
+    useEffect(() => {
+        if (!location.pathname.startsWith(`/products`) && !location.pathname.startsWith('/cart')) {
+            setToDisable(null);
+        }
+    }, [location.pathname]);
 
     return (
         <nav className="navbar navbar-dark m-3" style={{ backgroundColor: '#212223' }}>

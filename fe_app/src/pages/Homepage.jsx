@@ -7,31 +7,10 @@ import HeroCarousel from '../components/HeroCarousel';
 import BestSellers from '../components/BestSellers';
 
 const Homepage = () => {
-    // const [wines, setWines] = useState([]);
-
     const navigate = useNavigate();
 
     const {
-        // setIsLoading, 
-        homeSearch,
-        setHomeSearch
-    } = useContext(GlobalContext);
-
-    // const endpoint = !homeSearch
-    //     ? 'http://localhost:3000/api/wines'
-    //     : `http://localhost:3000/api/wines?search=${homeSearch}`
-
-    // const fetchWines = () => {
-    //     setIsLoading(true);
-    //     axios.get(endpoint, { timeout: 20000 })
-    //         .then((response) => {
-    //             setWines(response.data);
-    //             setIsLoading(false);
-    //         })
-    //         .catch((error) => {
-    //             console.log(error);
-    //         });
-    // };
+        homeSearch, setHomeSearch } = useContext(GlobalContext);
 
     const handleHomeSearch = (e) => {
         setHomeSearch(e.target.value);
@@ -42,10 +21,6 @@ const Homepage = () => {
         if (!homeSearch) return;
         navigate("/search");
     }
-
-    // useEffect(() => {
-    //     fetchWines();
-    // }, []);
 
     return (
         <>
@@ -67,21 +42,6 @@ const Homepage = () => {
                             </button>
                         </div>
                     </form>
-
-                    {/* <input
-                        type="text"
-                        id='home-search'
-                        placeholder="Search by name, year or producer"
-                        className='form-control rounded-0 rounded-start'
-                        value={homeSearch}
-                        onChange={handleHomeSearch}
-                    />
-                    <button
-                        className='btn btn-outline-light rounded-0 rounded-end'
-                        onClick={handleHomeClick}
-                    >
-                        <i className='fa-solid fa-magnifying-glass'></i>
-                    </button> */}
                 </div>
             </div>
             <hr />
