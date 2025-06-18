@@ -9,7 +9,10 @@ const transporter = nodemailer.createTransport({
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_APP_PASSWORD
     },
-    debug: true // Enable debug logs
+    tls: {
+        rejectUnauthorized: false // Fixes the self-signed certificate error
+    },
+    debug: true
 });
 
 // Test configuration

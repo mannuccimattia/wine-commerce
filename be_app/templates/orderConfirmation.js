@@ -1,11 +1,18 @@
 const createEmailTemplate = (orderDetails) => {
-    const { cartItems, shippingCost, total, customerEmail } = orderDetails;
+    const { cartItems, shippingCost, total, customerEmail, customerDetails } = orderDetails;
 
     return `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
             <h2>Grazie per il tuo ordine!</h2>
-            <p>Gentile cliente,</p>
+            <p>Gentile ${customerDetails.firstName} ${customerDetails.lastName},</p>
             <p>Il tuo ordine è stato confermato ed è in fase di elaborazione.</p>
+            
+            <h3>Indirizzo di Spedizione:</h3>
+            <p style="margin-bottom: 20px;">
+                ${customerDetails.firstName} ${customerDetails.lastName}<br>
+                ${customerDetails.address}<br>
+                ${customerDetails.city}, ${customerDetails.zipCode}
+            </p>
             
             <h3>Riepilogo Ordine:</h3>
             <table style="width: 100%; border-collapse: collapse;">
