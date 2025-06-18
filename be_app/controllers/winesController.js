@@ -29,9 +29,17 @@ const index = (req, res) => {
 
   const sql = !req.query.search
     ? sqlAll
-    : sqlAll + "WHERE W.name LIKE '%" + req.query.search + "%'";
+    : sqlAll + `
+    WHERE W.name LIKE ?
+    OR W.vintage LIKE ?
+    OR WN.name LIKE ?
+    `;
 
-  connection.query(sql, (err, winesResult) => {
+  const queryParams = req.query.search
+    ? [`%${req.query.search}%`, `%${req.query.search}%`, `%${req.query.search}%`]
+    : [];
+
+  connection.query(sql, queryParams, (err, winesResult) => {
     if (err) return queryFailed(err, res);
     const wines = winesResult.map((wine) => {
       const win = {
@@ -78,6 +86,11 @@ const index = (req, res) => {
       return win;
     });
 
+    if (wines.length === 0) {
+      return res.status(404).json({
+        error: "No wines available for your criteria."
+      })
+    }
     res.json(wines);
   });
 };
