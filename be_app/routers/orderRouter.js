@@ -2,86 +2,20 @@ const express = require("express");
 const router = express.Router();
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const transporter = require('../config/emailConfig');
-
-// Post order
-router.post("", (req, res) => {
-  const cliente = req.body.cliente;
-  const carrello = req.body.carrello;
-  const shipping_price = req.body.shippingCost || 0;
-  const amount = req.body.subtotale || 0;
-  const user_id = req.body.user_id || 1;
-
-  const sql = `INSERT INTO orders (amount, user_id, shipping_price, first_name, last_name, email, address, city, zip_code, status, created_at)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())`;
-
-  connection.query(
-    sql,
-    [
-      amount,
-      user_id,
-      shipping_price,
-      cliente.firstName,
-      cliente.lastName,
-      cliente.email,
-      cliente.address,
-      cliente.city,
-      cliente.zip_code,
-      "pending",
-    ],
-    (err, result) => {
-      if (err) {
-        console.error("Errore inserimento ordine:", err);
-        return res
-          .status(500)
-          .json({ message: "Errore nel salvataggio dell'ordine" });
-      }
-
-      const orderId = result.insertId;
-      let inseriti = 0;
-
-      if (!carrello || carrello.length === 0) {
-        return res.status(200).json({
-          message: "Ordine ricevuto correttamente, nessun item da inserire",
-          ordineRicevuto: orderId,
-        });
-      }
-
-      carrello.forEach((item) => {
-        const wineId = item.id;
-        const quantity = item.qty;
-        const price = parseFloat(item.prezzo);
-
-        connection.query(
-          `INSERT INTO order_items (order_id, wine_id, quantity, price) VALUES (?, ?, ?, ?)`,
-          [orderId, wineId, quantity, price],
-          () => {
-            inseriti++;
-            if (inseriti === carrello.length) {
-              res.status(200).json({
-                message: "Ordine e item inseriti correttamente!",
-                ordineRicevuto: orderId,
-              });
-            }
-          }
-        );
-      });
-    }
-  );
-});
+const createEmailTemplate = require('../templates/orderConfirmation');
 
 // Create Stripe checkout session
 router.post("/create-checkout-session", async (req, res) => {
   try {
-    const { cartItems, shippingCost, customerEmail } = req.body;
-    console.log('Received order data:', { cartItems, shippingCost, customerEmail });
+    const { cartItems, shippingCost } = req.body;
 
     const lineItems = cartItems.map(item => ({
       price_data: {
         currency: 'eur',
         product_data: {
-          name: item.nome || 'Wine',
+          name: item.nome,
         },
-        unit_amount: Math.round(item.prezzo * 100), // Convert to cents
+        unit_amount: Math.round(item.prezzo * 100),
       },
       quantity: item.qty
     }));
@@ -91,7 +25,7 @@ router.post("/create-checkout-session", async (req, res) => {
         price_data: {
           currency: 'eur',
           product_data: {
-            name: 'Shipping',
+            name: 'Spedizione',
           },
           unit_amount: Math.round(shippingCost * 100),
         },
@@ -107,34 +41,42 @@ router.post("/create-checkout-session", async (req, res) => {
       cancel_url: `${process.env.FE_URL || 'http://localhost:5173'}/cart`,
     });
 
-    // Send confirmation email
-    console.log('Attempting to send email to:', customerEmail);
+    res.json({ url: session.url });
+  } catch (error) {
+    console.error('Errore Stripe:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Nuova rotta per l'invio dell'email di conferma
+router.post("/send-confirmation", async (req, res) => {
+  const { cartItems, shippingCost, customerEmail, customerDetails, orderID } = req.body;
+  console.log('Richiesta invio email ricevuta:', new Date().toISOString());
+
+  try {
+    if (!cartItems || !customerEmail || !customerDetails) {
+      return res.status(400).json({ error: 'Dati mancanti' });
+    }
 
     const emailContent = {
       from: process.env.EMAIL_USER,
       to: customerEmail,
-      subject: 'Conferma Ordine - Bool Wines',
-      html: `
-                <h2>Grazie per il tuo ordine!</h2>
-                <p>Abbiamo ricevuto il tuo ordine e lo stiamo elaborando.</p>
-                <h3>Dettagli Ordine:</h3>
-                <ul>
-                    ${cartItems.map(item => `
-                        <li>${item.nome} - Quantità: ${item.qty} - €${(item.prezzo * item.qty).toFixed(2)}</li>
-                    `).join('')}
-                </ul>
-                <p>Spese di spedizione: €${shippingCost.toFixed(2)}</p>
-                <p>Totale: €${(cartItems.reduce((acc, item) => acc + (item.prezzo * item.qty), 0) + shippingCost).toFixed(2)}</p>
-            `
+      subject: `Conferma Ordine #${orderID} - Bool Wines`,
+      html: createEmailTemplate({
+        cartItems,
+        shippingCost,
+        total: cartItems.reduce((acc, item) => acc + (item.prezzo * item.qty), 0) + shippingCost,
+        customerEmail,
+        customerDetails
+      })
     };
 
-    await transporter.sendMail(emailContent)
-      .then(() => console.log('Email sent successfully'))
-      .catch(err => console.error('Email sending failed:', err));
+    await transporter.sendMail(emailContent);
+    console.log('Email inviata con successo a:', customerEmail, 'OrderID:', orderID);
 
-    res.json({ url: session.url });
+    res.json({ message: 'Email inviata con successo' });
   } catch (error) {
-    console.error('Checkout error:', error);
+    console.error('Errore invio email:', error);
     res.status(500).json({ error: error.message });
   }
 });
