@@ -4,12 +4,14 @@ import { Container, Row, Col, Image } from "react-bootstrap";
 import axios from "axios";
 import GlobalContext from "../contexts/globalContext";
 import WineGlasses from "../components/WineGlasses";
+import { useNavigate } from "react-router-dom";
 
 const Winepage = () => {
   const { id } = useParams();
   const [wine, setWine] = useState(null);
   const { setIsLoading } = useContext(GlobalContext);
   const [alertMsg, setAlertMsg] = useState("");
+  const  navigate = useNavigate();
 
   useEffect(() => {
     const fetchWine = async () => {
@@ -69,6 +71,7 @@ const Winepage = () => {
   }
 
   return (
+    
     <Container className="py-5" id="winepage-container">
       <Row className="gx-4">
         <Col lg={6}>
@@ -177,12 +180,16 @@ const Winepage = () => {
                     <p className="display-4 mb-0">€ {wine.price}</p>
                   </div>
                   {wine.stock > 0 ? (
+                    <>
+                    
                     <button
                       className="btn btn-outline-light btn-lg"
                       onClick={() => aggiungiAlCarrello(wine)}
                     >
                       Aggiungi al carrello
                     </button>
+                    
+                    </>
                   ) : (
                     <button className="btn btn-outline-danger btn-lg" disabled>
                       Non disponibile
@@ -190,7 +197,14 @@ const Winepage = () => {
                   )}
                 </div>
               </div>
-            </div>
+               <div className="d-flex justify-content-end">
+                  <button className="btn btn-outline-light btn-lg" 
+                  onClick={() => navigate("/")}>
+                  Indietro
+                </button>
+              </div>
+
+              </div>
           </div>
         </Col>
       </Row>
