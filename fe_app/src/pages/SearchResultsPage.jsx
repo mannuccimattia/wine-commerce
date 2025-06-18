@@ -9,7 +9,7 @@ const SearchResultsPage = () => {
   const { searchState, setSearchState } = useContext(SearchContext);
   const { searchTerm, categoryFilter, sortBy, wines } = searchState;
 
-  const { homeSearch } = useContext(GlobalContext);
+  const { homeSearch, setHomeSearch } = useContext(GlobalContext);
 
   useEffect(() => {
     console.log(homeSearch)
@@ -28,6 +28,11 @@ const SearchResultsPage = () => {
     if (wines.length === 0) {
       fetchWines();
     }
+
+    // Cleanup function to reset search state when component unmounts
+    return () => {
+      setHomeSearch("");
+    };
   }, []);
 
   const handleSearchChange = (e) => {

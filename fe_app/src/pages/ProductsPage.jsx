@@ -3,20 +3,16 @@ import { Container, Row, Col, Form } from "react-bootstrap";
 import axios from "axios";
 import WineCard from "../components/WineCard";
 import { SearchContext } from '../contexts/SearchContext';
-import GlobalContext from "../contexts/globalContext";
 
 const ProductsPage = () => {
     const { searchState, setSearchState } = useContext(SearchContext);
     const { searchTerm, categoryFilter, sortBy, wines } = searchState;
 
-    const { homeSearch } = useContext(GlobalContext);
 
     useEffect(() => {
 
         const fetchWines = async () => {
-            const endpoint = !homeSearch
-                ? "http://localhost:3000/api/wines"
-                : `http://localhost:3000/api/wines?search=${homeSearch}`;
+            const endpoint = "http://localhost:3000/api/wines"
             try {
                 const response = await axios.get(endpoint);
                 setSearchState(prev => ({ ...prev, wines: response.data }));
@@ -25,8 +21,18 @@ const ProductsPage = () => {
             }
         };
 
-        if (wines.length === 0) {
+        setTimeout(() => {
             fetchWines();
+        }, 500);
+
+        return () => {
+            setSearchState(prev => ({
+                ...prev,
+                searchTerm: "",
+                categoryFilter: "",
+                sortBy: "",
+                wines: []
+            }));
         }
     }, []);
 
@@ -97,14 +103,17 @@ const ProductsPage = () => {
                     </Form.Select>
                 </div>
             </Row>
-
-            <Row className="g-4">
-                {sortedWines.map((wine) => (
-                    <Col key={wine.id} xs={12} sm={6} md={4} lg={3}>
-                        <WineCard wine={wine} />
-                    </Col>
-                ))}
-            </Row>
+            {wines.length === 0 ? (
+                <div className="textcenter">Loading</div>
+            ) : (
+                <Row className="g-4">
+                    {sortedWines.map((wine) => (
+                        <Col key={wine.id} xs={12} sm={6} md={4} lg={3}>
+                            <WineCard wine={wine} />
+                        </Col>
+                    ))}
+                </Row>
+            )}
         </Container>
     );
 };

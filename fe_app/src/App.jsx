@@ -32,9 +32,8 @@ function App() {
           <Route element={<DefaultLayout />}>
             <Route index element={<Homepage />}></Route>
             <Route path="/wine/:id" element={<Winepage />}></Route>
-            <Route path="/products" element={<ProductsPage />}>
-              <Route path="search" element={<SearchResultsPage />} />
-            </Route>
+            <Route path="/products" element={<ProductsPage />} />
+            <Route path="/search" element={<SearchResultsPage />} />
             <Route path="/categoria/:id" element={<CategoryPage />} />
             <Route path="/checkout" element={<CheckoutPage />} />
             <Route path="/cart" element={<CartPage />} />
