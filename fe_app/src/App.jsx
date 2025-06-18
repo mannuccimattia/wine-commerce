@@ -15,13 +15,16 @@ import { useState } from "react";
 function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [toDisable, setToDisable] = useState(false);
+  const [homeSearch, setHomeSearch] = useState("");
 
   return (
     <GlobalContext.Provider value={{
       isLoading,
       setIsLoading,
       toDisable,
-      setToDisable
+      setToDisable,
+      homeSearch,
+      setHomeSearch
     }}>
       <BrowserRouter>
         <Routes>

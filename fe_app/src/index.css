@@ -339,3 +339,16 @@ footer img {
 #winepage-container {
     max-width: 988px;
 }
+
+#homeSearch {
+    max-width: 740px;
+    margin: 0 auto;
+}
+
+.form-control:focus {
+    box-shadow: none;
+    border-color: inherit;
+    /* Optional - keeps the border color unchanged */
+    /* outline: none; */
+    /* Removes browser default outline (not recommended for accessibility) */
+}

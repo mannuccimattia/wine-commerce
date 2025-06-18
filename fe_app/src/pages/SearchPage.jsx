@@ -3,15 +3,22 @@ import { Container, Row, Col, Form } from "react-bootstrap";
 import axios from "axios";
 import WineCard from "../components/WineCard";
 import { SearchContext } from '../contexts/SearchContext';
+import GlobalContext from "../contexts/globalContext";
 
 const SearchPage = () => {
     const { searchState, setSearchState } = useContext(SearchContext);
     const { searchTerm, categoryFilter, sortBy, wines } = searchState;
 
+    const { homeSearch } = useContext(GlobalContext);
+
     useEffect(() => {
+
         const fetchWines = async () => {
+            const endpoint = !homeSearch
+                ? "http://localhost:3000/api/wines"
+                : `http://localhost:3000/api/wines?search=${homeSearch}`;
             try {
-                const response = await axios.get('http://localhost:3000/api/wines');
+                const response = await axios.get(endpoint);
                 setSearchState(prev => ({ ...prev, wines: response.data }));
             } catch (error) {
                 console.error('Error:', error);

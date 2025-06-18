@@ -29,7 +29,7 @@ const index = (req, res) => {
 
   const sql = !req.query.search
     ? sqlAll
-    : sqlAll + "WHERE name LIKE '%" + req.query.search + "%'";
+    : sqlAll + "WHERE W.name LIKE '%" + req.query.search + "%'";
 
   connection.query(sql, (err, winesResult) => {
     if (err) return queryFailed(err, res);
