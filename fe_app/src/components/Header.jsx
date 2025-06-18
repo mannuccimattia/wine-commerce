@@ -88,7 +88,7 @@ const Header = () => {
                                 type="text"
                                 className="form-control text-white rounded-0 rounded-start"
                                 data-bs-theme="dark"
-                                placeholder="Search by Name"
+                                placeholder="Search by name, year or producer"
                                 value={homeSearch}
                                 onChange={handleHomeSearch}
                             />
