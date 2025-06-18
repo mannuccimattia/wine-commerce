@@ -12,7 +12,9 @@ const DefaultLayout = () => {
     return (
         <SearchProvider>
             <div className="site-wrapper d-flex flex-column min-vh-100">
-                <Header />
+                <header className='pb-4 border-bottom border-secondary'>
+                    <Header />
+                </header>
                 <main className="flex-grow-1">
                     <Outlet />
                     <Chatbot />

@@ -3,6 +3,7 @@ import { Container, Row, Col, Form } from "react-bootstrap";
 import axios from "axios";
 import WineCard from "../components/WineCard";
 import { SearchContext } from '../contexts/SearchContext';
+import Loader from "../components/Loader";
 
 const ProductsPage = () => {
     const { searchState, setSearchState } = useContext(SearchContext);
@@ -23,7 +24,7 @@ const ProductsPage = () => {
 
         setTimeout(() => {
             fetchWines();
-        }, 500);
+        }, 1000);
 
         return () => {
             setSearchState(prev => ({
@@ -104,7 +105,7 @@ const ProductsPage = () => {
                 </div>
             </Row>
             {wines.length === 0 ? (
-                <div className="textcenter">Loading</div>
+                <Loader />
             ) : (
                 <Row className="g-4">
                     {sortedWines.map((wine) => (

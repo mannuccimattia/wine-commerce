@@ -7,44 +7,9 @@ import HeroCarousel from '../components/HeroCarousel';
 import BestSellers from '../components/BestSellers';
 
 const Homepage = () => {
-    const navigate = useNavigate();
-
-    const {
-        homeSearch, setHomeSearch } = useContext(GlobalContext);
-
-    const handleHomeSearch = (e) => {
-        setHomeSearch(e.target.value);
-    }
-
-    const handleHomeSearchSubmit = (e) => {
-        e.preventDefault();
-        if (!homeSearch) return;
-        navigate("/search");
-    }
 
     return (
         <>
-            <div className="row">
-                <div className="col-12">
-
-                    <form id="homeSearch" onSubmit={handleHomeSearchSubmit}>
-                        <div className="form-group d-flex">
-                            <input
-                                type="text"
-                                className="form-control text-white rounded-0 rounded-start"
-                                data-bs-theme="dark"
-                                placeholder="Search by Name"
-                                value={homeSearch}
-                                onChange={handleHomeSearch}
-                            />
-                            <button className="btn btn-outline-light rounded-0 rounded-end" type="submit">
-                                <i className='fa-solid fa-magnifying-glass'></i>
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-            <hr />
             <HeroCarousel />
             <div className="homepage-background">
                 <CategoriesCard />

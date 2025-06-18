@@ -4,6 +4,7 @@ import { SearchContext } from '../contexts/SearchContext';
 import axios from "axios";
 import WineCard from "../components/WineCard";
 import GlobalContext from "../contexts/globalContext";
+import Loader from "../components/Loader";
 
 const SearchResultsPage = () => {
   const { searchState, setSearchState } = useContext(SearchContext);
@@ -14,7 +15,7 @@ const SearchResultsPage = () => {
   useEffect(() => {
     console.log(homeSearch)
     const fetchWines = async () => {
-      const endpoint = !homeSearch
+      const endpoint = !homeSearch.trim()
         ? "http://localhost:3000/api/wines"
         : `http://localhost:3000/api/wines?search=${homeSearch}`;
       try {
@@ -25,9 +26,9 @@ const SearchResultsPage = () => {
       }
     };
 
-    if (wines.length === 0) {
+    setTimeout(() => {
       fetchWines();
-    }
+    }, 1000);
 
     // Cleanup function to reset search state when component unmounts
     return () => {
@@ -103,13 +104,17 @@ const SearchResultsPage = () => {
         </div>
       </Row>
 
-      <Row className="g-4">
-        {sortedWines.map((wine) => (
-          <Col key={wine.id} xs={12} sm={6} md={4} lg={3}>
-            <WineCard wine={wine} />
-          </Col>
-        ))}
-      </Row>
+      {sortedWines.length === 0 ? (
+        <Loader />
+      ) : (
+        <Row className="g-4">
+          {sortedWines.map((wine) => (
+            <Col key={wine.id} xs={12} sm={6} md={4} lg={3}>
+              <WineCard wine={wine} />
+            </Col>
+          ))}
+        </Row>
+      )}
     </Container>
   );
 };
