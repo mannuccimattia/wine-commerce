@@ -12,7 +12,7 @@ const Winepage = () => {
   const { setIsLoading } = useContext(GlobalContext);
   const [alertMsg, setAlertMsg] = useState("");
   const  navigate = useNavigate();
-
+  const [mainImage, setMainImage] = useState(null);
   useEffect(() => {
     const fetchWine = async () => {
       setIsLoading(true);
@@ -20,15 +20,14 @@ const Winepage = () => {
         const response = await axios.get(
           `http://localhost:3000/api/wines/${id}`
         );
-
         setWine(response.data);
+        setMainImage(response.data.image_front_url); // Mostra frontale all'inizio
       } catch (error) {
         console.error("Error:", error);
       } finally {
         setIsLoading(false);
       }
     };
-
     fetchWine();
   }, [id]);
 
@@ -69,27 +68,32 @@ const Winepage = () => {
   if (!wine) {
     return <div className="text-white text-center">Loading...</div>;
   }
-
   return (
-    
     <Container className="py-5" id="winepage-container">
       <Row className="gx-4">
         <Col lg={6}>
           <div className="position-sticky" style={{ top: "2rem" }}>
             <Image
-              src={wine.image_front_url}
+              src={mainImage}
               alt={wine.name}
               fluid
               className="rounded shadow-lg mb-3"
               style={{ maxHeight: "600px", width: "100%", objectFit: "cover" }}
             />
-            <Image
-              src={wine.image_back_url}
-              alt={`${wine.name} retro`}
-              fluid
-              className="rounded shadow-lg"
-              style={{ maxHeight: "600px", width: "100%", objectFit: "cover" }}
-            />
+            <div style={{ display: 'flex', gap: '12px', marginTop: '10px' }}>
+              <Image
+                src={wine.image_front_url}
+                alt="front preview"
+                style={{ width: '70px', height: '70px', objectFit: 'cover', border: mainImage === wine.image_front_url ? '2px solid #B1A44B' : '2px solid #fff', borderRadius: '6px', cursor: 'pointer' }}
+                onClick={() => setMainImage(wine.image_front_url)}
+              />
+              <Image
+                src={wine.image_back_url}
+                alt="back preview"
+                style={{ width: '70px', height: '70px', objectFit: 'cover', border: mainImage === wine.image_back_url ? '2px solid #B1A44B' : '2px solid #fff', borderRadius: '6px', cursor: 'pointer' }}
+                onClick={() => setMainImage(wine.image_back_url)}
+              />
+            </div>
           </div>
         </Col>
         <Col lg={6}>
@@ -158,7 +162,7 @@ const Winepage = () => {
               {alertMsg && (
                 <div style={{
                   position: 'absolute',
-                  top: '150px', // regola questa distanza per posizionare l'alert sopra il bordo
+                  top: '200px', // regola questa distanza per posizionare l'alert sopra il bordo
                   right: '0',
                   background: '#B1A44B',
                   color: '#ffffff',
