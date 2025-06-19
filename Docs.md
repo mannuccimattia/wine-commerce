@@ -6,8 +6,11 @@
 
 > **Index All** - GET - `http://127.0.0.1:3000/api/wines`
 
-> **Index w/ Search** - GET - `http://127.0.0.1:3000/api/wines?search=search_param_here`  
-> Parametri: name, vintage, winemaker
+> **Index w/ Search** - GET - `http://127.0.0.1:3000/api/wines?search=search_param_here&sort=asc`  
+> Parametri:
+
+- Search: name, vintage, winemaker
+- Sort: ASC/DESC
 
 > **Index w/ Category** - GET - `http://127.0.0.1:3000/api/wines/category/category_id_here`
 

@@ -167,7 +167,7 @@ const CartPage = () => {
                   <Col xs={12} md={1} className="text-end">
                     <Button
                       variant="link"
-                      className="text-danger p-0"
+                      className="text-white p-2"
                       onClick={() => removeItem(item.id)}
                     >
                       <i className="fas fa-trash"></i>
