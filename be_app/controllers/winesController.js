@@ -6,7 +6,6 @@ const queryFailed = require("../functions/queryFailed");
 
 // index
 const index = (req, res) => {
-
   const sqlAll = `
       SELECT
       W.*,
@@ -25,18 +24,23 @@ const index = (req, res) => {
     LEFT JOIN winemakers WN ON W.winemaker = WN.id
     LEFT JOIN label_conditions LC ON W.label_condition = LC.id
     LEFT JOIN bottle_conditions BC ON W.bottle_condition = BC.id
-  `
+  `;
 
   const sql = !req.query.search
     ? sqlAll
-    : sqlAll + `
+    : sqlAll +
+      `
     WHERE W.name LIKE ?
     OR W.vintage LIKE ?
     OR WN.name LIKE ?
     `;
 
   const queryParams = req.query.search
-    ? [`%${req.query.search}%`, `%${req.query.search}%`, `%${req.query.search}%`]
+    ? [
+        `%${req.query.search}%`,
+        `%${req.query.search}%`,
+        `%${req.query.search}%`,
+      ]
     : [];
 
   connection.query(sql, queryParams, (err, winesResult) => {
@@ -88,8 +92,8 @@ const index = (req, res) => {
 
     if (wines.length === 0) {
       return res.status(404).json({
-        error: "No wines available for your criteria."
-      })
+        error: "No wines available for your criteria.",
+      });
     }
     res.json(wines);
   });
@@ -174,7 +178,6 @@ const show = (req, res) => {
 
 // get best sellers
 const getBestSellers = (req, res) => {
-  console.log("BESTSELLER");
   const bestSellersSql = `
     SELECT 
       W.*,
