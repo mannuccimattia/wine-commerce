@@ -16,7 +16,7 @@ const SearchResultsPage = () => {
     console.log(homeSearch)
     const fetchWines = async () => {
       const endpoint = !homeSearch.trim()
-        ? "http://localhost:3000/api/wines"
+        ? null
         : `http://localhost:3000/api/wines?search=${homeSearch}`;
       try {
         const response = await axios.get(endpoint);
@@ -35,6 +35,21 @@ const SearchResultsPage = () => {
       setHomeSearch("");
     };
   }, []);
+
+  useEffect(() => {
+    const fetchWines = async () => {
+      if (!searchParam) return;
+
+      try {
+        const response = await axios.get(`http://localhost:3000/api/wines?search=${searchParam}`);
+        setSearchState(prev => ({ ...prev, wines: response.data }));
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    };
+
+    fetchWines();
+  }, [searchParam]);
 
   const handleSearchChange = (e) => {
     setSearchState(prev => ({ ...prev, searchTerm: e.target.value }));
