@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Card, Row, Col, Spinner } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
+import { Row, Col, Spinner } from "react-bootstrap";
+import WineCard from "./WineCard";
 
 const Bestseller = () => {
   const [bestsellerWines, setBestsellerWines] = useState([]);
   const [loading, setLoading] = useState(true);
-  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchBestsellerWines = async () => {
@@ -36,26 +35,8 @@ const Bestseller = () => {
       ) : (
         <Row>
           {bestsellerWines.map((wine) => (
-            <Col key={wine.id} md={3} className="mb-4">
-              <Card
-                className="h-100 shadow-sm hover-effect"
-                onClick={() => navigate(`/wine/${wine.id}`)}
-                style={{ cursor: "pointer" }}
-              >
-                <Card.Img
-                  variant="top"
-                  src={wine.image_front_url}
-                  alt={wine.name}
-                  style={{
-                    height: "200px",
-                    objectFit: "cover",
-                  }}
-                />
-                <Card.Body className="d-flex flex-column">
-                  <Card.Title className="text-center">{wine.name}</Card.Title>
-                  <Card.Text className="text-center">€{wine.price}</Card.Text>
-                </Card.Body>
-              </Card>
+            <Col key={`bs-${wine.id}`} md={3} className="mb-4">
+              <WineCard wine={wine} />
             </Col>
           ))}
         </Row>
