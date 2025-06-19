@@ -34,7 +34,8 @@ const Header = () => {
     const handleHomeSearchSubmit = (e) => {
         e.preventDefault();
         if (!homeSearch.trim()) return;
-        navigate("/search");
+        navigate(`/search?search=${encodeURIComponent(homeSearch)}`);
+        setHomeSearch(''); // Clear the input after search
     }
 
     useEffect(() => {
@@ -79,25 +80,22 @@ const Header = () => {
                 </div>
             </nav>
 
-            <div className="row">
-                <div className="col-12">
-
-                    <form id="homeSearch" onSubmit={handleHomeSearchSubmit}>
-                        <div className="form-group d-flex">
-                            <input
-                                type="text"
-                                className="form-control text-white rounded-0 rounded-start"
-                                data-bs-theme="dark"
-                                placeholder="Search by name, year or producer"
-                                value={homeSearch}
-                                onChange={handleHomeSearch}
-                            />
-                            <button className="btn btn-outline-light rounded-0 rounded-end" type="submit">
-                                <i className='fa-solid fa-magnifying-glass'></i>
-                            </button>
-                        </div>
-                    </form>
-                </div>
+            <div className="col-12">
+                <form id="homeSearch" onSubmit={handleHomeSearchSubmit}>
+                    <div className="form-group d-flex">
+                        <input
+                            type="text"
+                            className="form-control text-white rounded-0 rounded-start"
+                            data-bs-theme="dark"
+                            placeholder="Search by name, year or producer"
+                            value={homeSearch}
+                            onChange={handleHomeSearch}
+                        />
+                        <button className="btn btn-outline-light rounded-0 rounded-end" type="submit">
+                            <i className='fa-solid fa-magnifying-glass'></i>
+                        </button>
+                    </div>
+                </form>
             </div>
         </>
     );

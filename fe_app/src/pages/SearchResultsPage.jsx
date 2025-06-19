@@ -5,35 +5,39 @@ import axios from "axios";
 import WineCard from "../components/WineCard";
 import GlobalContext from "../contexts/globalContext";
 import Loader from "../components/Loader";
+import { useSearchParams } from 'react-router-dom';
 
 const SearchResultsPage = () => {
   const { searchState, setSearchState } = useContext(SearchContext);
   const { searchTerm, categoryFilter, sortBy, wines } = searchState;
-
-  const { homeSearch, setHomeSearch } = useContext(GlobalContext);
+  const [searchParams] = useSearchParams();
+  const searchParamValue = searchParams.get('search');
 
   useEffect(() => {
-    console.log(homeSearch)
     const fetchWines = async () => {
-      const endpoint = !homeSearch.trim()
-        ? "http://localhost:3000/api/wines"
-        : `http://localhost:3000/api/wines?search=${homeSearch}`;
+      if (!searchParamValue?.trim()) return;
+
       try {
-        const response = await axios.get(endpoint);
+        const response = await axios.get(`http://localhost:3000/api/wines?search=${searchParamValue}`);
         setSearchState(prev => ({ ...prev, wines: response.data }));
       } catch (error) {
         console.error('Error:', error);
       }
     };
 
-    setTimeout(() => {
-      fetchWines();
-    }, 1000);
+    fetchWines();
+  }, [searchParamValue]);
 
-    // Cleanup function to reset search state when component unmounts
-    return () => {
-      setHomeSearch("");
-    };
+  useEffect(() => {
+    return (() => {
+      setSearchState(prev => ({
+        ...prev,
+        searchTerm: "",
+        categoryFilter: "",
+        sortBy: "",
+        wines: []
+      }));
+    })
   }, []);
 
   const handleSearchChange = (e) => {

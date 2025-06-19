@@ -1,12 +1,11 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import { Card, Row, Col, Spinner } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { Row, Col, Spinner } from "react-bootstrap";
+import WineCard from "./WineCard";
 
 const WineCardAll = () => {
   const [topWines, setTopWines] = useState([]);
   const [loading, setLoading] = useState(true);
-  const navigate = useNavigate();
 
   const CATEGORIES = {
     Rosso: 1,
@@ -18,7 +17,9 @@ const WineCardAll = () => {
   useEffect(() => {
     const fetchTopWineByCategory = async (categoryName, categoryId) => {
       try {
-        const res = await axios.get(`http://localhost:3000/api/wines/category/${categoryId}`);
+        const res = await axios.get(
+          `http://localhost:3000/api/wines/category/${categoryId}`
+        );
         const wines = res.data;
 
         wines.sort((a, b) => b.price - a.price);
@@ -43,7 +44,7 @@ const WineCardAll = () => {
       ];
 
       const results = await Promise.all(categories);
-      const filtered = results.filter(w => w !== null);
+      const filtered = results.filter((w) => w !== null);
       setTopWines(filtered);
       setLoading(false);
     };
@@ -63,27 +64,7 @@ const WineCardAll = () => {
         <Row>
           {topWines.map((wine) => (
             <Col key={wine.id} md={3} className="mb-4">
-              <Card
-                className="h-100 shadow-sm hover-effect"
-                onClick={() => navigate(`/wine/${wine.id}`)}
-                style={{ cursor: 'pointer' }}
-              >
-                <Card.Img
-                  variant="top"
-                  src={wine.image_front_url}
-                  alt={wine.name}
-                  style={{
-                    height: '200px',
-                    objectFit: 'cover'
-                  }}
-                />
-                <Card.Body className="d-flex flex-column">
-                  <Card.Title className="text-center">{wine.name}</Card.Title>
-                  <Card.Text className="text-center">
-                    {wine.category_name} – €{wine.price}
-                  </Card.Text>
-                </Card.Body>
-              </Card>
+              <WineCard wine={wine} />
             </Col>
           ))}
         </Row>

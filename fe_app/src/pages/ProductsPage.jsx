@@ -24,7 +24,7 @@ const ProductsPage = () => {
 
         setTimeout(() => {
             fetchWines();
-        }, 1000);
+        }, 500);
 
         return () => {
             setSearchState(prev => ({

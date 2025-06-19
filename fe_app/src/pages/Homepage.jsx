@@ -14,7 +14,7 @@ const Homepage = () => {
             <HeroCarousel />
             <div className="homepage-background">
                 <CategoriesCard />
-                <WineCardAll/>
+                <WineCardAll />
                 <BestSellers />
             </div>
         </>

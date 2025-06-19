@@ -18,6 +18,10 @@ function App() {
   const [toDisable, setToDisable] = useState(false);
   const [homeSearch, setHomeSearch] = useState("");
 
+  const resetSearchField = () => {
+    setHomeSearch("");
+  };
+
   return (
     <GlobalContext.Provider value={{
       isLoading,
@@ -25,7 +29,8 @@ function App() {
       toDisable,
       setToDisable,
       homeSearch,
-      setHomeSearch
+      setHomeSearch,
+      resetSearchField
     }}>
       <BrowserRouter>
         <Routes>
@@ -33,7 +38,7 @@ function App() {
             <Route index element={<Homepage />}></Route>
             <Route path="/wine/:id" element={<Winepage />}></Route>
             <Route path="/products" element={<ProductsPage />} />
-            <Route path="/search" element={<SearchResultsPage />} />
+            <Route path={`/search`} element={<SearchResultsPage />} />
             <Route path="/categoria/:id" element={<CategoryPage />} />
             <Route path="/checkout" element={<CheckoutPage />} />
             <Route path="/cart" element={<CartPage />} />
