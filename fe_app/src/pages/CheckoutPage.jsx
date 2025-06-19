@@ -63,6 +63,10 @@ const CheckoutPage = () => {
       .post("http://localhost:3000/api/order", orderDetail)
       .then((response) => {
         console.log("Risposta dal server:", response.data);
+        //Svuoto carrello
+        localStorage.removeItem("carrello");
+        localStorage.removeItem("subtotale");
+        console.log("Carrello svuotato");
         // Redirect alla pagina di successo
         navigate("/success");
       })
