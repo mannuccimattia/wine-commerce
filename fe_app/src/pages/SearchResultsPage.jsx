@@ -5,43 +5,20 @@ import axios from "axios";
 import WineCard from "../components/WineCard";
 import GlobalContext from "../contexts/globalContext";
 import Loader from "../components/Loader";
+import { useSearchParams } from 'react-router-dom';
 
 const SearchResultsPage = () => {
   const { searchState, setSearchState } = useContext(SearchContext);
   const { searchTerm, categoryFilter, sortBy, wines } = searchState;
-
-  const { homeSearch, setHomeSearch } = useContext(GlobalContext);
-
-  useEffect(() => {
-    console.log(homeSearch)
-    const fetchWines = async () => {
-      const endpoint = !homeSearch.trim()
-        ? null
-        : `http://localhost:3000/api/wines?search=${homeSearch}`;
-      try {
-        const response = await axios.get(endpoint);
-        setSearchState(prev => ({ ...prev, wines: response.data }));
-      } catch (error) {
-        console.error('Error:', error);
-      }
-    };
-
-    setTimeout(() => {
-      fetchWines();
-    }, 1000);
-
-    // Cleanup function to reset search state when component unmounts
-    return () => {
-      setHomeSearch("");
-    };
-  }, []);
+  const [searchParams] = useSearchParams();
+  const searchParamValue = searchParams.get('search');
 
   useEffect(() => {
     const fetchWines = async () => {
-      if (!searchParam) return;
+      if (!searchParamValue?.trim()) return;
 
       try {
-        const response = await axios.get(`http://localhost:3000/api/wines?search=${searchParam}`);
+        const response = await axios.get(`http://localhost:3000/api/wines?search=${searchParamValue}`);
         setSearchState(prev => ({ ...prev, wines: response.data }));
       } catch (error) {
         console.error('Error:', error);
@@ -49,7 +26,19 @@ const SearchResultsPage = () => {
     };
 
     fetchWines();
-  }, [searchParam]);
+  }, [searchParamValue]);
+
+  useEffect(() => {
+    return (() => {
+      setSearchState(prev => ({
+        ...prev,
+        searchTerm: "",
+        categoryFilter: "",
+        sortBy: "",
+        wines: []
+      }));
+    })
+  }, []);
 
   const handleSearchChange = (e) => {
     setSearchState(prev => ({ ...prev, searchTerm: e.target.value }));

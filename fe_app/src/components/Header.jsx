@@ -34,8 +34,8 @@ const Header = () => {
     const handleHomeSearchSubmit = (e) => {
         e.preventDefault();
         if (!homeSearch.trim()) return;
-        // navigate("/search", { state: { search: homeSearch } });
-        navigate(`/search?search=${encodeURIComponent(homeSearch)}`)
+        navigate(`/search?search=${encodeURIComponent(homeSearch)}`);
+        setHomeSearch(''); // Clear the input after search
     }
 
     useEffect(() => {
