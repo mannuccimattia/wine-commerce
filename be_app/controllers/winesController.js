@@ -25,14 +25,17 @@ const index = (req, res) => {
     LEFT JOIN label_conditions LC ON W.label_condition = LC.id
     LEFT JOIN bottle_conditions BC ON W.bottle_condition = BC.id
   `;
+  const sortOrder =
+    req.query.sort && req.query.sort.toLowerCase() === "desc" ? "DESC" : "ASC";
 
   const sql = !req.query.search
-    ? sqlAll
+    ? sqlAll + ` ORDER BY W.price ASC`
     : sqlAll +
       `
     WHERE W.name LIKE ?
     OR W.vintage LIKE ?
     OR WN.name LIKE ?
+        ORDER BY W.price ${sortOrder}
     `;
 
   const queryParams = req.query.search
@@ -273,6 +276,7 @@ const getWineFromCategory = (req, res) => {
     LEFT JOIN label_conditions LC ON W.label_condition = LC.id
     LEFT JOIN bottle_conditions BC ON W.bottle_condition = BC.id
     WHERE C.id = ?
+    ORDER BY W.price ASC
   `;
 
   connection.query(sql, [categoryID], (err, winesResult) => {

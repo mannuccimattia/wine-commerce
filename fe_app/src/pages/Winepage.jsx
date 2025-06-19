@@ -11,7 +11,7 @@ const Winepage = () => {
   const [wine, setWine] = useState(null);
   const { setIsLoading } = useContext(GlobalContext);
   const [alertMsg, setAlertMsg] = useState("");
-  const  navigate = useNavigate();
+  const navigate = useNavigate();
   const [mainImage, setMainImage] = useState(null);
   useEffect(() => {
     const fetchWine = async () => {
@@ -52,7 +52,7 @@ const Winepage = () => {
     }
 
     // Nascondi l'alert dopo 3 secondi
-    setTimeout(() => setAlertMsg("") , 3000);
+    setTimeout(() => setAlertMsg(""), 3000);
 
     const subtotale = carrello.reduce((acc, item) => {
       return acc + item.qty * (item.prezzo || 0);
@@ -80,17 +80,37 @@ const Winepage = () => {
               className="rounded shadow-lg mb-3"
               style={{ maxHeight: "600px", width: "100%", objectFit: "cover" }}
             />
-            <div style={{ display: 'flex', gap: '12px', marginTop: '10px' }}>
+            <div style={{ display: "flex", gap: "12px", marginTop: "10px" }}>
               <Image
                 src={wine.image_front_url}
                 alt="front preview"
-                style={{ width: '70px', height: '70px', objectFit: 'cover', border: mainImage === wine.image_front_url ? '2px solid #B1A44B' : '2px solid #fff', borderRadius: '6px', cursor: 'pointer' }}
+                style={{
+                  width: "70px",
+                  height: "70px",
+                  objectFit: "cover",
+                  border:
+                    mainImage === wine.image_front_url
+                      ? "2px solid #B1A44B"
+                      : "2px solid #fff",
+                  borderRadius: "6px",
+                  cursor: "pointer",
+                }}
                 onClick={() => setMainImage(wine.image_front_url)}
               />
               <Image
                 src={wine.image_back_url}
                 alt="back preview"
-                style={{ width: '70px', height: '70px', objectFit: 'cover', border: mainImage === wine.image_back_url ? '2px solid #B1A44B' : '2px solid #fff', borderRadius: '6px', cursor: 'pointer' }}
+                style={{
+                  width: "70px",
+                  height: "70px",
+                  objectFit: "cover",
+                  border:
+                    mainImage === wine.image_back_url
+                      ? "2px solid #B1A44B"
+                      : "2px solid #fff",
+                  borderRadius: "6px",
+                  cursor: "pointer",
+                }}
                 onClick={() => setMainImage(wine.image_back_url)}
               />
             </div>
@@ -104,7 +124,9 @@ const Winepage = () => {
             <div className="my-5">
               <WineGlasses rating={wine.label_condition?.rating} />
               <div className="my-5">
-                <span className="fw-bold" id="price-tag">€ {wine.price}</span>
+                <span className="fw-bold" id="price-tag">
+                  € {wine.price}
+                </span>
               </div>
               {wine.stock > 0 && (
                 <small className="text-white-50">
@@ -157,23 +179,28 @@ const Winepage = () => {
             <div className="mb-4">
               <p className="fs-5">{wine.description}</p>
             </div>
-            <div className="border-top border-white-50 pt-4 mt-4" style={{position: 'relative'}}>
+            <div
+              className="border-top border-white-50 pt-4 mt-4"
+              style={{ position: "relative" }}
+            >
               {/* Alert assoluto sopra il bordo */}
               {alertMsg && (
-                <div style={{
-                  position: 'absolute',
-                  top: '200px', // regola questa distanza per posizionare l'alert sopra il bordo
-                  right: '0',
-                  background: '#B1A44B',
-                  color: '#ffffff',
-                  border: '1px solid #ffffff',
-                  borderRadius: '8px',
-                  padding: '8px 16px',
-                  fontSize: '0.95rem',
-                  boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
-                  maxWidth: '300px',
-                  zIndex: 10
-                }}>
+                <div
+                  style={{
+                    position: "absolute",
+                    top: "200px", // regola questa distanza per posizionare l'alert sopra il bordo
+                    right: "0",
+                    background: "#B1A44B",
+                    color: "#ffffff",
+                    border: "1px solid #ffffff",
+                    borderRadius: "8px",
+                    padding: "8px 16px",
+                    fontSize: "0.95rem",
+                    boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
+                    maxWidth: "300px",
+                    zIndex: 10,
+                  }}
+                >
                   {alertMsg}
                 </div>
               )}
@@ -185,14 +212,12 @@ const Winepage = () => {
                   </div>
                   {wine.stock > 0 ? (
                     <>
-                    
-                    <button
-                      className="btn btn-outline-light btn-lg"
-                      onClick={() => aggiungiAlCarrello(wine)}
-                    >
-                      Aggiungi al carrello
-                    </button>
-                    
+                      <button
+                        className="btn btn-outline-light btn-lg"
+                        onClick={() => aggiungiAlCarrello(wine)}
+                      >
+                        Aggiungi al carrello
+                      </button>
                     </>
                   ) : (
                     <button className="btn btn-outline-danger btn-lg" disabled>
@@ -201,14 +226,7 @@ const Winepage = () => {
                   )}
                 </div>
               </div>
-               <div className="d-flex justify-content-end">
-                  <button className="btn btn-outline-light btn-lg" 
-                  onClick={() => navigate("/")}>
-                  Indietro
-                </button>
-              </div>
-
-              </div>
+            </div>
           </div>
         </Col>
       </Row>
