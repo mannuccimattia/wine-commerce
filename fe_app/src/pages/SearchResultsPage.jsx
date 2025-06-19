@@ -1,27 +1,30 @@
 import { useEffect, useContext } from "react";
 import { Container, Row, Col, Form } from "react-bootstrap";
-import { SearchContext } from '../contexts/SearchContext';
+import { SearchContext } from "../contexts/SearchContext";
 import axios from "axios";
 import WineCard from "../components/WineCard";
 import GlobalContext from "../contexts/globalContext";
 import Loader from "../components/Loader";
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams } from "react-router-dom";
+import NoResultsWine from "../components/NoResultsWine";
 
 const SearchResultsPage = () => {
   const { searchState, setSearchState } = useContext(SearchContext);
   const { searchTerm, categoryFilter, sortBy, wines } = searchState;
   const [searchParams] = useSearchParams();
-  const searchParamValue = searchParams.get('search');
+  const searchParamValue = searchParams.get("search");
 
   useEffect(() => {
     const fetchWines = async () => {
       if (!searchParamValue?.trim()) return;
 
       try {
-        const response = await axios.get(`http://localhost:3000/api/wines?search=${searchParamValue}`);
-        setSearchState(prev => ({ ...prev, wines: response.data }));
+        const response = await axios.get(
+          `http://localhost:3000/api/wines?search=${searchParamValue}`
+        );
+        setSearchState((prev) => ({ ...prev, wines: response.data }));
       } catch (error) {
-        console.error('Error:', error);
+        console.error("Error:", error);
       }
     };
 
@@ -29,42 +32,45 @@ const SearchResultsPage = () => {
   }, [searchParamValue]);
 
   useEffect(() => {
-    return (() => {
-      setSearchState(prev => ({
+    return () => {
+      setSearchState((prev) => ({
         ...prev,
         searchTerm: "",
         categoryFilter: "",
         sortBy: "",
-        wines: []
+        wines: [],
       }));
-    })
+    };
   }, []);
 
   const handleSearchChange = (e) => {
-    setSearchState(prev => ({ ...prev, searchTerm: e.target.value }));
+    setSearchState((prev) => ({ ...prev, searchTerm: e.target.value }));
   };
 
   const handleCategoryChange = (e) => {
-    setSearchState(prev => ({ ...prev, categoryFilter: e.target.value }));
+    setSearchState((prev) => ({ ...prev, categoryFilter: e.target.value }));
   };
 
   const handleSortChange = (e) => {
-    setSearchState(prev => ({ ...prev, sortBy: e.target.value }));
+    setSearchState((prev) => ({ ...prev, sortBy: e.target.value }));
   };
 
-  const filteredWines = wines.filter(wine => {
-    const matchesSearch = wine.name.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = !categoryFilter || wine.category.id == Number(categoryFilter);
+  const filteredWines = wines.filter((wine) => {
+    const matchesSearch = wine.name
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase());
+    const matchesCategory =
+      !categoryFilter || wine.category.id == Number(categoryFilter);
     return matchesSearch && matchesCategory;
   });
 
   const sortedWines = [...filteredWines].sort((a, b) => {
-    if (sortBy === 'price_asc') return a.price - b.price;
-    if (sortBy === 'price_desc') return b.price - a.price;
-    if (sortBy === 'name_asc') return a.name.localeCompare(b.name);
-    if (sortBy === 'name_desc') return b.name.localeCompare(a.name);
-    if (sortBy === 'year_desc') return b.vintage - a.vintage; // Più recenti prima
-    if (sortBy === 'year_asc') return a.vintage - b.vintage;  // Più vecchi prima
+    if (sortBy === "price_asc") return a.price - b.price;
+    if (sortBy === "price_desc") return b.price - a.price;
+    if (sortBy === "name_asc") return a.name.localeCompare(b.name);
+    if (sortBy === "name_desc") return b.name.localeCompare(a.name);
+    if (sortBy === "year_desc") return b.vintage - a.vintage; // Più recenti prima
+    if (sortBy === "year_asc") return a.vintage - b.vintage; // Più vecchi prima
     return 0;
   });
 
@@ -82,10 +88,7 @@ const SearchResultsPage = () => {
           />
         </div>
         <div className="col-md-4 mb-3">
-          <Form.Select
-            value={categoryFilter}
-            onChange={handleCategoryChange}
-          >
+          <Form.Select value={categoryFilter} onChange={handleCategoryChange}>
             <option value="">Categorie</option>
             <option value="1">Rossi</option>
             <option value="2">Bianchi</option>
@@ -94,10 +97,7 @@ const SearchResultsPage = () => {
           </Form.Select>
         </div>
         <div className="col-md-4 mb-3">
-          <Form.Select
-            value={sortBy}
-            onChange={handleSortChange}
-          >
+          <Form.Select value={sortBy} onChange={handleSortChange}>
             <option value="">Sort by</option>
             <option value="price_asc">Price (asc)</option>
             <option value="price_desc">Price (desc)</option>
@@ -109,7 +109,7 @@ const SearchResultsPage = () => {
       </Row>
 
       {sortedWines.length === 0 ? (
-        <Loader />
+        <NoResultsWine />
       ) : (
         <Row className="g-4">
           {sortedWines.map((wine) => (

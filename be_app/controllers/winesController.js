@@ -91,9 +91,7 @@ const index = (req, res) => {
     });
 
     if (wines.length === 0) {
-      return res.status(404).json({
-        error: "No wines available for your criteria.",
-      });
+      return res.status(200).json([]);
     }
     res.json(wines);
   });
