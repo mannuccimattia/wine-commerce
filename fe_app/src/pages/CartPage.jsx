@@ -1,104 +1,32 @@
-import { useState, useEffect } from "react";
+import { useEffect, useContext } from "react";
 import { Container, Row, Col, Card, Button } from "react-bootstrap";
-import { Link } from 'react-router-dom';
-import { useNavigate } from "react-router-dom";
-
-
-
-
+import { Link, useNavigate } from "react-router-dom";
+import { useCarrello } from "../contexts/cartContext";
 
 const CartPage = () => {
-  // Stato per gestire gli elementi del carrello
-  const [cartItems, setCartItems] = useState([]);
+  const { carrello, rimuoviDalCarrello, aggiornaQuantita } = useCarrello();
   const SPESE_SPEDIZIONE = 8.9;
   const SOGLIA_SPEDIZIONE = 300;
   const navigate = useNavigate();
-  const [hoveredItemId, setHoveredItemId] = useState(null);
 
-  // Al mount del componente, carica il carrello dal localStorage
-  useEffect(() => {
-    const cart = JSON.parse(localStorage.getItem("carrello")) || [];
-    setCartItems(cart);
-  }, []);
-
-  /**
-   * Aggiorna la quantità di un prodotto nel carrello
-   * @param {number} itemId - ID del prodotto da aggiornare
-   * @param {number} newQuantity - Nuova quantità da impostare
-   */
-  const updateQuantity = (itemId, newQuantity) => {
-    // Verifica che la quantità non sia inferiore a 1
-    if (newQuantity < 1) return;
-
-    // Crea un nuovo array con la quantità aggiornata
-    const updatedCart = cartItems.map((item) =>
-      item.id === itemId ? { ...item, qty: newQuantity } : item
-    );
-
-    // Calcola il nuovo subtotale
-    const subtotale = updatedCart.reduce((acc, item) => {
-      return acc + item.qty * (item.prezzo || 0);
-    }, 0);
-
-    // Aggiorna lo stato e il localStorage
-    setCartItems(updatedCart);
-    localStorage.setItem("carrello", JSON.stringify(updatedCart));
-    localStorage.setItem("subtotale", subtotale.toFixed(2));
-  };
-
-  /**
-   * Rimuove un prodotto dal carrello
-   * @param {number} itemId - ID del prodotto da rimuovere
-   */
-  const removeItem = (itemId) => {
-    // Filtra l'array rimuovendo l'elemento selezionato
-    const updatedCart = cartItems.filter((item) => item.id !== itemId);
-
-    // Ricalcola il subtotale
-    const subtotale = updatedCart.reduce((acc, item) => {
-      return acc + item.qty * (item.prezzo || 0);
-    }, 0);
-
-    // Aggiorna lo stato e il localStorage
-    setCartItems(updatedCart);
-    localStorage.setItem("carrello", JSON.stringify(updatedCart));
-    localStorage.setItem("subtotale", subtotale.toFixed(2));
-  };
-
-  /**
-   * Calcola il subtotale del carrello
-   * @returns {number} Subtotale calcolato
-   */
+  // Calculate subtotal
   const calculateSubtotal = () => {
-    const subtotal = cartItems.reduce(
-      (acc, item) => acc + item.qty * item.prezzo,
-      0
-    );
-    localStorage.setItem("subtotale", subtotal.toFixed(2));
-    return subtotal;
+    return carrello.reduce((acc, item) => acc + item.qty * item.prezzo, 0);
   };
 
-  /**
-   * Calcola le spese di spedizione in base al subtotale
-   * @returns {number} Spese di spedizione calcolate
-   */
+  // Calculate shipping based on subtotal
   const calculateShipping = () => {
     const subtotal = calculateSubtotal();
     return subtotal > SOGLIA_SPEDIZIONE ? 0 : SPESE_SPEDIZIONE;
   };
 
-  /**
-   * Calcola il totale dell'ordine
-   * @returns {number} Totale calcolato
-   */
+  // Calculate total
   const calculateTotal = () => {
-    const subtotal = calculateSubtotal();
-    const shipping = calculateShipping();
-    return subtotal + shipping;
+    return calculateSubtotal() + calculateShipping();
   };
 
-  // Rendering condizionale per carrello vuoto
-  if (cartItems.length === 0) {
+  // Rendering conditional for empty cart
+  if (carrello.length === 0) {
     return (
       <Container className="py-5">
         <div className="text-center text-white">
@@ -111,53 +39,45 @@ const CartPage = () => {
     );
   }
 
-  // Rendering principale del carrello
+  // Main rendering of the cart
   return (
     <Container className="py-5">
       <h2 className="text-white mb-4">Carrello</h2>
       <Row>
-        {/* Colonna sinistra - Lista prodotti */}
+        {/* Left column - Product list */}
         <Col lg={8}>
-          {cartItems.map((item) => (
+          {carrello.map((item) => (
             <Card key={item.id} className="mb-3 bg-dark text-white">
               <Card.Body>
                 <Row className="align-items-center">
-                  {/* Nome prodotto */}
+                  {/* Product name */}
                   <Col xs={9} md={6}>
                     <div className="d-flex align-items-center">
                       {item.img && (
                         <img
                           src={item.img}
                           alt={item.nome}
-                          onClick={() => navigate(`/wine/${item.id}`)}
                           style={{
                             width: "100px",
                             height: "100px",
                             objectFit: "cover",
                             marginRight: "15px",
                             borderRadius: "4px",
-                            cursor: 'pointer'
                           }}
                         />
                       )}
-                      <span
-                        style={{ color: 'inherit', cursor: 'pointer', textDecoration: hoveredItemId === item.id ? 'underline' : 'none' }}
-                        onMouseEnter={() => setHoveredItemId(item.id)}
-                        onMouseLeave={() => setHoveredItemId(null)}
-                        onClick={() => navigate(`/wine/${item.id}`)}
-                      >
-                        <h5 className="mb-0">{item.nome}</h5>
-                      </span>
+                      <h5 className="mb-0">{item.nome}</h5>
                     </div>
                   </Col>
 
-                  {/* Controlli quantità */}
+                  {/* Quantity controls */}
                   <Col xs={6} md={3} className="text-center">
                     <div className="d-flex align-items-center justify-content-center">
                       <Button
                         variant="outline-light"
                         size="sm"
-                        onClick={() => updateQuantity(item.id, item.qty - 1)}
+                        onClick={() => aggiornaQuantita(item.id, item.qty - 1)}
+                        disabled={item.qty === 1}
                       >
                         -
                       </Button>
@@ -165,26 +85,26 @@ const CartPage = () => {
                       <Button
                         variant="outline-light"
                         size="sm"
-                        onClick={() => updateQuantity(item.id, item.qty + 1)}
+                        onClick={() => aggiornaQuantita(item.id, item.qty + 1)}
                       >
                         +
                       </Button>
                     </div>
                   </Col>
 
-                  {/* Prezzo totale per prodotto */}
+                  {/* Total price for product */}
                   <Col xs={6} md={2} className="text-end">
                     <p className="mb-0">
                       € {(item.prezzo * item.qty).toFixed(2)}
                     </p>
                   </Col>
 
-                  {/* Pulsante rimozione */}
+                  {/* Remove button */}
                   <Col xs={12} md={1} className="text-end">
                     <Button
                       variant="link"
-                      className="text-white p-2"
-                      onClick={() => removeItem(item.id)}
+                      className="text-danger p-0"
+                      onClick={() => rimuoviDalCarrello(item.id)}
                     >
                       <i className="fas fa-trash"></i>
                     </Button>
@@ -195,7 +115,7 @@ const CartPage = () => {
           ))}
         </Col>
 
-        {/* Colonna destra - Riepilogo ordine */}
+        {/* Right column - Order summary */}
         <Col lg={4}>
           <Card className="bg-dark text-white p-4">
             <h4 className="mb-4">Riepilogo Ordine</h4>
