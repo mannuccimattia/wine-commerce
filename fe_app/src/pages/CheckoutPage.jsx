@@ -185,6 +185,15 @@ const CheckoutPage = () => {
                 <Col md={4}>
                     <Card className="bg-dark text-white p-4">
                         <h4 className="mb-4">Riepilogo Ordine</h4>
+                        {/* Visualizza immagini prodotti */}
+                        <div className="mb-3">
+                            {(JSON.parse(localStorage.getItem('carrello')) || []).map((item, idx) => (
+                                <div key={idx} className="d-flex align-items-center mb-2">
+                                    <img src={item.img} alt={item.nome} style={{width: '50px', height: '50px', objectFit: 'cover', marginRight: '10px', borderRadius: '5px'}} />
+                                    <span>{item.nome} x {item.qty}</span>
+                                </div>
+                            ))}
+                        </div>
                         <div className="border-top pt-3 mt-3">
                             <div className="d-flex justify-content-between mb-2">
                                 <span>Subtotale</span>
