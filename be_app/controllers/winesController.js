@@ -330,7 +330,7 @@ const getWineFromCategory = (req, res) => {
   });
 };
 
-// Premium Vintage - Versione adattata
+// Premium Vintage
 const premiumVintage = (req, res) => {
   const premiumVintageSql = `
     SELECT 
@@ -406,10 +406,23 @@ const premiumVintage = (req, res) => {
   });
 };
 
+//GET CATEGORIES
+const getCategories = (req, res) => {
+  const sql = "SELECT id, name FROM categories ORDER BY id";
+  connection.query(sql, (err, results) => {
+    if (err) {
+      console.error("Errore nella query getCategories:", err);
+      return res.status(500).json({ message: "Errore nel recupero categorie" });
+    }
+    res.json(results);
+  });
+};
+
 module.exports = {
   index,
   show,
   getBestSellers,
   getWineFromCategory,
   premiumVintage,
+  getCategories,
 };

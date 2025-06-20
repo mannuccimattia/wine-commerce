@@ -1,66 +1,115 @@
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import GlobalContext from "../contexts/globalContext";
 
 const SearchForm = () => {
   const { homeSearch, setHomeSearch } = useContext(GlobalContext);
   const navigate = useNavigate();
-  const [sortOrder, setSortOrder] = useState("asc"); // asc = crescente, desc = decrescente
-  const handleHomeSearch = (e) => {
-    setHomeSearch(e.target.value);
-  };
+  const [categories, setCategories] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState("all");
+  const [selectedCategoryLabel, setSelectedCategoryLabel] =
+    useState("Tutte le categorie");
 
-  const handleHomeSearchSubmit = (e) => {
-    e.preventDefault();
-    if (!homeSearch.trim()) return;
-    navigate(`/search?search=${encodeURIComponent(homeSearch)}`);
-    setHomeSearch(""); // Clear the input after search
-  };
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await axios.get(
+          "http://127.0.0.1:3000/api/wines/getcategories"
+        );
+        setCategories(response.data);
+      } catch (error) {
+        console.error("Errore nel recupero delle categorie:", error);
+      }
+    };
+
+    fetchCategories();
+  }, []);
+
   const handleInputChange = (e) => setHomeSearch(e.target.value);
 
-  const toggleSortOrder = () => {
-    setSortOrder((prev) => (prev === "asc" ? "desc" : "asc"));
+  const handleCategoryChange = (id, label) => {
+    setSelectedCategory(id);
+    setSelectedCategoryLabel(label);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!homeSearch.trim()) return;
-    navigate(
-      `/search?search=${encodeURIComponent(homeSearch)}&sort=${sortOrder}`
-    );
+
+    // Se è selezionata una categoria specifica, il campo di ricerca è obbligatorio
+    if (selectedCategory !== "all" && !homeSearch.trim()) {
+      alert("Inserisci un termine di ricerca per questa categoria");
+      return;
+    }
+
+    // Se "tutte le categorie" e nessun testo → vai su /products
+    if (selectedCategory === "all" && !homeSearch.trim()) {
+      navigate("/products");
+      return;
+    }
+
+    // Altrimenti costruisci URL
+    let searchUrl = `/search?search=${encodeURIComponent(homeSearch)}`;
+    if (selectedCategory !== "all") {
+      searchUrl += `&category=${selectedCategory}`;
+    }
+
+    navigate(searchUrl);
     setHomeSearch("");
   };
 
   return (
     <form id="homeSearch" onSubmit={handleSubmit}>
-      <div className="input-group">
-        <input
-          type="text"
-          className="form-control"
-          placeholder="Search by name, year or producer"
-          value={homeSearch}
-          onChange={handleInputChange}
-          aria-label="Search input"
-        />
-        <button
-          type="button"
-          className="btn btn-outline-light"
-          onClick={toggleSortOrder}
-          aria-label={`Toggle sort order, currently ${
-            sortOrder === "asc" ? "ascending" : "descending"
-          }`}
-          title={`Ordina ${sortOrder === "asc" ? "crescente" : "decrescente"}`}
-          style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
-        >
-          {sortOrder === "asc" ? (
-            <i className="fa-solid fa-arrow-up"></i>
-          ) : (
-            <i className="fa-solid fa-arrow-down"></i>
-          )}
-        </button>
+      <div className="d-flex align-items-stretch gap-2">
+        <div className="input-group">
+          <button
+            className="btn btn-outline-secondary dropdown-toggle "
+            type="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            {selectedCategoryLabel}
+          </button>
+          <ul className="dropdown-menu">
+            <li>
+              <button
+                type="button"
+                className="dropdown-item"
+                onClick={() =>
+                  handleCategoryChange("all", "Tutte le categorie")
+                }
+              >
+                Tutte le categorie
+              </button>
+            </li>
+            {categories.map((category) => (
+              <li key={category.id}>
+                <button
+                  type="button"
+                  className="dropdown-item"
+                  onClick={() =>
+                    handleCategoryChange(category.id, category.name)
+                  }
+                >
+                  {category.name}
+                </button>
+              </li>
+            ))}
+          </ul>
+
+          <input
+            type="text"
+            className="form-control"
+            placeholder="Search by name, year or producer"
+            value={homeSearch}
+            onChange={handleInputChange}
+            aria-label="Search input"
+          />
+        </div>
+
         <button
           type="submit"
-          className="btn btn-outline-light ms-2"
+          className="btn btn-outline-light"
           aria-label="Search"
           title="Cerca"
         >

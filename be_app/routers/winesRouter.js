@@ -11,6 +11,8 @@ router.get("/bestseller", winesController.getBestSellers);
 
 router.get("/premiumvintage", winesController.premiumVintage);
 
+router.get("/getcategories", winesController.getCategories);
+
 router.get("/:id", winesController.show);
 
 router.get("/category/:id", winesController.getWineFromCategory);
