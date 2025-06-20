@@ -73,14 +73,13 @@ const Winepage = () => {
     <Container className="py-5" id="winepage-container">
       <Row className="gx-4">
         <CartSidebar />
-        <Col lg={6}>
-          <div className="position-sticky" style={{ top: "2rem" }}>
+        <Col sm={12} md={6}>
+          <div>
             <Image
               src={mainImage}
               alt={wine.name}
               fluid
               className="rounded shadow-lg mb-3"
-              style={{ maxHeight: "600px", width: "100%", objectFit: "cover" }}
             />
             <div style={{ display: "flex", gap: "12px", marginTop: "10px" }}>
               <Image
@@ -118,125 +117,79 @@ const Winepage = () => {
             </div>
           </div>
         </Col>
-        <Col lg={6}>
+        <Col sm={12} md={6}>
           <div className="text-white">
             <h1 className="fw-semibold">
               {`${wine.winemaker.name} ${wine.vintage} ${wine.name} ${wine.denomination.name} `}
             </h1>
             <div className="my-5">
-              <WineGlasses rating={wine.label_condition?.rating} />
-              <div className="my-5">
+
+              <WineGlasses
+                label={wine.label_condition?.rating}
+                bottle={wine.bottle_condition?.rating}
+              />
+              <div className="mt-4">
+                <div className="fs-5" id="condizioni">
+                  <p>
+                    <strong>Bottle:</strong> {wine.bottle_condition.name}
+                  </p>
+                  <p>
+                    <strong>Label:</strong> {wine.label_condition.name}
+                  </p>
+                </div>
+              </div>
+              <div className="my-5 pe-3 d-flex justify-content-between align-items-center">
                 <span className="fw-bold" id="price-tag">
                   € {wine.price}
                 </span>
-              </div>
-              {wine.stock > 0 && (
-                <small className="text-white-50">
-                  Disponibilità: {wine.stock} bottiglie
-                </small>
-              )}
-            </div>
-
-            <div className="mb-4">
-              <div className="fs-5" id="details">
-                <p>
-                  <strong>Produttore:</strong> {wine.winemaker.name}
-                </p>
-                <p>
-                  <strong>Regione:</strong> {wine.region.name}
-                </p>
-                <p>
-                  <strong>Categoria:</strong> {wine.category.name}
-                </p>
-                <p>
-                  <strong>Denominazione:</strong> {wine.denomination.name}
-                </p>
-                <p>
-                  <strong>Annata:</strong> {wine.vintage}
-                </p>
-                <p>
-                  <strong>Uvaggio:</strong> {wine.grape_type}
-                </p>
-                <p>
-                  <strong>Gradazione:</strong> {wine.alcol}%
-                </p>
-                <p>
-                  <strong>Formato:</strong> {wine.bottle_size}L
-                </p>
-                <p>
-                  <strong>Temperatura di servizio:</strong> {wine.temperature}°C
-                </p>
-              </div>
-            </div>
-            <div className="mb-4">
-              <div className="fs-5" id="condizioni">
-                <p>
-                  <strong>Bottiglia:</strong> {wine.bottle_condition.name}
-                </p>
-                <p>
-                  <strong>Etichetta:</strong> {wine.label_condition.name}
-                </p>
-              </div>
-            </div>
-            <div className="mb-4">
-              <p className="fs-5">{wine.description}</p>
-            </div>
-            <div
-              className="border-top border-white-50 pt-4 mt-4"
-              style={{ position: "relative" }}
-            >
-              {/* Alert assoluto sopra il bordo */}
-              {alertMsg && (
-                <div
-                  style={{
-                    position: "absolute",
-                    top: "200px", // regola questa distanza per posizionare l'alert sopra il bordo
-                    right: "0",
-                    background: "#B1A44B",
-                    color: "#ffffff",
-                    border: "1px solid #ffffff",
-                    borderRadius: "8px",
-                    padding: "8px 16px",
-                    fontSize: "0.95rem",
-                    boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
-                    maxWidth: "300px",
-                    zIndex: 10,
-                  }}
+                <button
+                  className="btn btn-outline-light btn-lg"
+                  onClick={() => aggiungiAlCarrello(wine)}
                 >
-                  {alertMsg}
-                </div>
-              )}
-              <div className="d-flex flex-column align-items-end">
-                <div className="d-flex justify-content-between align-items-center w-100">
-                  <div>
-                    <h3 className="mb-0">Prezzo</h3>
-                    <p className="display-4 mb-0">€ {wine.price}</p>
-                  </div>
-                  {wine.stock > 0 ? (
-                    <>
-                      <button
-                        className="btn btn-outline-light btn-lg"
-                        onClick={() => aggiungiAlCarrello(wine)}
-                      >
-                        Aggiungi al carrello
-                      </button>
-                    </>
-                  ) : (
-                    <button className="btn btn-outline-danger btn-lg" disabled>
-                      Non disponibile
-                    </button>
-                  )}
-                </div>
-              </div>
-              <div className="d-flex justify-content-end">
-                <button className="btn btn-outline-light btn-lg"
-                  onClick={() => navigate("/")}>
-                  Indietro
+                  Aggiungi al carrello
                 </button>
               </div>
-              
-
             </div>
+          </div>
+        </Col>
+      </Row>
+      <hr />
+      <Row>
+        <Col>
+          <div className="mb-4">
+            <div className="" id="details">
+              <div>
+                <strong>Producer:</strong> {wine.winemaker.name}
+              </div>
+              <div>
+                <strong>Region:</strong> {wine.region.name}
+              </div>
+              <div>
+                <strong>Category:</strong> {wine.category.name}
+              </div>
+              <div>
+                <strong>Denomination:</strong> {wine.denomination.name}
+              </div>
+              <div>
+                <strong>Vintage:</strong> {wine.vintage}
+              </div>
+              <div>
+                <strong>Grapes:</strong> {wine.grape_type}
+              </div>
+              <div>
+                <strong>ABV:</strong> {wine.alcol}%
+              </div>
+              <div>
+                <strong>Volume:</strong> {wine.bottle_size}L
+              </div>
+              <div>
+                <strong>Temperature:</strong> {wine.temperature}°C
+              </div>
+            </div>
+          </div>
+
+          <div className="mb-4" id="descr">
+            {wine.description}
           </div>
         </Col>
       </Row>

@@ -29,10 +29,10 @@ const WineCard = ({ wine }) => {
       />
       <Card.Body className="d-flex flex-column">
         <Card.Title className="text-white">{`${wine.winemaker.name} ${wine.vintage} ${wine.name} ${wine.denomination.name}`}</Card.Title>
-        <Card.Text className="text-white-50">{wine.description}</Card.Text>
-        <div className="mb-2">
-          <WineGlasses rating={wine.label_condition?.rating} />
-        </div>
+        <WineGlasses
+          label={wine.label_condition.rating}
+          bottle={wine.bottle_condition.rating}
+        />
         <div className="mt-auto">
           <p className="text-white mb-2">€ {wine.price}</p>
         </div>
