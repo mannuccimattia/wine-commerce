@@ -117,10 +117,6 @@ body {
     color: rgba(255, 255, 255, 0.8);
 }
 
-.btn {
-    background-color: #a88b4d;
-}
-
 .hover-effect {
     transition: transform 0.3s ease;
 }
@@ -159,10 +155,41 @@ body {
 .wine-card .card-title {
     font-size: 1.1rem;
     margin-bottom: 0.5rem;
+    min-height: 4rem;
 }
 
 .wine-card .card-text {
     font-size: 0.9rem;
+}
+
+#provenance-tier-wrapper {
+    height: 80px;
+    padding-top: 40px;
+}
+
+#card-shopping-tooltip {
+    position: absolute;
+    right: 70px;
+    color: #a88b4d;
+    opacity: 0;
+    transition: 0.3s;
+}
+
+#card-shopping:hover~#card-shopping-tooltip {
+    opacity: 1;
+}
+
+.card-shopping-alert {
+    position: absolute;
+    right: 50px;
+    color: #28a745 !important;
+    font-weight: 700;
+    opacity: 1;
+    transition: 0.3s;
+    z-index: 2;
+    background-color: #228f3b73;
+    padding: 1px 5px;
+    border-radius: 20px;
 }
 
 @media (max-width: 768px) {
@@ -253,6 +280,11 @@ body {
     cursor: pointer;
 }
 
+.btn-outline-light:hover {
+    background-color: #a88b4d;
+    color: #fff;
+}
+
 .input-msg {
     width: 100%;
     height: 50px;
@@ -315,7 +347,7 @@ footer .social-icons {
 }
 
 footer a>i {
-    color: #AEB2B6
+    color: #aeb2b6;
 }
 
 footer img {
@@ -326,14 +358,32 @@ footer img {
     color: #79434f;
 }
 
-#details p>strong,
+#details,
+#condizioni {
+    font-size: 16px !important;
+}
+
+#details div>strong,
 #condizioni p>strong {
     color: gray;
 }
 
+#descr {
+    font-family: 'Lora', 'Cormorant', serif;
+    font-size: 1.2rem;
+    line-height: 1.6;
+}
+
+#descr::before,
+#descr::after {
+    content: "~";
+    margin: 0 10px;
+}
+
 #price-tag {
-    font-family: monospace;
-    font-size: 20px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 22px;
+    color: #a88b4d;
 }
 
 #winepage-container {
@@ -356,7 +406,7 @@ footer img {
 .loader {
     width: 48px;
     height: 48px;
-    border: 5px solid #FFF;
+    border: 5px solid #fff;
     border-bottom-color: transparent;
     border-radius: 50%;
     display: inline-block;
@@ -372,4 +422,23 @@ footer img {
     100% {
         transform: rotate(360deg);
     }
+}
+
+.pill,
+#pt-hover {
+    font-size: 0.8em;
+}
+
+#pt-hover {
+    position: absolute;
+    top: 5px;
+    padding-left: 5px;
+    color: #a88b4d;
+    background-color: #171718;
+    opacity: 0;
+    transition: 0.3s;
+}
+
+.pill:hover~#pt-hover {
+    opacity: 1;
 }

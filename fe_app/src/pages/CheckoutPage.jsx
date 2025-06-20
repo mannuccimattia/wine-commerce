@@ -1,80 +1,78 @@
-import React, { useState } from 'react';
-import { Container, Row, Col, Form, Card } from 'react-bootstrap';
-import axios from 'axios';
+import axios from "axios";
+import React, { useState, useEffect } from "react";
+import { Container, Row, Col, Form, Card } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 
 const CheckoutPage = () => {
-    const [loading, setLoading] = useState(false);
-    const [formData, setFormData] = useState({
-        firstName: '',
-        lastName: '',
-        email: '',
-        address: '',
-        city: '',
-        zip_code: ''
-    });
-
     const SPESE_SPEDIZIONE = 8.9;
     const SOGLIA_SPEDIZIONE = 300;
 
-    const calculateShipping = () => {
-        const cartItems = JSON.parse(localStorage.getItem('carrello')) || [];
-        const subtotal = cartItems.reduce((acc, item) => acc + (item.prezzo * item.qty), 0);
-        return subtotal > SOGLIA_SPEDIZIONE ? 0 : SPESE_SPEDIZIONE;
-    };
+    const navigate = useNavigate();
+
+    // Stato per riepilogo ordine
+    const [subtotale, setSubtotale] = useState(0);
+    const [shipping, setShipping] = useState(0);
+    const [totale, setTotale] = useState(0);
+
+    // Stato form
+    const [formData, setFormData] = useState({
+        firstName: "",
+        lastName: "",
+        email: "",
+        address: "",
+        city: "",
+        zip_code: "",
+    });
+
+    useEffect(() => {
+        const storedSubtotale = parseFloat(localStorage.getItem("subtotale")) || 0;
+        const shippingCost =
+            storedSubtotale > SOGLIA_SPEDIZIONE ? 0 : SPESE_SPEDIZIONE;
+        const totalAmount = storedSubtotale + shippingCost;
+
+        setSubtotale(storedSubtotale);
+        setShipping(shippingCost);
+        setTotale(totalAmount);
+    }, []);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setFormData(prev => ({
+        setFormData((prev) => ({
             ...prev,
-            [name]: value
+            [name]: value,
         }));
     };
 
-    const handleCheckout = async (e) => {
+    const handleSubmit = (e) => {
         e.preventDefault();
-        if (loading) return; // Previeni doppi click
-        setLoading(true);
 
-        try {
-            const cartItems = JSON.parse(localStorage.getItem('carrello')) || [];
-            if (cartItems.length === 0) {
-                alert('Il carrello è vuoto');
-                setLoading(false);
-                return;
-            }
+        const cliente = { ...formData };
+        const carrello = JSON.parse(localStorage.getItem("carrello")) || [];
+        const subtotale = parseFloat(localStorage.getItem("subtotale")) || 0;
+        const shipping = subtotale > SOGLIA_SPEDIZIONE ? 0 : SPESE_SPEDIZIONE;
+        const totale = subtotale + shipping;
 
-            const shippingCost = calculateShipping();
+        const orderDetail = {
+            cliente,
+            carrello,
+            subtotale: subtotale.toFixed(2),
+            shippingCost: shipping.toFixed(2),
+        };
 
-            // Salva i dati per l'email di conferma
-            const orderData = {
-                cartItems,
-                shippingCost,
-                customerEmail: formData.email,
-                customerDetails: {
-                    firstName: formData.firstName,
-                    lastName: formData.lastName,
-                    address: formData.address,
-                    city: formData.city,
-                    zipCode: formData.zip_code
-                }
-            };
-            localStorage.setItem('orderData', JSON.stringify(orderData));
-
-            // Solo chiamata Stripe checkout, rimuovi qualsiasi altra chiamata API
-            const response = await axios.post('http://localhost:3000/api/order/create-checkout-session', {
-                cartItems,
-                shippingCost
+        axios
+            .post("http://localhost:3000/api/order", orderDetail)
+            .then((response) => {
+                console.log("Risposta dal server:", response.data);
+                //Svuoto carrello
+                localStorage.removeItem("carrello");
+                localStorage.removeItem("subtotale");
+                console.log("Carrello svuotato");
+                // Redirect alla pagina di successo
+                navigate("/success");
+            })
+            .catch((error) => {
+                console.error("Errore nella richiesta: ", error);
             });
-
-            if (response.data.url) {
-                window.location.href = response.data.url;
-            }
-        } catch (error) {
-            console.error('Errore:', error);
-            alert('Errore durante il checkout');
-        } finally {
-            setLoading(false);
-        }
     };
 
     return (
@@ -83,11 +81,11 @@ const CheckoutPage = () => {
             <Row>
                 <Col md={8}>
                     <Card className="bg-dark text-white p-4 mb-4">
-                        <Form onSubmit={handleCheckout}>
-                            <h4 className="mb-4">Informazioni di Spedizione</h4>
+                        <Form onSubmit={handleSubmit}>
+                            <h4 className="mb-4">Dati di Spedizione</h4>
                             <Row>
                                 <Col md={6}>
-                                    <Form.Group className="mb-3">
+                                    <Form.Group className="mb-3" controlId="firstName">
                                         <Form.Label>Nome</Form.Label>
                                         <Form.Control
                                             type="text"
@@ -99,7 +97,7 @@ const CheckoutPage = () => {
                                     </Form.Group>
                                 </Col>
                                 <Col md={6}>
-                                    <Form.Group className="mb-3">
+                                    <Form.Group className="mb-3" controlId="lastName">
                                         <Form.Label>Cognome</Form.Label>
                                         <Form.Control
                                             type="text"
@@ -112,7 +110,7 @@ const CheckoutPage = () => {
                                 </Col>
                             </Row>
 
-                            <Form.Group className="mb-3">
+                            <Form.Group className="mb-3" controlId="email">
                                 <Form.Label>Email</Form.Label>
                                 <Form.Control
                                     type="email"
@@ -123,7 +121,7 @@ const CheckoutPage = () => {
                                 />
                             </Form.Group>
 
-                            <Form.Group className="mb-3">
+                            <Form.Group className="mb-3" controlId="address">
                                 <Form.Label>Indirizzo</Form.Label>
                                 <Form.Control
                                     type="text"
@@ -135,8 +133,8 @@ const CheckoutPage = () => {
                             </Form.Group>
 
                             <Row>
-                                <Col md={6}>
-                                    <Form.Group className="mb-3">
+                                <Col md={8}>
+                                    <Form.Group className="mb-3" controlId="city">
                                         <Form.Label>Città</Form.Label>
                                         <Form.Control
                                             type="text"
@@ -147,8 +145,8 @@ const CheckoutPage = () => {
                                         />
                                     </Form.Group>
                                 </Col>
-                                <Col md={6}>
-                                    <Form.Group className="mb-3">
+                                <Col md={4}>
+                                    <Form.Group className="mb-3" controlId="zip_code">
                                         <Form.Label>CAP</Form.Label>
                                         <Form.Control
                                             type="text"
@@ -156,32 +154,34 @@ const CheckoutPage = () => {
                                             value={formData.zip_code}
                                             onChange={handleChange}
                                             required
+                                            pattern="\d{5}"
+                                            inputMode="numeric"
+                                            maxLength={5}
                                         />
                                     </Form.Group>
                                 </Col>
                             </Row>
 
-                            <div className="mt-4 d-flex justify-content-center">
-                                <button
-                                    type="submit"
-                                    className="btn btn-primary py-3 px-5"
-                                    style={{ minWidth: '200px' }}
-                                    disabled={loading}
-                                >
-                                    {loading ? (
-                                        <>
-                                            <span className="spinner-border spinner-border-sm me-2" />
-                                            Elaborazione...
-                                        </>
-                                    ) : (
-                                        `Paga €${(JSON.parse(localStorage.getItem('carrello')) || [])
-                                            .reduce((acc, item) => acc + (item.prezzo * item.qty), 0) + calculateShipping()}`
-                                    )}
-                                </button>
-                            </div>
+                            <Row>
+                                <div className="mt-4 d-flex justify-content-center">
+                                    <button
+                                        type="submit"
+                                        className="btn btn-outline-light py-3 px-5"
+                                        style={{ minWidth: "200px" }}
+                                    >
+                                        {`Paga €${(
+                                            (
+                                                JSON.parse(localStorage.getItem("carrello")) || []
+                                            ).reduce((acc, item) => acc + item.prezzo * item.qty, 0) +
+                                            shipping
+                                        ).toFixed(2)}`}
+                                    </button>
+                                </div>
+                            </Row>
                         </Form>
                     </Card>
                 </Col>
+
                 <Col md={4}>
                     <Card className="bg-dark text-white p-4">
                         <h4 className="mb-4">Riepilogo Ordine</h4>
@@ -189,7 +189,7 @@ const CheckoutPage = () => {
                         <div className="mb-3">
                             {(JSON.parse(localStorage.getItem('carrello')) || []).map((item, idx) => (
                                 <div key={idx} className="d-flex align-items-center mb-2">
-                                    <img src={item.img} alt={item.nome} style={{width: '50px', height: '50px', objectFit: 'cover', marginRight: '10px', borderRadius: '5px'}} />
+                                    <img src={item.img} alt={item.nome} style={{ width: '50px', height: '50px', objectFit: 'cover', marginRight: '10px', borderRadius: '5px' }} />
                                     <span>{item.nome} x {item.qty}</span>
                                 </div>
                             ))}
@@ -197,17 +197,15 @@ const CheckoutPage = () => {
                         <div className="border-top pt-3 mt-3">
                             <div className="d-flex justify-content-between mb-2">
                                 <span>Subtotale</span>
-                                <span>€{(JSON.parse(localStorage.getItem('carrello')) || [])
-                                    .reduce((acc, item) => acc + (item.prezzo * item.qty), 0).toFixed(2)}</span>
+                                <span>€{subtotale.toFixed(2)}</span>
                             </div>
                             <div className="d-flex justify-content-between mb-2">
                                 <span>Spedizione</span>
-                                <span>€{calculateShipping().toFixed(2)}</span>
+                                <span>€{subtotale ? shipping.toFixed(2) : "0.00"}</span>
                             </div>
                             <div className="d-flex justify-content-between mt-3 pt-3 border-top">
                                 <strong>Totale</strong>
-                                <strong>€{(JSON.parse(localStorage.getItem('carrello')) || [])
-                                    .reduce((acc, item) => acc + (item.prezzo * item.qty), 0) + calculateShipping().toFixed(2)}</strong>
+                                <strong>€{subtotale ? totale.toFixed(2) : "0.00"}</strong>
                             </div>
                         </div>
                     </Card>

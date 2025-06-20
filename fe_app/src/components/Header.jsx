@@ -1,104 +1,96 @@
-import { Link } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
-import { useContext, useEffect } from 'react';
-import GlobalContext from '../contexts/globalContext';
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import { useContext, useEffect, useState } from "react";
+import GlobalContext from "../contexts/globalContext";
+import SearchForm from "./SearchForm";
 
 const Header = () => {
+  const { toDisable, setToDisable } = useContext(GlobalContext);
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [cartItems, setCartItems] = useState([]);
+  const [total, setTotal] = useState(0);
 
-    const {
-        toDisable,
-        setToDisable,
-        homeSearch,
-        setHomeSearch } = useContext(GlobalContext);
+  const handleClick = (e) => {
+    e.preventDefault();
+    const target = e.currentTarget.value; // Fix qui
+    setToDisable(target === toDisable ? null : target);
+    navigate(`/${target}`);
+  };
 
-    const navigate = useNavigate();
+  const handleLogoClick = () => {
+    setToDisable(null);
+  };
 
-    const handleClick = (e) => {
-        e.preventDefault();
-        const target = e.target.value;
-        // Toggle disable state
-        setToDisable(target === toDisable ? null : target);
-        // If click on view all, edit path to /search/all  
-        navigate(`/${target}`);
+  useEffect(() => {
+    if (
+      !location.pathname.startsWith(`/products`) &&
+      !location.pathname.startsWith("/cart")
+    ) {
+      setToDisable(null);
     }
+  }, [location.pathname]);
 
-    const handleLogoClick = () => {
-        setToDisable(null); // Clear disable state when clicking logo
-    }
+  useEffect(() => {
+    // Carica gli elementi del carrello dal localStorage
+    const cart = JSON.parse(localStorage.getItem("carrello")) || [];
+    setCartItems(cart);
 
-
-    const handleHomeSearch = (e) => {
-        setHomeSearch(e.target.value);
-    }
-
-    const handleHomeSearchSubmit = (e) => {
-        e.preventDefault();
-        if (!homeSearch.trim()) return;
-        navigate(`/search?search=${encodeURIComponent(homeSearch)}`);
-        setHomeSearch(''); // Clear the input after search
-    }
-
-    useEffect(() => {
-        if (!location.pathname.startsWith(`/products`) && !location.pathname.startsWith('/cart')) {
-            setToDisable(null);
-        }
-    }, [location.pathname]);
-
-    return (
-        <>
-            <nav className="navbar navbar-dark m-3" style={{ backgroundColor: '#212223' }}>
-                <div className="container-fluid">
-                    <Link className='navbar-brand' to="/" onClick={handleLogoClick}>
-                        <img
-                            src="\imgs\wordmarks\boolze-high-resolution-wordmark.png"
-                            alt="Bool Wines Logo"
-                            height="40"
-                            className="me-2"
-                        />
-                    </Link>
-                    <div className="d-flex gap-3">
-                        <button
-                            className="btn btn-outline-light"
-                            id='products'
-                            value="products"
-                            onClick={handleClick}
-                            disabled={toDisable === "products"}
-                        >
-
-                            <i className="fa-solid fa-eye me-1"></i> View All
-                        </button>
-                        <button
-                            className='btn btn-outline-light'
-                            id='cart'
-                            value="cart"
-                            onClick={handleClick}
-                            disabled={toDisable === "cart"}
-                        >
-                            <i className="fa-solid fa-cart-shopping me-1"></i> Go to Cart
-                        </button>
-                    </div>
-                </div>
-            </nav>
-
-            <div className="col-12">
-                <form id="homeSearch" onSubmit={handleHomeSearchSubmit}>
-                    <div className="form-group d-flex">
-                        <input
-                            type="text"
-                            className="form-control text-white rounded-0 rounded-start"
-                            data-bs-theme="dark"
-                            placeholder="Search by name, year or producer"
-                            value={homeSearch}
-                            onChange={handleHomeSearch}
-                        />
-                        <button className="btn btn-outline-light rounded-0 rounded-end" type="submit">
-                            <i className='fa-solid fa-magnifying-glass'></i>
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </>
+    // Calcola il totale
+    const totalAmount = cart.reduce(
+      (acc, item) => acc + item.qty * item.prezzo,
+      0
     );
+    setTotal(totalAmount);
+  }, []);
+
+  return (
+    <>
+      <nav
+        className="navbar navbar-dark m-3"
+        style={{ backgroundColor: "#212223" }}
+      >
+        <div className="container-fluid">
+          <Link className="navbar-brand" to="/" onClick={handleLogoClick}>
+            <img
+              src="\imgs\wordmarks\boolze-high-resolution-wordmark.png"
+              alt="Bool Wines Logo"
+              height="40"
+              className="me-2"
+            />
+          </Link>
+          <div className="d-flex gap-3">
+            <button
+              className="btn btn-outline-light"
+              value="products"
+              onClick={handleClick}
+              disabled={toDisable === "products"}
+            >
+              <i className="fa-solid fa-eye me-1"></i> View All
+            </button>
+            <button
+              className="btn btn-outline-light position-relative"
+              value="cart"
+              onClick={handleClick}
+              disabled={toDisable === "cart"}
+            >
+              <i className="fa-solid fa-cart-shopping me-1"></i>
+              {cartItems.length > 0 && (
+                <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-white text-black">
+                  {cartItems.length}
+                  <span className="visually-hidden">items in cart</span>
+                </span>
+              )}
+              {total > 0 && <span className="ms-2">€{total.toFixed(2)}</span>}
+            </button>
+          </div>
+        </div>
+      </nav>
+
+      <div className="col-12">
+        <SearchForm />
+      </div>
+    </>
+  );
 };
 
 export default Header;

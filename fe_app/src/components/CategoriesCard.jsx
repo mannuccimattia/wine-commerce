@@ -49,7 +49,7 @@ const CategoriesCard = () => {
                 {/* Mapping dell'array delle categorie per creare le card */}
                 {categories.map((category) => (
                     // Colonna per ogni categoria - occupa 3 colonne su 12 in viewport md e superiori
-                    <Col key={category.id} md={3} className="mb-4">
+                    <Col key={category.id} sm={12} md={6} lg={3} className="mb-4">
                         {/* Card cliccabile con effetto hover */}
                         <Card
                             className="h-100 shadow-sm hover-effect"
