@@ -1,9 +1,9 @@
 /* Reset CSS globale per rimuovere margini e padding di default 
    e assicurare un comportamento coerente del box-sizing */
 * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
 /* Stili base per html e body:
@@ -13,17 +13,17 @@
    - color: #fff imposta il testo in bianco per leggibilità */
 html,
 body {
-  min-height: 100vh;
-  background-color: #212223 !important;
-  color: #fff;
+    min-height: 100vh;
+    background-color: #212223 !important;
+    color: #fff;
 }
 
 /* Stili per il contenitore root di React:
    - min-height assicura che occupi almeno l'intera viewport
    - background-color mantiene la coerenza del colore di sfondo */
 #root {
-  min-height: 100vh;
-  background-color: #212223;
+    min-height: 100vh;
+    background-color: #212223;
 }
 
 /* Stili per il contenitore principale della homepage:
@@ -31,75 +31,75 @@ body {
    - min-height assicura che occupi almeno l'intera viewport
    - padding aggiunge spazio interno per il contenuto */
 .homepage-background {
-  background-color: #212223;
-  min-height: 100vh;
-  padding: 2rem 0;
+    background-color: #212223;
+    min-height: 100vh;
+    padding: 2rem 0;
 }
 
 .hero-carousel {
-  margin-bottom: 3rem;
+    margin-bottom: 3rem;
 }
 
 .carousel {
-  width: 100%;
-  max-width: 1300px;
-  margin: 0 auto;
-  margin-bottom: 2rem;
-  border-radius: 20px;
+    width: 100%;
+    max-width: 1300px;
+    margin: 0 auto;
+    margin-bottom: 2rem;
+    border-radius: 20px;
 }
 
 .carousel-item img {
-  height: 80vh;
-  object-fit: cover;
-  width: 100%;
+    height: 80vh;
+    object-fit: cover;
+    width: 100%;
 }
 
 .carousel-content {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  text-align: center;
-  color: white;
-  width: 80%;
-  max-width: 800px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    color: white;
+    width: 80%;
+    max-width: 800px;
 }
 
 .carousel-content h1 {
-  font-size: 3.5rem;
-  margin-bottom: 1rem;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    font-size: 3.5rem;
+    margin-bottom: 1rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 .carousel-content p {
-  font-size: 1.5rem;
-  margin-bottom: 2rem;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+    font-size: 1.5rem;
+    margin-bottom: 2rem;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
 }
 
 .carousel-caption {
-  background: rgba(0, 0, 0, 0.5);
-  padding: 20px;
-  border-radius: 10px;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 20px;
+    border-radius: 10px;
 }
 
 .carousel-caption h3 {
-  font-size: 2.5rem;
-  margin-bottom: 1rem;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 .carousel-caption p {
-  font-size: 1.2rem;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+    font-size: 1.2rem;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
 }
 
 /* Stili per le card in tema scuro:
    - background-color semi-trasparente per un effetto vetro
    - border sottile per definire i bordi delle card */
 .card {
-  background-color: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+    background-color: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 /* Stili per il testo nelle card:
@@ -107,269 +107,307 @@ body {
    - si applica sia al body che al titolo delle card */
 .card-body,
 .card-title {
-  color: #fff;
+    color: #fff;
 }
 
 /* Stile per il testo secondario nelle card:
    - colore bianco leggermente trasparente per differenziare 
    - il testo secondario dal testo principale */
 .card-text {
-  color: rgba(255, 255, 255, 0.8);
-}
-
-.btn {
-  background-color: #a88b4d;
+    color: rgba(255, 255, 255, 0.8);
 }
 
 .hover-effect {
-  transition: transform 0.3s ease;
+    transition: transform 0.3s ease;
 }
 
 .hover-effect:hover {
-  transform: translateY(-5px);
+    transform: translateY(-5px);
 }
 
 .wine-swiper {
-  padding: 20px 10px 40px;
+    padding: 20px 10px 40px;
 }
 
 .wine-swiper .swiper-button-next,
 .wine-swiper .swiper-button-prev {
-  color: #fff !important;
+    color: #fff !important;
 }
 
 .wine-swiper .swiper-pagination-bullet {
-  background: #fff !important;
+    background: #fff !important;
 }
 
 .wine-swiper .swiper-slide {
-  height: auto;
+    height: auto;
 }
 
 .wine-card {
-  background-color: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  transition: transform 0.3s ease;
+    background-color: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: transform 0.3s ease;
 }
 
 .wine-card:hover {
-  transform: translateY(-5px);
+    transform: translateY(-5px);
 }
 
 .wine-card .card-title {
-  font-size: 1.1rem;
-  margin-bottom: 0.5rem;
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
 }
 
 .wine-card .card-text {
-  font-size: 0.9rem;
+    font-size: 0.9rem;
 }
 
 @media (max-width: 768px) {
-  .carousel-content h1 {
-    font-size: 2.5rem;
-  }
+    .carousel-content h1 {
+        font-size: 2.5rem;
+    }
 
-  .carousel-content p {
-    font-size: 1.2rem;
-  }
+    .carousel-content p {
+        font-size: 1.2rem;
+    }
 }
 
 #chatbot {
-  width: 70px;
-  height: 70px;
-  background-color: #a88b4d;
-  box-shadow: 3px 3px rgba(0, 0, 0, 0.3);
-  border-radius: 50%;
-  font-size: 38px;
-  position: fixed;
-  bottom: 30px;
-  right: 50px;
-  z-index: 1000;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
+    width: 70px;
+    height: 70px;
+    background-color: #a88b4d;
+    box-shadow: 3px 3px rgba(0, 0, 0, 0.3);
+    border-radius: 50%;
+    font-size: 38px;
+    position: fixed;
+    bottom: 30px;
+    right: 50px;
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
 }
 
 #chatbot-modal {
-  position: fixed;
-  bottom: 30px;
-  right: 50px;
-  width: 350px;
-  height: 600px;
-  background-color: rgba(0, 0, 0, 1);
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-  z-index: 9999;
-  transition: 0.3s;
+    position: fixed;
+    bottom: 30px;
+    right: 50px;
+    width: 350px;
+    height: 600px;
+    background-color: rgba(0, 0, 0, 1);
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    z-index: 9999;
+    transition: 0.3s;
 }
 
 .fa-xmark {
-  cursor: pointer;
-  font-size: 20px;
+    cursor: pointer;
+    font-size: 20px;
 }
 
 .chatbot-header {
-  width: 100%;
-  height: 50px;
-  color: #a88b4d;
-  border-radius: 10px 10px 0 0;
-  padding: 0 10px;
+    width: 100%;
+    height: 50px;
+    color: #a88b4d;
+    border-radius: 10px 10px 0 0;
+    padding: 0 10px;
 }
 
 .chatbot-body {
-  width: 100%;
-  height: 475px;
-  display: flex;
-  flex-direction: column;
-  background-color: #a88b4d;
-  border-radius: 0 0 15px 15px;
-  padding: 10px;
-  overflow: auto;
+    width: 100%;
+    height: 475px;
+    display: flex;
+    flex-direction: column;
+    background-color: #a88b4d;
+    border-radius: 0 0 15px 15px;
+    padding: 10px;
+    overflow: auto;
 }
 
 .chatbot-body::-webkit-scrollbar {
-  width: 0px;
-  background: transparent;
+    width: 0px;
+    background: transparent;
 }
 
 .chatbot-body::-webkit-scrollbar-thumb {
-  background: transparent;
+    background: transparent;
 }
 
-.chatbot-body > div > p {
-  max-width: 90%;
+.chatbot-body>div>p {
+    max-width: 90%;
 }
 
 .btn-msg {
-  width: 50px;
-  aspect-ratio: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: #a88b4d;
-  border-radius: 50%;
-  cursor: pointer;
+    width: 50px;
+    aspect-ratio: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #a88b4d;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.btn-outline-light:hover {
+    background-color: #a88b4d;
+    color: #fff;
 }
 
 .input-msg {
-  width: 100%;
-  height: 50px;
-  border-radius: 30px;
-  padding: 10px;
-  box-sizing: border-box;
-  border: none;
-  outline: none;
+    width: 100%;
+    height: 50px;
+    border-radius: 30px;
+    padding: 10px;
+    box-sizing: border-box;
+    border: none;
+    outline: none;
 }
 
 .bot-msg {
-  align-self: flex-start;
-  justify-self: flex-start;
+    align-self: flex-start;
+    justify-self: flex-start;
 }
 
 .user-msg {
-  align-self: flex-end;
-  justify-self: flex-end;
+    align-self: flex-end;
+    justify-self: flex-end;
 }
 
 .bot-msg {
-  background-color: #ffffff;
-  color: #000;
-  border-radius: 15px 15px 15px 0;
-  padding: 10px 15px;
-  margin-bottom: 10px;
+    background-color: #ffffff;
+    color: #000;
+    border-radius: 15px 15px 15px 0;
+    padding: 10px 15px;
+    margin-bottom: 10px;
 }
 
 .user-msg {
-  background-color: #dcf8c6;
-  color: #000;
-  border-radius: 15px 15px 0 15px;
-  padding: 10px 15px;
-  margin-bottom: 10px;
+    background-color: #dcf8c6;
+    color: #000;
+    border-radius: 15px 15px 0 15px;
+    padding: 10px 15px;
+    margin-bottom: 10px;
 }
 
 .app-wrapper {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
 main {
-  flex: 1 0 auto;
+    flex: 1 0 auto;
 }
 
 footer {
-  flex-shrink: 0;
-  margin-top: auto;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+    flex-shrink: 0;
+    margin-top: auto;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 footer a:hover {
-  opacity: 0.8;
+    opacity: 0.8;
 }
 
 footer .social-icons {
-  display: flex;
-  gap: 1rem;
+    display: flex;
+    gap: 1rem;
 }
 
-footer a > i {
-  color: #aeb2b6;
+footer a>i {
+    color: #aeb2b6;
 }
 
 footer img {
-  max-height: 200px;
+    max-height: 200px;
 }
 
 .color-wine {
-  color: #79434f;
+    color: #79434f;
 }
 
-#details p > strong,
-#condizioni p > strong {
-  color: gray;
+#details,
+#condizioni {
+    font-size: 16px !important;
+}
+
+#details div>strong,
+#condizioni p>strong {
+    color: gray;
+}
+
+#descr {
+    font-family: 'Lora', 'Cormorant', serif;
+    font-size: 1.2rem;
+    line-height: 1.6;
+}
+
+#descr::before,
+#descr::after {
+    content: "~";
+    margin: 0 10px;
 }
 
 #price-tag {
-  font-family: monospace;
-  font-size: 20px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 22px;
+    color: #a88b4d;
 }
 
 #winepage-container {
-  max-width: 988px;
+    max-width: 988px;
 }
 
 #homeSearch {
-  max-width: 740px;
-  margin: 0 auto;
+    max-width: 740px;
+    margin: 0 auto;
 }
 
 .form-control:focus {
-  box-shadow: none;
-  border-color: inherit;
-  /* Optional - keeps the border color unchanged */
-  /* outline: none; */
-  /* Removes browser default outline (not recommended for accessibility) */
+    box-shadow: none;
+    border-color: inherit;
+    /* Optional - keeps the border color unchanged */
+    /* outline: none; */
+    /* Removes browser default outline (not recommended for accessibility) */
 }
 
 .loader {
-  width: 48px;
-  height: 48px;
-  border: 5px solid #fff;
-  border-bottom-color: transparent;
-  border-radius: 50%;
-  display: inline-block;
-  box-sizing: border-box;
-  animation: rotation 1s linear infinite;
+    width: 48px;
+    height: 48px;
+    border: 5px solid #fff;
+    border-bottom-color: transparent;
+    border-radius: 50%;
+    display: inline-block;
+    box-sizing: border-box;
+    animation: rotation 1s linear infinite;
 }
 
 @keyframes rotation {
-  0% {
-    transform: rotate(0deg);
-  }
+    0% {
+        transform: rotate(0deg);
+    }
 
-  100% {
-    transform: rotate(360deg);
-  }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.pill,
+#pt-hover {
+    font-size: 0.8em;
+}
+
+#pt-hover {
+    position: absolute;
+    top: -36px;
+    padding-left: 5px;
+    color: #a88b4d;
+    background-color: #171718;
+    opacity: 0;
+    transition: 0.3s;
+}
+
+.pill:hover~#pt-hover {
+    opacity: 1;
 }

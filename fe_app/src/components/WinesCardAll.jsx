@@ -63,7 +63,7 @@ const WineCardAll = () => {
       ) : (
         <Row>
           {topWines.map((wine) => (
-            <Col key={wine.id} md={3} className="mb-4">
+            <Col key={wine.id} sm={12} md={6} lg={3} className="mb-4">
               <WineCard wine={wine} />
             </Col>
           ))}

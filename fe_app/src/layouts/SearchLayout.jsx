@@ -16,7 +16,7 @@ const SearchLayout = () => {
         </aside>
         {/* Main content */}
         <main className="col-12 col-md-9">
-          <h4>
+          <h4 className="ms-3 fw-semibold">
             Search Results
           </h4>
           <Outlet />

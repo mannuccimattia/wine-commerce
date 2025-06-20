@@ -35,7 +35,7 @@ const Bestseller = () => {
       ) : (
         <Row>
           {bestsellerWines.map((wine) => (
-            <Col key={`bs-${wine.id}`} md={3} className="mb-4">
+            <Col key={`bs-${wine.id}`} sm={12} md={6} lg={3} className="mb-4">
               <WineCard wine={wine} />
             </Col>
           ))}
