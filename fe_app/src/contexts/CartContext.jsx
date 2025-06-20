@@ -1,9 +1,9 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 
-// Crea il context
+// Create the context
 const CarrelloContext = createContext();
 
-// Hook custom per accedere al context
+// Custom hook to access the context
 export const useCarrello = () => useContext(CarrelloContext);
 
 // Provider
@@ -13,7 +13,7 @@ export const CarrelloProvider = ({ children }) => {
   const [alertMsg, setAlertMsg] = useState("");
 
   useEffect(() => {
-    // Carica dati da localStorage al primo rendering
+    // Load data from localStorage on first render
     const storedCarrello = JSON.parse(localStorage.getItem("carrello")) || [];
     const storedSubtotale = parseFloat(localStorage.getItem("subtotale")) || 0;
 
@@ -34,15 +34,17 @@ export const CarrelloProvider = ({ children }) => {
     localStorage.setItem("subtotale", nuovoSubtotale.toFixed(2));
   };
 
-  const aggiungiAlCarrello = (wine) => {
+  const aggiungiAlCarrello = (wine, quantity = 1) => {
     const prodottoEsistente = carrello.find((item) => item.id === wine.id);
     let nuovoCarrello;
 
     if (prodottoEsistente) {
       nuovoCarrello = carrello.map((item) =>
-        item.id === wine.id ? { ...item, qty: item.qty + 1 } : item
+        item.id === wine.id ? { ...item, qty: item.qty + quantity } : item
       );
-      setAlertMsg(`${wine.name} aumentata a ${prodottoEsistente.qty + 1}`);
+      setAlertMsg(
+        `${wine.name} aumentata a ${prodottoEsistente.qty + quantity}`
+      );
     } else {
       nuovoCarrello = [
         ...carrello,
@@ -50,7 +52,7 @@ export const CarrelloProvider = ({ children }) => {
           id: wine.id,
           nome: wine.name,
           prezzo: wine.price,
-          qty: 1,
+          qty: quantity, // Set the initial quantity to the passed quantity
           img: wine.image_front_url,
         },
       ];

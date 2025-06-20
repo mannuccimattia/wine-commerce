@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useParams } from "react-router-dom";
-import { Container, Row, Col, Image } from "react-bootstrap";
+import { Container, Row, Col, Image, Button } from "react-bootstrap";
 import axios from "axios";
 import GlobalContext from "../contexts/globalContext";
 import WineGlasses from "../components/WineGlasses";
@@ -11,7 +11,9 @@ const Winepage = () => {
   const [wine, setWine] = useState(null);
   const { setIsLoading } = useContext(GlobalContext);
   const [mainImage, setMainImage] = useState(null);
-  const { aggiungiAlCarrello } = useCarrello(); // Use the context to manage cart
+  const { carrello, aggiungiAlCarrello, rimuoviDalCarrello, aggiornaQuantita } =
+    useCarrello(); // Use the context to manage cart
+  const [quantity, setQuantity] = useState(1); // Set default quantity to 1
 
   useEffect(() => {
     const fetchWine = async () => {
@@ -22,6 +24,14 @@ const Winepage = () => {
         );
         setWine(response.data);
         setMainImage(response.data.image_front_url); // Show front image initially
+
+        // Check if the wine is already in the cart
+        const existingProduct = carrello.find(
+          (item) => item.id === response.data.id
+        );
+        if (existingProduct) {
+          setQuantity(existingProduct.qty); // Set quantity to existing qty
+        }
       } catch (error) {
         console.error("Error:", error);
       } finally {
@@ -29,11 +39,36 @@ const Winepage = () => {
       }
     };
     fetchWine();
-  }, [id]);
+  }, [id, carrello]);
+
+  const handleQuantityChange = (change) => {
+    setQuantity((prev) => {
+      const newQuantity = Math.max(0, prev + change); // Ensure quantity does not go below 0
+      if (newQuantity === 0) {
+        rimuoviDalCarrello(wine.id); // Remove from cart if quantity is 0
+      }
+      return newQuantity;
+    });
+  };
+
+  const handleAddOrUpdateCart = () => {
+    if (quantity > 0) {
+      const existingProduct = carrello.find((item) => item.id === wine.id);
+      if (existingProduct) {
+        // Update quantity in cart
+        aggiornaQuantita(wine.id, quantity);
+      } else {
+        // Add new product to cart with the selected quantity
+        aggiungiAlCarrello(wine, quantity); // Pass the selected quantity here
+      }
+    }
+  };
 
   if (!wine) {
     return <div className="text-white text-center">Loading...</div>;
   }
+
+  const isInCart = carrello.some((item) => item.id === wine.id);
 
   return (
     <Container className="py-5" id="winepage-container">
@@ -104,6 +139,30 @@ const Winepage = () => {
               )}
             </div>
 
+            {/* Quantity Selector */}
+            <div className="mb-4">
+              <div className="d-flex align-items-center">
+                <button
+                  onClick={() => handleQuantityChange(-1)}
+                  disabled={quantity === 0}
+                >
+                  -
+                </button>
+                <span className="mx-3">{quantity}</span>
+                <button onClick={() => handleQuantityChange(1)}>+</button>
+              </div>
+            </div>
+
+            {/* Add or Update Cart Button */}
+            <div className="mb-4">
+              <button
+                className="btn btn-outline-light btn-lg"
+                onClick={handleAddOrUpdateCart}
+              >
+                {isInCart ? "Aggiorna quantità" : "Aggiungi al carrello"}
+              </button>
+            </div>
+
             <div className="mb-4">
               <div className="fs-5" id="details">
                 <p>
@@ -147,29 +206,6 @@ const Winepage = () => {
             </div>
             <div className="mb-4">
               <p className="fs-5">{wine.description}</p>
-            </div>
-            <div className="d-flex flex-column align-items-end">
-              <div className="d-flex justify-content-between align-items-center w-100">
-                <div>
-                  <h3 className="mb-0">Prezzo</h3>
-                  <p className="display-4 mb-0">€ {wine.price}</p>
-                </div>
-                {wine.stock > 0 ? (
-                  <button
-                    className="btn btn-outline-light btn-lg"
-                    onClick={() => {
-                      aggiungiAlCarrello(wine);
-                      window.location.reload(); // Reload to update cart icon
-                    }}
-                  >
-                    Aggiungi al carrello
-                  </button>
-                ) : (
-                  <button className="btn btn-outline-danger btn-lg" disabled>
-                    Non disponibile
-                  </button>
-                )}
-              </div>
             </div>
           </div>
         </Col>
