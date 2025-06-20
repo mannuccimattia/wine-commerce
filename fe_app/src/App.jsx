@@ -13,6 +13,7 @@ import SuccessPage from './pages/SuccessPage';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import GlobalContext from "./contexts/globalContext";
 
+
 function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [toDisable, setToDisable] = useState(false);

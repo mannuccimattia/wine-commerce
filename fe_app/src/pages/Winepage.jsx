@@ -5,6 +5,7 @@ import axios from "axios";
 import GlobalContext from "../contexts/globalContext";
 import WineGlasses from "../components/WineGlasses";
 import { useNavigate } from "react-router-dom";
+import CartSidebar from "../components/CartSidebar";
 
 const Winepage = () => {
   const { id } = useParams();
@@ -71,6 +72,7 @@ const Winepage = () => {
   return (
     <Container className="py-5" id="winepage-container">
       <Row className="gx-4">
+        <CartSidebar />
         <Col lg={6}>
           <div className="position-sticky" style={{ top: "2rem" }}>
             <Image
@@ -207,6 +209,7 @@ const Winepage = () => {
                   Indietro
                 </button>
               </div>
+              
 
               </div>
           </div>
