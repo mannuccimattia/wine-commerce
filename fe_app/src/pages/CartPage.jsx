@@ -6,7 +6,7 @@ import { useCarrello } from "../contexts/cartContext";
 const CartPage = () => {
   const { carrello, rimuoviDalCarrello, aggiornaQuantita } = useCarrello();
   const SPESE_SPEDIZIONE = 8.9;
-  const SOGLIA_SPEDIZIONE = 300;
+  const SOGLIA_SPEDIZIONE = 1000;
   const navigate = useNavigate();
 
   // Calculate subtotal
