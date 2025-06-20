@@ -4,8 +4,9 @@ import { useNavigate } from "react-router-dom";
 import WineGlasses from "./WineGlasses";
 
 const WineCard = ({ wine }) => {
-
   const [activeImage, setActiveImage] = useState(wine.image_front_url);
+  const [showTooltip, setShowTooltip] = useState(false);
+  const [showAddedAlert, setShowAddedAlert] = useState(false);
 
   const navigate = useNavigate();
 
@@ -27,14 +28,47 @@ const WineCard = ({ wine }) => {
         onMouseOver={() => setActiveImage(wine.image_back_url)}
         onMouseOut={() => { setActiveImage(wine.image_front_url) }}
       />
-      <Card.Body className="d-flex flex-column">
+      <Card.Body className="d-flex flex-column pb-0">
         <Card.Title className="text-white">{`${wine.winemaker.name} ${wine.vintage} ${wine.name} ${wine.denomination.name}`}</Card.Title>
-        <Card.Text className="text-white-50">{wine.description}</Card.Text>
-        <div className="mb-2">
-          <WineGlasses rating={wine.label_condition?.rating} />
-        </div>
-        <div className="mt-auto">
-          <p className="text-white mb-2">€ {wine.price}</p>
+        <WineGlasses
+          label={wine.label_condition.rating}
+          bottle={wine.bottle_condition.rating}
+        />
+        <div className="my-2 px-2 pb-2 d-flex justify-content-between align-items-center position-relative">
+          <span className="text-white">€ {wine.price}</span>
+          <button
+            className="btn btn-outline-light"
+            id="card-shopping"
+            onMouseEnter={() => setShowTooltip(true)}
+            onMouseLeave={() => setShowTooltip(false)}
+            onClick={e => {
+              e.stopPropagation();
+              setShowTooltip(false);
+              setShowAddedAlert(true);
+              setTimeout(() => setShowAddedAlert(false), 2000);
+              // Add your cart logic here
+            }}
+          >
+            <i className="fa-solid fa-shopping-cart"></i>
+          </button>
+          {/* Tooltip */}
+          {/* {!showAddedAlert && (
+            <div
+              id="card-shopping-tooltip"
+              style={{ opacity: showTooltip ? 1 : 0 }}
+            >
+              Add to cart
+            </div>
+          )} */}
+          {/* Alert */}
+          {/* {showAddedAlert && (
+            <div
+              id="card-shopping-tooltip"
+              className="card-shopping-alert"
+            >
+              Added to cart
+            </div>
+          )} */}
         </div>
       </Card.Body>
     </Card>
