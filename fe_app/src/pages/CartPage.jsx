@@ -1,12 +1,19 @@
 import { useState, useEffect } from 'react';
 import { Container, Row, Col, Card, Button } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import { Link } from'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+
+
+
+
 
 const CartPage = () => {
     // Stato per gestire gli elementi del carrello
     const [cartItems, setCartItems] = useState([]);
     const SPESE_SPEDIZIONE = 8.9;
     const SOGLIA_SPEDIZIONE = 300;
+    const navigate = useNavigate();
+    const [hoveredItemId, setHoveredItemId] = useState(null);
 
     // Al mount del componente, carica il carrello dal localStorage
     useEffect(() => {
@@ -119,10 +126,18 @@ const CartPage = () => {
                                                 <img
                                                     src={item.img}
                                                     alt={item.nome}
-                                                    style={{ width: '100px', height: '100px', objectFit: 'cover', marginRight: '15px', borderRadius: '4px' }}
+                                                    style={{ width: '100px', height: '100px', objectFit: 'cover', marginRight: '15px', borderRadius: '4px', cursor: 'pointer' }}
+                                                    onClick={() => navigate(`/wine/${item.id}`)}
                                                 />
                                             )}
-                                            <h5 className="mb-0">{item.nome}</h5>
+                                            <span
+                                                style={{ color: 'inherit', cursor: 'pointer', textDecoration: hoveredItemId === item.id ? 'underline' : 'none' }}
+                                                onMouseEnter={() => setHoveredItemId(item.id)}
+                                                onMouseLeave={() => setHoveredItemId(null)}
+                                                onClick={() => navigate(`/wine/${item.id}`)}
+                                            >
+                                                <h5 className="mb-0">{item.nome}</h5>
+                                            </span>
                                         </div>
                                     </Col>
 
