@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom"
 import DefaultLayout from "./layouts/DefaultLayout"
+import SearchLayout from "./layouts/SearchLayout";
 import Homepage from "./pages/Homepage";
 import Winepage from "./pages/Winepage";
 import NotFoundPage from "./pages/NotFoundPage";
@@ -37,9 +38,11 @@ function App() {
           <Route element={<DefaultLayout />}>
             <Route index element={<Homepage />}></Route>
             <Route path="/wine/:id" element={<Winepage />}></Route>
-            <Route path="/products" element={<ProductsPage />} />
-            <Route path={`/search`} element={<SearchResultsPage />} />
-            <Route path="/categoria/:id" element={<CategoryPage />} />
+            <Route element={<SearchLayout />}>
+              <Route path="/products" element={<ProductsPage />} />
+              <Route path={`/search`} element={<SearchResultsPage />} />
+              <Route path="/categoria/:id" element={<CategoryPage />} />
+            </Route>
             <Route path="/checkout" element={<CheckoutPage />} />
             <Route path="/cart" element={<CartPage />} />
             <Route path="/success" element={<SuccessPage />} />

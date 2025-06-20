@@ -11,7 +11,7 @@ const Winepage = () => {
   const [wine, setWine] = useState(null);
   const { setIsLoading } = useContext(GlobalContext);
   const [alertMsg, setAlertMsg] = useState("");
-  const  navigate = useNavigate();
+  const navigate = useNavigate();
   const [mainImage, setMainImage] = useState(null);
   useEffect(() => {
     const fetchWine = async () => {
@@ -52,7 +52,7 @@ const Winepage = () => {
     }
 
     // Nascondi l'alert dopo 3 secondi
-    setTimeout(() => setAlertMsg("") , 3000);
+    setTimeout(() => setAlertMsg(""), 3000);
 
     const subtotale = carrello.reduce((acc, item) => {
       return acc + item.qty * (item.prezzo || 0);
@@ -157,7 +157,7 @@ const Winepage = () => {
             <div className="mb-4">
               <p className="fs-5">{wine.description}</p>
             </div>
-            <div className="border-top border-white-50 pt-4 mt-4" style={{position: 'relative'}}>
+            <div className="border-top border-white-50 pt-4 mt-4" style={{ position: 'relative' }}>
               {/* Alert assoluto sopra il bordo */}
               {alertMsg && (
                 <div style={{
@@ -185,14 +185,14 @@ const Winepage = () => {
                   </div>
                   {wine.stock > 0 ? (
                     <>
-                    
-                    <button
-                      className="btn btn-outline-light btn-lg"
-                      onClick={() => aggiungiAlCarrello(wine)}
-                    >
-                      Aggiungi al carrello
-                    </button>
-                    
+
+                      <button
+                        className="btn btn-outline-light btn-lg"
+                        onClick={() => aggiungiAlCarrello(wine)}
+                      >
+                        Aggiungi al carrello
+                      </button>
+
                     </>
                   ) : (
                     <button className="btn btn-outline-danger btn-lg" disabled>
@@ -201,14 +201,14 @@ const Winepage = () => {
                   )}
                 </div>
               </div>
-               <div className="d-flex justify-content-end">
-                  <button className="btn btn-outline-light btn-lg" 
+              <div className="d-flex justify-content-end">
+                <button className="btn btn-outline-light btn-lg"
                   onClick={() => navigate("/")}>
                   Indietro
                 </button>
               </div>
 
-              </div>
+            </div>
           </div>
         </Col>
       </Row>
