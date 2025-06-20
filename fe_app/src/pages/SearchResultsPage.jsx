@@ -50,7 +50,7 @@ const SearchResultsPage = () => {
           <h1 className="text-white mb-4">Riusltati per {searchParamValue}</h1>
 
           {filteredWines.map((wine) => (
-            <Col key={wine.id} xs={12} sm={6} md={4} lg={3}>
+            <Col key={wine.id} xs={12} sm={6} md={4} xl={4} xxl={3}>
               <WineCard wine={wine} />
             </Col>
           ))}

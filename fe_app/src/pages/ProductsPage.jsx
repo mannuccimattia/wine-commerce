@@ -39,7 +39,7 @@ const ProductsPage = () => {
       ) : (
         <Row className="g-4">
           {wines.map((wine) => (
-            <Col key={wine.id} sm={12} md={6} lg={3}>
+            <Col key={wine.id} sm={12} md={6} xl={4} xxl={3}>
               <WineCard wine={wine} />
             </Col>
           ))}
