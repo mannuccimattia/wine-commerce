@@ -5,8 +5,6 @@ import WineGlasses from "./WineGlasses";
 
 const WineCard = ({ wine }) => {
   const [activeImage, setActiveImage] = useState(wine.image_front_url);
-  const [showTooltip, setShowTooltip] = useState(false);
-  const [showAddedAlert, setShowAddedAlert] = useState(false);
 
   const navigate = useNavigate();
 
@@ -39,36 +37,13 @@ const WineCard = ({ wine }) => {
           <button
             className="btn btn-outline-light"
             id="card-shopping"
-            onMouseEnter={() => setShowTooltip(true)}
-            onMouseLeave={() => setShowTooltip(false)}
             onClick={e => {
               e.stopPropagation();
-              setShowTooltip(false);
-              setShowAddedAlert(true);
-              setTimeout(() => setShowAddedAlert(false), 2000);
               // Add your cart logic here
             }}
           >
             <i className="fa-solid fa-shopping-cart"></i>
           </button>
-          {/* Tooltip */}
-          {/* {!showAddedAlert && (
-            <div
-              id="card-shopping-tooltip"
-              style={{ opacity: showTooltip ? 1 : 0 }}
-            >
-              Add to cart
-            </div>
-          )} */}
-          {/* Alert */}
-          {/* {showAddedAlert && (
-            <div
-              id="card-shopping-tooltip"
-              className="card-shopping-alert"
-            >
-              Added to cart
-            </div>
-          )} */}
         </div>
       </Card.Body>
     </Card>
