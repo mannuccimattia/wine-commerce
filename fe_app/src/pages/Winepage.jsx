@@ -5,6 +5,7 @@ import axios from "axios";
 import GlobalContext from "../contexts/globalContext";
 import WineGlasses from "../components/WineGlasses";
 import { useCarrello } from "../contexts/cartContext";
+import WineBreadcrumb from "../components/WineBreadcrumb";
 
 const Winepage = () => {
   const { id } = useParams();
@@ -69,6 +70,7 @@ const Winepage = () => {
 
   return (
     <Container className="py-4" id="winepage-container">
+      <WineBreadcrumb category={wine.category} name={wine.name} />
       <Row className="gx-4">
         <Col lg={6}>
           <div className="position-sticky" style={{ top: "2rem" }}>
