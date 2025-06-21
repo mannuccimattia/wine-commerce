@@ -16,7 +16,15 @@
 
 > **Index Bestsellers** - GET - `http://127.0.0.1:3000/api/wines/bestseller`
 
+> **Index PremiumVintage** - GET - `http://127.0.0.1:3000/api/wines/premiumvintage`
+
 > **Show** - GET - `http://127.0.0.1:3000/api/wines/id_here`
+
+> **Get Categories** - GET - `http://127.0.0.1:3000/api/getcategories`
+
+> **Get Denominations** - GET - `http://127.0.0.1:3000/api/getdenominations`
+
+> **Get Regions** - GET - `http://127.0.0.1:3000/api/getregions`
 
 #### Chatbot
 
