@@ -1,31 +1,84 @@
 import { Outlet } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Form, Button, Offcanvas } from "react-bootstrap";
+import axios from "axios";
 
 const SearchLayout = () => {
-  const [minPrice, setMinPrice] = useState(0);
-  const [maxPrice, setMaxPrice] = useState(200);
+  // Stato filtri
+  const [filters, setFilters] = useState({
+    minPrice: 0,
+    maxPrice: 200,
+    sortBy: "",
+    denomination: "",
+    region: "",
+  });
+
+  // Stati per i valori di input indipendenti
+  const [minPriceInput, setMinPriceInput] = useState(filters.minPrice);
+  const [maxPriceInput, setMaxPriceInput] = useState(filters.maxPrice);
+
   const [showFilters, setShowFilters] = useState(false);
-  const [sortBy, setSortBy] = useState("");
 
-  const denominations = ["DOP", "DOCG", "IGT", "DOC", "VdT"];
-  const regions = ["Tuscany", "Piedmont", "Sicily", "Veneto", "Lombardy"];
+  const [denominations, setDenominations] = useState([]);
+  const [regions, setRegions] = useState([]);
 
+  // Carico denominazioni e regioni da API
+  useEffect(() => {
+    axios
+      .get("http://127.0.0.1:3000/api/wines/getdenominations")
+      .then((res) => setDenominations(res.data))
+      .catch((err) => console.log("Errore Caricamento Denominazioni", err));
+
+    axios
+      .get("http://127.0.0.1:3000/api/wines/getregions")
+      .then((res) => setRegions(res.data))
+      .catch((err) => console.log("Errore Caricamento Regioni", err));
+  }, []);
+
+  // Gestione cambiamenti price con controllo di validità
   const handleMinPriceChange = (e) => {
-    const value = parseInt(e.target.value) || 0;
-    if (value < maxPrice) {
-      setMinPrice(value);
-    }
+    let value = parseInt(e.target.value);
+    if (isNaN(value)) value = 0;
+    if (value <= maxPriceInput) setMinPriceInput(value);
   };
 
   const handleMaxPriceChange = (e) => {
-    const value = parseInt(e.target.value) || 0;
-    if (value > minPrice) {
-      setMaxPrice(value);
-    }
+    let value = parseInt(e.target.value);
+    if (isNaN(value)) value = 0;
+    if (value >= minPriceInput) setMaxPriceInput(value);
   };
 
-  // Componente filtri riutilizzabile
+  // Cambia ordinamento
+  const handleSortChange = (e) => {
+    setFilters((prev) => ({ ...prev, sortBy: e.target.value }));
+  };
+
+  // Cambia denominazione
+  const handleDenominationChange = (e) => {
+    setFilters((prev) => ({ ...prev, denomination: e.target.value }));
+  };
+
+  // Toggle region (clicca un pulsante)
+  const toggleRegion = (regionName) => {
+    setFilters((prev) => {
+      if (prev.region === regionName) {
+        return { ...prev, region: "" }; // Deseleziona se già selezionata
+      }
+      return { ...prev, region: regionName };
+    });
+  };
+
+  // Applica i valori min/max price allo stato filtri quando si preme il bottone
+  const applyFilters = () => {
+    setFilters((prev) => ({
+      ...prev,
+      minPrice: minPriceInput,
+      maxPrice: maxPriceInput,
+    }));
+    setShowFilters(false);
+  };
+
+  // Componente contenuto filtri (riutilizzabile)
   const FiltersContent = () => (
     <>
       <h5 className="mb-4">Filters</h5>
@@ -34,8 +87,8 @@ const SearchLayout = () => {
       <div className="mb-4">
         <h6>Ordina per</h6>
         <Form.Select
-          value={sortBy}
-          onChange={(e) => setSortBy(e.target.value)}
+          value={filters.sortBy}
+          onChange={handleSortChange}
           className="bg-dark text-white border-secondary"
         >
           <option value="">Seleziona ordinamento</option>
@@ -56,7 +109,7 @@ const SearchLayout = () => {
               type="number"
               min="0"
               max="500"
-              value={minPrice}
+              value={minPriceInput}
               onChange={handleMinPriceChange}
               className="bg-dark text-white border-secondary"
               size="sm"
@@ -68,7 +121,7 @@ const SearchLayout = () => {
               type="number"
               min="0"
               max="500"
-              value={maxPrice}
+              value={maxPriceInput}
               onChange={handleMaxPriceChange}
               className="bg-dark text-white border-secondary"
               size="sm"
@@ -77,7 +130,7 @@ const SearchLayout = () => {
         </div>
         <div className="text-center mt-2">
           <small className="text-muted">
-            €{minPrice} - €{maxPrice}
+            €{minPriceInput} - €{maxPriceInput}
           </small>
         </div>
       </div>
@@ -86,11 +139,15 @@ const SearchLayout = () => {
       <div className="mb-4">
         <h6>Wine Denominations</h6>
         <Form.Group controlId="denominations">
-          <Form.Select className="bg-dark text-white border-secondary">
-            <option>Select a denomination</option>
-            {denominations.map((denomination, index) => (
-              <option key={index} value={denomination}>
-                {denomination}
+          <Form.Select
+            className="bg-dark text-white border-secondary"
+            value={filters.denomination}
+            onChange={handleDenominationChange}
+          >
+            <option value="">Seleziona una denominazione</option>
+            {denominations.map(({ id, name }) => (
+              <option key={id} value={name}>
+                {name}
               </option>
             ))}
           </Form.Select>
@@ -101,14 +158,15 @@ const SearchLayout = () => {
       <div>
         <h6>Regions</h6>
         <div className="d-flex flex-wrap">
-          {regions.map((region, index) => (
+          {regions.map(({ id, name }) => (
             <Button
-              key={index}
-              variant="outline-light"
+              key={id}
+              variant={filters.region === name ? "primary" : "outline-light"}
               className="m-1"
               size="sm"
+              onClick={() => toggleRegion(name)}
             >
-              {region}
+              {name}
             </Button>
           ))}
         </div>
@@ -136,10 +194,19 @@ const SearchLayout = () => {
         {/* Sidebar Desktop */}
         <aside className="col-lg-3 mb-4 mb-lg-0 d-none d-lg-block">
           <div
-            className=" text-white p-3 rounded shadow-sm"
+            className="text-white p-3 rounded shadow-sm"
             style={{ minHeight: "300px" }}
           >
             <FiltersContent />
+            <div className="mt-4">
+              <Button
+                variant="primary"
+                className="w-100"
+                onClick={applyFilters}
+              >
+                Applica Filtri
+              </Button>
+            </div>
           </div>
         </aside>
 
@@ -159,7 +226,7 @@ const SearchLayout = () => {
               <Button
                 variant="primary"
                 className="w-100"
-                onClick={() => setShowFilters(false)}
+                onClick={applyFilters}
               >
                 Applica Filtri
               </Button>
@@ -167,9 +234,9 @@ const SearchLayout = () => {
           </Offcanvas.Body>
         </Offcanvas>
 
-        {/* Main content */}
+        {/* Main content - passo i filtri al figlio */}
         <main className="col-12 col-lg-9">
-          <Outlet />
+          <Outlet context={{ filters }} />
         </main>
       </div>
     </div>
