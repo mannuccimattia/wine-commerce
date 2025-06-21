@@ -39,24 +39,38 @@ const SearchForm = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (selectedCategory !== "all" && !homeSearch.trim()) {
-      setAlertMessage("Inserisci un termine di ricerca per questa categoria");
-      setShowAlert(true);
+    const trimmedSearch = homeSearch.trim();
+
+    // Se categoria diversa da "all" e campo di ricerca vuoto, naviga pagina categoria
+    if (selectedCategory !== "all" && !trimmedSearch) {
+      navigate(`/categoria/${selectedCategory}`);
+      setHomeSearch(""); // opzionale, pulisce input
       return;
     }
 
-    if (selectedCategory === "all" && !homeSearch.trim()) {
+    // Se categoria "all" e campo di ricerca vuoto, vai a prodotti generici
+    if (selectedCategory === "all" && !trimmedSearch) {
       navigate("/products");
       return;
     }
 
-    let searchUrl = `/search?search=${encodeURIComponent(homeSearch)}`;
-    if (selectedCategory !== "all") {
-      searchUrl += `&category=${selectedCategory}`;
+    // Se categoria diversa da "all" e c'è testo, fai la ricerca con filtro categoria
+    if (selectedCategory !== "all" && trimmedSearch) {
+      const searchUrl = `/search?search=${encodeURIComponent(
+        trimmedSearch
+      )}&category=${selectedCategory}`;
+      navigate(searchUrl);
+      setHomeSearch("");
+      return;
     }
 
-    navigate(searchUrl);
-    setHomeSearch(""); // Pulisce il campo dopo la ricerca
+    // Se categoria "all" e c'è testo, ricerca generica senza categoria
+    if (selectedCategory === "all" && trimmedSearch) {
+      const searchUrl = `/search?search=${encodeURIComponent(trimmedSearch)}`;
+      navigate(searchUrl);
+      setHomeSearch("");
+      return;
+    }
   };
 
   return (

@@ -3,6 +3,7 @@ import { Card, Alert } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import WineGlasses from "./WineGlasses";
 import { useCarrello } from "../contexts/cartContext"; // Import the context
+import CategoryBadge from "./CategoryBadge";
 
 const WineCard = ({ wine }) => {
   const [activeImage, setActiveImage] = useState(wine.image_front_url);
@@ -36,11 +37,17 @@ const WineCard = ({ wine }) => {
         onMouseOut={() => setActiveImage(wine.image_front_url)}
       />
       <Card.Body className="d-flex flex-column pb-0">
-        <Card.Title className="text-white">{`${wine.winemaker.name} ${wine.vintage} ${wine.name} ${wine.denomination.name}`}</Card.Title>
+        <Card.Title className="text-white">
+          {`${wine.winemaker.name} ${wine.vintage} ${wine.name} ${wine.denomination.name}`}
+        </Card.Title>
         <WineGlasses
           label={wine.label_condition.rating}
           bottle={wine.bottle_condition.rating}
         />
+        <div>
+          {" "}
+          <CategoryBadge categoryId={wine.category.id} />
+        </div>
         <div className="my-2 px-2 pb-2 d-flex justify-content-between align-items-center position-relative">
           <span className="text-white">€ {wine.price}</span>
           <button

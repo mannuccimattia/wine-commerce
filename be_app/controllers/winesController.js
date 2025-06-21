@@ -26,91 +26,164 @@ const index = (req, res) => {
     LEFT JOIN bottle_conditions BC ON W.bottle_condition = BC.id
   `;
 
-  const sortOrder =
-    req.query.sort && req.query.sort.toLowerCase() === "desc" ? "DESC" : "ASC";
-  const searchTerm = req.query.search;
+  // Estrazione parametri dalla query
+  const searchTerm = req.query.search?.trim();
   const categoryId = req.query.category ? parseInt(req.query.category) : null;
+  const minPrice = req.query.minPrice ? parseFloat(req.query.minPrice) : null;
+  const maxPrice = req.query.maxPrice ? parseFloat(req.query.maxPrice) : null;
+  const sortBy = req.query.sortBy;
+  const denomination = req.query.denomination?.trim();
+  const region = req.query.region?.trim();
 
-  // WHERE
+  // Costruzione condizioni WHERE
   let whereConditions = [];
   let queryParams = [];
 
-  // text
-  if (searchTerm && searchTerm.trim()) {
+  // Ricerca testuale (name, vintage, winemaker)
+  if (searchTerm) {
     whereConditions.push(
       `(W.name LIKE ? OR W.vintage LIKE ? OR WN.name LIKE ?)`
     );
     queryParams.push(`%${searchTerm}%`, `%${searchTerm}%`, `%${searchTerm}%`);
   }
 
-  // category
+  // Filtro categoria
   if (categoryId && categoryId !== "all") {
     whereConditions.push(`W.category = ?`);
     queryParams.push(categoryId);
   }
 
-  // complete query
+  // Filtro prezzo minimo
+  if (minPrice !== null && minPrice > 0) {
+    whereConditions.push(`W.price >= ?`);
+    queryParams.push(minPrice);
+  }
+
+  // Filtro prezzo massimo
+  if (maxPrice !== null && maxPrice > 0) {
+    whereConditions.push(`W.price <= ?`);
+    queryParams.push(maxPrice);
+  }
+
+  // Filtro denominazione
+  if (denomination) {
+    whereConditions.push(`D.name = ?`);
+    queryParams.push(denomination);
+  }
+
+  // Filtro regione
+  if (region) {
+    whereConditions.push(`R.name = ?`);
+    queryParams.push(region);
+  }
+
+  // Costruzione query completa
   let sql = sqlBase;
   if (whereConditions.length > 0) {
     sql += ` WHERE ${whereConditions.join(" AND ")}`;
   }
-  sql += ` ORDER BY W.price ${sortOrder}`;
 
-  // chiamata
+  // Gestione ordinamento
+  let orderBy = "W.id ASC"; // Default fallback
+
+  switch (sortBy) {
+    case "price-asc":
+      orderBy = "W.price ASC";
+      break;
+    case "price-desc":
+      orderBy = "W.price DESC";
+      break;
+    case "year-asc":
+      orderBy = "W.vintage ASC";
+      break;
+    case "year-desc":
+      orderBy = "W.vintage DESC";
+      break;
+    case "name-asc":
+      orderBy = "W.name ASC";
+      break;
+    case "name-desc":
+      orderBy = "W.name DESC";
+      break;
+    default:
+      // Se non è specificato nessun ordinamento, ordina per rilevanza
+      if (searchTerm) {
+        orderBy = "W.name ASC"; // Ordina per nome quando c'è una ricerca
+      } else {
+        orderBy = "W.id DESC"; // Ordina per ID (più recenti primi) quando non c'è ricerca
+      }
+  }
+
+  sql += ` ORDER BY ${orderBy}`;
+
+  // Debug logging (rimuovi in produzione)
+  console.log("Query SQL:", sql);
+  console.log("Parametri:", queryParams);
+  console.log("Filtri applicati:", {
+    searchTerm,
+    categoryId,
+    minPrice,
+    maxPrice,
+    sortBy,
+    denomination,
+    region,
+  });
+
+  // Esecuzione query
   connection.query(sql, queryParams, (err, winesResult) => {
-    if (err) return queryFailed(err, res);
-
-    const wines = winesResult.map((wine) => {
-      const win = {
-        id: wine.id,
-        name: wine.name,
-        category: {
-          id: wine.category,
-          name: wine.category_name,
-        },
-        price: wine.price,
-        alcol: wine.alcol,
-        bottle_size: wine.bottle_size,
-        vintage: wine.vintage,
-        stock: wine.stock,
-        image_front_url: req.imagePath + wine.image_front_url,
-        image_back_url: req.imagePath + wine.image_back_url,
-        grape_type: wine.grape_type,
-        label_condition: {
-          id: wine.label_condition,
-          name: wine.label_condition_name,
-          rating: wine.label_condition_rating,
-        },
-        bottle_condition: {
-          id: wine.bottle_condition,
-          name: wine.bottle_condition_name,
-          rating: wine.bottle_condition_rating,
-        },
-        region: {
-          id: wine.region,
-          name: wine.region_name,
-        },
-        temperature: wine.temperature,
-        winemaker: {
-          id: wine.winemaker,
-          name: wine.winemaker_name,
-        },
-        description: wine.description,
-        denomination: {
-          id: wine.denomination,
-          name: wine.denomination_name,
-        },
-      };
-
-      return win;
-    });
-
-    if (wines.length === 0) {
-      return res.status(200).json([]);
+    if (err) {
+      console.error("Errore query:", err);
+      return queryFailed(err, res);
     }
-    res.json(wines);
+
+    // Mappatura risultati
+    const wines = winesResult.map((wine) => ({
+      id: wine.id,
+      name: wine.name,
+      category: {
+        id: wine.category,
+        name: wine.category_name,
+      },
+      price: wine.price,
+      alcol: wine.alcol,
+      bottle_size: wine.bottle_size,
+      vintage: wine.vintage,
+      stock: wine.stock,
+      image_front_url: req.imagePath + wine.image_front_url,
+      image_back_url: req.imagePath + wine.image_back_url,
+      grape_type: wine.grape_type,
+      label_condition: {
+        id: wine.label_condition,
+        name: wine.label_condition_name,
+        rating: wine.label_condition_rating,
+      },
+      bottle_condition: {
+        id: wine.bottle_condition,
+        name: wine.bottle_condition_name,
+        rating: wine.bottle_condition_rating,
+      },
+      region: {
+        id: wine.region,
+        name: wine.region_name,
+      },
+      temperature: wine.temperature,
+      winemaker: {
+        id: wine.winemaker,
+        name: wine.winemaker_name,
+      },
+      description: wine.description,
+      denomination: {
+        id: wine.denomination,
+        name: wine.denomination_name,
+      },
+    }));
+
+    // Risposta
+    res.status(200).json(wines);
   });
 };
+
+module.exports = { index };
 
 // show
 const show = (req, res) => {
@@ -420,7 +493,7 @@ const premiumVintage = (req, res) => {
 
 //GET CATEGORIES
 const getCategories = (req, res) => {
-  const sql = "SELECT id, name FROM categories ORDER BY id";
+  const sql = "SELECT id, name, color FROM categories ORDER BY id";
   connection.query(sql, (err, results) => {
     if (err) {
       console.error("Errore nella query getCategories:", err);

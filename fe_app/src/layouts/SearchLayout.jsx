@@ -1,28 +1,75 @@
-import { Outlet } from "react-router-dom";
+import { Outlet, useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Form, Button, Offcanvas } from "react-bootstrap";
 import axios from "axios";
 
 const SearchLayout = () => {
-  // Stato filtri
+  const [searchParams, setSearchParams] = useSearchParams();
+
   const [filters, setFilters] = useState({
-    minPrice: 0,
-    maxPrice: 200,
-    sortBy: "",
-    denomination: "",
-    region: "",
+    minPrice: parseInt(searchParams.get("minPrice")) || 0,
+    maxPrice: parseInt(searchParams.get("maxPrice")) || 5000,
+    sortBy: searchParams.get("sortBy") || "",
+    denomination: searchParams.get("denomination") || "",
+    region: searchParams.get("region") || "",
   });
 
-  // Stati per i valori di input indipendenti
   const [minPriceInput, setMinPriceInput] = useState(filters.minPrice);
   const [maxPriceInput, setMaxPriceInput] = useState(filters.maxPrice);
 
   const [showFilters, setShowFilters] = useState(false);
 
+  const useDebounce = (value, delay) => {
+    const [debouncedValue, setDebouncedValue] = useState(value);
+
+    useEffect(() => {
+      const handler = setTimeout(() => {
+        setDebouncedValue(value);
+      }, delay);
+
+      return () => {
+        clearTimeout(handler);
+      };
+    }, [value, delay]);
+
+    return debouncedValue;
+  };
+
+  const debouncedMinPrice = useDebounce(minPriceInput, 500);
+  const debouncedMaxPrice = useDebounce(maxPriceInput, 500);
+
+  useEffect(() => {
+    if (
+      debouncedMinPrice !== filters.minPrice ||
+      debouncedMaxPrice !== filters.maxPrice
+    ) {
+      const newFilters = {
+        ...filters,
+        minPrice: debouncedMinPrice,
+        maxPrice: debouncedMaxPrice,
+      };
+      setFilters(newFilters);
+      updateURLParams(newFilters);
+    }
+  }, [debouncedMinPrice, debouncedMaxPrice]);
+
   const [denominations, setDenominations] = useState([]);
   const [regions, setRegions] = useState([]);
 
-  // Carico denominazioni e regioni da API
+  const updateURLParams = (newFilters) => {
+    const currentParams = new URLSearchParams(searchParams);
+
+    Object.entries(newFilters).forEach(([key, value]) => {
+      if (value && value !== "" && value !== 0) {
+        currentParams.set(key, value);
+      } else {
+        currentParams.delete(key);
+      }
+    });
+
+    setSearchParams(currentParams);
+  };
+
   useEffect(() => {
     axios
       .get("http://127.0.0.1:3000/api/wines/getdenominations")
@@ -35,55 +82,89 @@ const SearchLayout = () => {
       .catch((err) => console.log("Errore Caricamento Regioni", err));
   }, []);
 
-  // Gestione cambiamenti price con controllo di validità
   const handleMinPriceChange = (e) => {
     let value = parseInt(e.target.value);
     if (isNaN(value)) value = 0;
-    if (value <= maxPriceInput) setMinPriceInput(value);
+    if (value <= maxPriceInput && value >= 0) setMinPriceInput(value);
   };
 
   const handleMaxPriceChange = (e) => {
     let value = parseInt(e.target.value);
     if (isNaN(value)) value = 0;
-    if (value >= minPriceInput) setMaxPriceInput(value);
+    if (value >= minPriceInput && value >= 0) setMaxPriceInput(value);
   };
 
-  // Cambia ordinamento
   const handleSortChange = (e) => {
-    setFilters((prev) => ({ ...prev, sortBy: e.target.value }));
+    const newFilters = { ...filters, sortBy: e.target.value };
+    setFilters(newFilters);
+    updateURLParams(newFilters);
   };
 
-  // Cambia denominazione
   const handleDenominationChange = (e) => {
-    setFilters((prev) => ({ ...prev, denomination: e.target.value }));
+    const newFilters = { ...filters, denomination: e.target.value };
+    setFilters(newFilters);
+    updateURLParams(newFilters);
   };
 
-  // Toggle region (clicca un pulsante)
   const toggleRegion = (regionName) => {
-    setFilters((prev) => {
-      if (prev.region === regionName) {
-        return { ...prev, region: "" }; // Deseleziona se già selezionata
-      }
-      return { ...prev, region: regionName };
-    });
+    const newRegion = filters.region === regionName ? "" : regionName;
+    const newFilters = { ...filters, region: newRegion };
+    setFilters(newFilters);
+    updateURLParams(newFilters);
   };
 
-  // Applica i valori min/max price allo stato filtri quando si preme il bottone
-  const applyFilters = () => {
-    setFilters((prev) => ({
-      ...prev,
-      minPrice: minPriceInput,
-      maxPrice: maxPriceInput,
-    }));
-    setShowFilters(false);
+  const resetFilters = () => {
+    const resetFilters = {
+      minPrice: 0,
+      maxPrice: 5000,
+      sortBy: "",
+      denomination: "",
+      region: "",
+    };
+    setFilters(resetFilters);
+    setMinPriceInput(0);
+    setMaxPriceInput(5000);
+
+    const currentParams = new URLSearchParams(searchParams);
+    const preservedParams = new URLSearchParams();
+
+    if (currentParams.has("search")) {
+      preservedParams.set("search", currentParams.get("search"));
+    }
+    if (currentParams.has("category")) {
+      preservedParams.set("category", currentParams.get("category"));
+    }
+
+    setSearchParams(preservedParams);
   };
 
-  // Componente contenuto filtri (riutilizzabile)
+  const getFullURLParams = () => {
+    const params = new URLSearchParams(searchParams);
+    return {
+      search: params.get("search") || "",
+      category: params.get("category") || "",
+      minPrice: params.get("minPrice") || "",
+      maxPrice: params.get("maxPrice") || "",
+      sortBy: params.get("sortBy") || "",
+      denomination: params.get("denomination") || "",
+      region: params.get("region") || "",
+    };
+  };
+
   const FiltersContent = () => (
     <>
-      <h5 className="mb-4">Filters</h5>
+      <div className="d-flex justify-content-between align-items-center mb-4">
+        <h5 className="mb-0">Seleziona filtri</h5>
+        <Button
+          variant="outline-light"
+          size="sm"
+          onClick={resetFilters}
+          className="text-decoration-none"
+        >
+          Reset
+        </Button>
+      </div>
 
-      {/* Ordinamento */}
       <div className="mb-4">
         <h6>Ordina per</h6>
         <Form.Select
@@ -99,7 +180,6 @@ const SearchLayout = () => {
         </Form.Select>
       </div>
 
-      {/* Price Range Semplificato */}
       <div className="mb-4">
         <h6>Fascia di prezzo</h6>
         <div className="row g-2">
@@ -108,7 +188,7 @@ const SearchLayout = () => {
             <Form.Control
               type="number"
               min="0"
-              max="500"
+              step="50"
               value={minPriceInput}
               onChange={handleMinPriceChange}
               className="bg-dark text-white border-secondary"
@@ -119,8 +199,8 @@ const SearchLayout = () => {
             <Form.Label className="small">Max €</Form.Label>
             <Form.Control
               type="number"
-              min="0"
-              max="500"
+              max="5000"
+              step="50"
               value={maxPriceInput}
               onChange={handleMaxPriceChange}
               className="bg-dark text-white border-secondary"
@@ -135,9 +215,8 @@ const SearchLayout = () => {
         </div>
       </div>
 
-      {/* Denominations Dropdown */}
       <div className="mb-4">
-        <h6>Wine Denominations</h6>
+        <h6>Denominazione</h6>
         <Form.Group controlId="denominations">
           <Form.Select
             className="bg-dark text-white border-secondary"
@@ -154,9 +233,8 @@ const SearchLayout = () => {
         </Form.Group>
       </div>
 
-      {/* Regions Buttons */}
       <div>
-        <h6>Regions</h6>
+        <h6>Regione</h6>
         <div className="d-flex flex-wrap">
           {regions.map(({ id, name }) => (
             <Button
@@ -177,7 +255,6 @@ const SearchLayout = () => {
   return (
     <div className="container-fluid py-4">
       <div className="row">
-        {/* Pulsante filtri mobile */}
         <div className="col-12 d-lg-none mb-3">
           <Button
             variant="dark"
@@ -191,26 +268,15 @@ const SearchLayout = () => {
           </Button>
         </div>
 
-        {/* Sidebar Desktop */}
         <aside className="col-lg-3 mb-4 mb-lg-0 d-none d-lg-block">
           <div
             className="text-white p-3 rounded shadow-sm"
             style={{ minHeight: "300px" }}
           >
             <FiltersContent />
-            <div className="mt-4">
-              <Button
-                variant="primary"
-                className="w-100"
-                onClick={applyFilters}
-              >
-                Applica Filtri
-              </Button>
-            </div>
           </div>
         </aside>
 
-        {/* Offcanvas Mobile */}
         <Offcanvas
           show={showFilters}
           onHide={() => setShowFilters(false)}
@@ -224,19 +290,18 @@ const SearchLayout = () => {
             <FiltersContent />
             <div className="mt-4">
               <Button
-                variant="primary"
+                variant="secondary"
                 className="w-100"
-                onClick={applyFilters}
+                onClick={() => setShowFilters(false)}
               >
-                Applica Filtri
+                Chiudi
               </Button>
             </div>
           </Offcanvas.Body>
         </Offcanvas>
 
-        {/* Main content - passo i filtri al figlio */}
         <main className="col-12 col-lg-9">
-          <Outlet context={{ filters }} />
+          <Outlet context={{ filters, getFullURLParams }} />
         </main>
       </div>
     </div>

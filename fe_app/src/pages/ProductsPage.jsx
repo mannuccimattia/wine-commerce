@@ -1,20 +1,18 @@
-import { useEffect, useContext } from "react";
+import { useEffect, useState } from "react";
 import { Container, Row, Col } from "react-bootstrap";
 import axios from "axios";
 import WineCard from "../components/WineCard";
-import { SearchContext } from "../contexts/SearchContext";
 import Loader from "../components/Loader";
 
 const ProductsPage = () => {
-  const { searchState, setSearchState } = useContext(SearchContext);
-  const { wines } = searchState;
+  const [wines, setWines] = useState([]); // stato locale per i vini
 
   useEffect(() => {
     const fetchWines = async () => {
       const endpoint = "http://localhost:3000/api/wines";
       try {
         const response = await axios.get(endpoint);
-        setSearchState((prev) => ({ ...prev, wines: response.data }));
+        setWines(response.data);
       } catch (error) {
         console.error("Error:", error);
       }
@@ -25,10 +23,7 @@ const ProductsPage = () => {
     }, 500);
 
     return () => {
-      setSearchState((prev) => ({
-        ...prev,
-        wines: [],
-      }));
+      setWines([]);
     };
   }, []);
 
