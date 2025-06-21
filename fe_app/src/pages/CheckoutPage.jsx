@@ -201,9 +201,13 @@ const CheckoutPage = () => {
                         borderRadius: "5px",
                       }}
                     />
-                    <span>
-                      {item.nome} x {item.qty}
-                    </span>
+                    <div>
+                      <div>{item.nome}</div>
+                      <div>
+                        {" "}
+                        € {item.prezzo} x {item.qty}
+                      </div>
+                    </div>
                   </div>
                 )
               )}

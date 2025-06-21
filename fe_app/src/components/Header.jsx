@@ -2,17 +2,17 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useContext, useEffect } from "react";
 import GlobalContext from "../contexts/globalContext";
 import SearchForm from "./SearchForm";
-import { useCarrello } from "../contexts/cartContext"; // Import the cart context
+import { useCarrello } from "../contexts/cartContext";
 
 const Header = () => {
   const { toDisable, setToDisable } = useContext(GlobalContext);
-  const { carrello } = useCarrello(); // Access cart items from context
+  const { carrello } = useCarrello();
   const navigate = useNavigate();
   const location = useLocation();
 
   const handleClick = (e) => {
     e.preventDefault();
-    const target = e.currentTarget.value; // Fix here
+    const target = e.currentTarget.value;
     setToDisable(target === toDisable ? null : target);
     navigate(`/${target}`);
   };
@@ -32,6 +32,7 @@ const Header = () => {
 
   // Calculate total amount based on cart items
   const total = carrello.reduce((acc, item) => acc + item.qty * item.prezzo, 0);
+  const totalItems = carrello.reduce((acc, item) => acc + item.qty, 0);
 
   return (
     <>
@@ -39,7 +40,8 @@ const Header = () => {
         className="navbar navbar-dark m-3"
         style={{ backgroundColor: "#212223" }}
       >
-        <div className="container-fluid">
+        <div className="container-fluid d-flex justify-content-between align-items-center">
+          {/* Logo */}
           <Link className="navbar-brand" to="/" onClick={handleLogoClick}>
             <img
               src="\imgs\wordmarks\boolze-high-resolution-wordmark.png"
@@ -48,21 +50,44 @@ const Header = () => {
               className="me-2"
             />
           </Link>
-          <div className="d-flex gap-3">
+
+          {/* Cart Section */}
+          <div className="d-flex align-items-center">
+            {/* Desktop - Show amount */}
             <button
-              className="btn btn-outline-light position-relative"
+              className="btn btn-outline-light position-relative d-none d-md-inline-block"
               value="cart"
               onClick={handleClick}
               disabled={toDisable === "cart"}
             >
               <i className="fa-solid fa-cart-shopping me-1"></i>
-              {carrello.length > 0 && (
+              {totalItems > 0 && (
                 <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-white text-black">
-                  {carrello.reduce((acc, item) => acc + item.qty, 0)}
+                  {totalItems}
                   <span className="visually-hidden">items in cart</span>
                 </span>
               )}
               {total > 0 && <span className="ms-2">€{total.toFixed(2)}</span>}
+            </button>
+
+            {/* Mobile - Icon only */}
+            <button
+              className="btn btn-outline-light position-relative d-md-none p-2"
+              value="cart"
+              onClick={handleClick}
+              disabled={toDisable === "cart"}
+              style={{ minWidth: "44px", minHeight: "44px" }}
+            >
+              <i className="fa-solid fa-cart-shopping"></i>
+              {totalItems > 0 && (
+                <span
+                  className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-white text-black"
+                  style={{ fontSize: "0.75rem" }}
+                >
+                  {totalItems}
+                  <span className="visually-hidden">items in cart</span>
+                </span>
+              )}
             </button>
           </div>
         </div>

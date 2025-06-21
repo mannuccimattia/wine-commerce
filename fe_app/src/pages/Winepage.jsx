@@ -12,8 +12,8 @@ const Winepage = () => {
   const { setIsLoading } = useContext(GlobalContext);
   const [mainImage, setMainImage] = useState(null);
   const { carrello, aggiungiAlCarrello, rimuoviDalCarrello, aggiornaQuantita } =
-    useCarrello(); // Use the context to manage cart
-  const [quantity, setQuantity] = useState(1); // Set default quantity to 1
+    useCarrello();
+  const [quantity, setQuantity] = useState(1);
 
   useEffect(() => {
     const fetchWine = async () => {
@@ -23,14 +23,13 @@ const Winepage = () => {
           `http://localhost:3000/api/wines/${id}`
         );
         setWine(response.data);
-        setMainImage(response.data.image_front_url); // Show front image initially
+        setMainImage(response.data.image_front_url);
 
-        // Check if the wine is already in the cart
         const existingProduct = carrello.find(
           (item) => item.id === response.data.id
         );
         if (existingProduct) {
-          setQuantity(existingProduct.qty); // Set quantity to existing qty
+          setQuantity(existingProduct.qty);
         }
       } catch (error) {
         console.error("Error:", error);
@@ -43,9 +42,9 @@ const Winepage = () => {
 
   const handleQuantityChange = (change) => {
     setQuantity((prev) => {
-      const newQuantity = Math.max(0, prev + change); // Ensure quantity does not go below 0
+      const newQuantity = Math.max(0, prev + change);
       if (newQuantity === 0) {
-        rimuoviDalCarrello(wine.id); // Remove from cart if quantity is 0
+        rimuoviDalCarrello(wine.id);
       }
       return newQuantity;
     });
@@ -55,11 +54,9 @@ const Winepage = () => {
     if (quantity > 0) {
       const existingProduct = carrello.find((item) => item.id === wine.id);
       if (existingProduct) {
-        // Update quantity in cart
         aggiornaQuantita(wine.id, quantity);
       } else {
-        // Add new product to cart with the selected quantity
-        aggiungiAlCarrello(wine, quantity); // Pass the selected quantity here
+        aggiungiAlCarrello(wine, quantity);
       }
     }
   };
@@ -71,7 +68,7 @@ const Winepage = () => {
   const isInCart = carrello.some((item) => item.id === wine.id);
 
   return (
-    <Container className="py-5" id="winepage-container">
+    <Container className="py-4" id="winepage-container">
       <Row className="gx-4">
         <Col lg={6}>
           <div className="position-sticky" style={{ top: "2rem" }}>
@@ -120,13 +117,22 @@ const Winepage = () => {
         </Col>
         <Col lg={6}>
           <div className="text-white">
-            <h1 className="fw-semibold">
-              {`${wine.winemaker.name} ${wine.vintage} ${wine.name} ${wine.denomination.name}`}
-            </h1>
-            <div className="my-5">
+            {/* Header Section */}
+            <div className="mb-3">
+              <h1 className="fw-semibold mb-2">
+                {`${wine.winemaker.name} ${wine.vintage} ${wine.name} ${wine.denomination.name}`}
+              </h1>
               <WineGlasses rating={wine.label_condition?.rating} />
-              <div className="my-5">
-                <span className="fw-bold" id="price-tag">
+            </div>
+
+            {/* Price and Stock Section */}
+            <div className="mb-3">
+              <div className="mb-2">
+                <span
+                  className="fw-bold fs-3"
+                  id="price-tag"
+                  style={{ color: "#B1A44B" }}
+                >
                   € {wine.price}
                 </span>
               </div>
@@ -139,74 +145,176 @@ const Winepage = () => {
               )}
             </div>
 
-            {/* Quantity Selector */}
-            <div className="mb-4">
-              <div className="d-flex align-items-center">
-                <button
-                  onClick={() => handleQuantityChange(-1)}
-                  disabled={quantity === 0}
+            {/* Quantity and Cart Section */}
+            <div
+              className="mb-4 p-3 rounded"
+              style={{ backgroundColor: "rgba(255,255,255,0.05)" }}
+            >
+              {/* Desktop Layout */}
+              <div className="d-none d-md-flex align-items-center justify-content-between">
+                {/* Quantity Selector */}
+                <div className="d-flex align-items-center">
+                  <Button
+                    variant="outline-light"
+                    size="sm"
+                    onClick={() => handleQuantityChange(-1)}
+                    disabled={quantity === 0}
+                    className="rounded-circle d-flex align-items-center justify-content-center"
+                    style={{ width: "35px", height: "35px", minWidth: "35px" }}
+                  >
+                    -
+                  </Button>
+                  <span
+                    className="mx-2 fw-bold fs-6"
+                    style={{ minWidth: "40px", textAlign: "center" }}
+                  >
+                    {quantity}
+                  </span>
+                  <Button
+                    variant="outline-light"
+                    size="sm"
+                    onClick={() => handleQuantityChange(1)}
+                    className="rounded-circle d-flex align-items-center justify-content-center"
+                    style={{ width: "35px", height: "35px", minWidth: "35px" }}
+                  >
+                    +
+                  </Button>
+                </div>
+
+                {/* Add to Cart Button */}
+                <Button
+                  variant="outline-light"
+                  size="lg"
+                  onClick={handleAddOrUpdateCart}
+                  className="px-4 py-2"
+                  style={{ minWidth: "200px" }}
                 >
-                  -
-                </button>
-                <span className="mx-3">{quantity}</span>
-                <button onClick={() => handleQuantityChange(1)}>+</button>
+                  {isInCart ? "Aggiorna quantità" : "Aggiungi al carrello"}
+                </Button>
+              </div>
+
+              {/* Mobile Layout */}
+              <div className="d-md-none">
+                {/* Quantity Selector - Centered */}
+                <div className="d-flex align-items-center justify-content-center mb-3">
+                  <Button
+                    variant="outline-light"
+                    size="sm"
+                    onClick={() => handleQuantityChange(-1)}
+                    disabled={quantity === 0}
+                    className="rounded-circle d-flex align-items-center justify-content-center"
+                    style={{ width: "45px", height: "45px", minWidth: "45px" }}
+                  >
+                    -
+                  </Button>
+                  <span
+                    className="mx-4 fw-bold fs-4"
+                    style={{ minWidth: "50px", textAlign: "center" }}
+                  >
+                    {quantity}
+                  </span>
+                  <Button
+                    variant="outline-light"
+                    size="sm"
+                    onClick={() => handleQuantityChange(1)}
+                    className="rounded-circle d-flex align-items-center justify-content-center"
+                    style={{ width: "45px", height: "45px", minWidth: "45px" }}
+                  >
+                    +
+                  </Button>
+                </div>
+
+                {/* Add to Cart Button - Full Width */}
+                <Button
+                  variant="outline-light"
+                  size="lg"
+                  onClick={handleAddOrUpdateCart}
+                  className="w-100 py-3"
+                >
+                  {isInCart ? "Aggiorna quantità" : "Aggiungi al carrello"}
+                </Button>
               </div>
             </div>
 
-            {/* Add or Update Cart Button */}
+            {/* Wine Details Section */}
             <div className="mb-4">
-              <button
-                className="btn btn-outline-light btn-lg"
-                onClick={handleAddOrUpdateCart}
-              >
-                {isInCart ? "Aggiorna quantità" : "Aggiungi al carrello"}
-              </button>
+              <h5 className="mb-3 fw-bold" style={{ color: "#B1A44B" }}>
+                Dettagli del vino
+              </h5>
+              <Row className="g-2">
+                <Col md={6}>
+                  <div className="mb-2">
+                    <strong>Produttore:</strong>{" "}
+                    <span className="text-white-75">{wine.winemaker.name}</span>
+                  </div>
+                  <div className="mb-2">
+                    <strong>Regione:</strong>{" "}
+                    <span className="text-white-75">{wine.region.name}</span>
+                  </div>
+                  <div className="mb-2">
+                    <strong>Categoria:</strong>{" "}
+                    <span className="text-white-75">{wine.category.name}</span>
+                  </div>
+                  <div className="mb-2">
+                    <strong>Denominazione:</strong>{" "}
+                    <span className="text-white-75">
+                      {wine.denomination.name}
+                    </span>
+                  </div>
+                  <div className="mb-2">
+                    <strong>Annata:</strong>{" "}
+                    <span className="text-white-75">{wine.vintage}</span>
+                  </div>
+                </Col>
+                <Col md={6}>
+                  <div className="mb-2">
+                    <strong>Uvaggio:</strong>{" "}
+                    <span className="text-white-75">{wine.grape_type}</span>
+                  </div>
+                  <div className="mb-2">
+                    <strong>Gradazione:</strong>{" "}
+                    <span className="text-white-75">{wine.alcol}%</span>
+                  </div>
+                  <div className="mb-2">
+                    <strong>Formato:</strong>{" "}
+                    <span className="text-white-75">{wine.bottle_size}L</span>
+                  </div>
+                  <div className="mb-2">
+                    <strong>Temperatura:</strong>{" "}
+                    <span className="text-white-75">{wine.temperature}°C</span>
+                  </div>
+                </Col>
+              </Row>
             </div>
 
+            {/* Condition Section */}
             <div className="mb-4">
-              <div className="fs-5" id="details">
-                <p>
-                  <strong>Produttore:</strong> {wine.winemaker.name}
-                </p>
-                <p>
-                  <strong>Regione:</strong> {wine.region.name}
-                </p>
-                <p>
-                  <strong>Categoria:</strong> {wine.category.name}
-                </p>
-                <p>
-                  <strong>Denominazione:</strong> {wine.denomination.name}
-                </p>
-                <p>
-                  <strong>Annata:</strong> {wine.vintage}
-                </p>
-                <p>
-                  <strong>Uvaggio:</strong> {wine.grape_type}
-                </p>
-                <p>
-                  <strong>Gradazione:</strong> {wine.alcol}%
-                </p>
-                <p>
-                  <strong>Formato:</strong> {wine.bottle_size}L
-                </p>
-                <p>
-                  <strong>Temperatura di servizio:</strong> {wine.temperature}°C
-                </p>
+              <h5 className="mb-3 fw-bold" style={{ color: "#B1A44B" }}>
+                Condizioni
+              </h5>
+              <div className="mb-2">
+                <strong>Bottiglia:</strong>{" "}
+                <span className="text-white-75">
+                  {wine.bottle_condition.name}
+                </span>
+              </div>
+              <div className="mb-2">
+                <strong>Etichetta:</strong>{" "}
+                <span className="text-white-75">
+                  {wine.label_condition.name}
+                </span>
               </div>
             </div>
-            <div className="mb-4">
-              <div className="fs-5" id="condizioni">
-                <p>
-                  <strong>Bottiglia:</strong> {wine.bottle_condition.name}
-                </p>
-                <p>
-                  <strong>Etichetta:</strong> {wine.label_condition.name}
-                </p>
+
+            {/* Description Section */}
+            {wine.description && (
+              <div className="mb-4">
+                <h5 className="mb-3 fw-bold" style={{ color: "#B1A44B" }}>
+                  Descrizione
+                </h5>
+                <p className="text-white-75 lh-base">{wine.description}</p>
               </div>
-            </div>
-            <div className="mb-4">
-              <p className="fs-5">{wine.description}</p>
-            </div>
+            )}
           </div>
         </Col>
       </Row>
