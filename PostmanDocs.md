@@ -20,6 +20,12 @@
 
 > **Show** - GET - `http://127.0.0.1:3000/api/wines/id_here`
 
+> **Get Categories** - GET - `http://127.0.0.1:3000/api/getcategories`
+
+> **Get Denominations** - GET - `http://127.0.0.1:3000/api/getdenominations`
+
+> **Get Regions** - GET - `http://127.0.0.1:3000/api/getregions`
+
 #### Chatbot
 
 > **Send message** - POST - `http://localhost:3000/api/chat`  

@@ -418,6 +418,32 @@ const getCategories = (req, res) => {
   });
 };
 
+// GET DENOMINATIONS
+const getDenominations = (req, res) => {
+  const sql = "SELECT id, name FROM denominations ORDER BY id";
+  connection.query(sql, (err, results) => {
+    if (err) {
+      console.error("Errore nella query getDenominations:", err);
+      return res
+        .status(500)
+        .json({ message: "Errore nel recupero denominazioni" });
+    }
+    res.json(results);
+  });
+};
+
+// GET REGIONS
+const getRegions = (req, res) => {
+  const sql = "SELECT id, name FROM regions ORDER BY id";
+  connection.query(sql, (err, results) => {
+    if (err) {
+      console.error("Errore nella query getRegions:", err);
+      return res.status(500).json({ message: "Errore nel recupero regioni" });
+    }
+    res.json(results);
+  });
+};
+
 module.exports = {
   index,
   show,
@@ -425,4 +451,6 @@ module.exports = {
   getWineFromCategory,
   premiumVintage,
   getCategories,
+  getDenominations,
+  getRegions,
 };
