@@ -2,14 +2,20 @@ import { useState } from "react";
 import { Card } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import WineGlasses from "./WineGlasses";
+import { useCarrello } from "../contexts/cartContext"; // Import the context
 
 const WineCard = ({ wine }) => {
   const [activeImage, setActiveImage] = useState(wine.image_front_url);
-
   const navigate = useNavigate();
+  const { aggiungiAlCarrello } = useCarrello(); // Access the context
 
   const handleClick = () => {
     navigate(`/wine/${wine.id}`);
+  };
+
+  const handleAddToCart = (e) => {
+    e.stopPropagation(); // Prevent the card click event
+    aggiungiAlCarrello(wine, 1); // Add the wine to the cart with a quantity of 1
   };
 
   return (
@@ -24,7 +30,7 @@ const WineCard = ({ wine }) => {
         alt={wine.name}
         style={{ height: "300px", objectFit: "cover" }}
         onMouseOver={() => setActiveImage(wine.image_back_url)}
-        onMouseOut={() => { setActiveImage(wine.image_front_url) }}
+        onMouseOut={() => setActiveImage(wine.image_front_url)}
       />
       <Card.Body className="d-flex flex-column pb-0">
         <Card.Title className="text-white">{`${wine.winemaker.name} ${wine.vintage} ${wine.name} ${wine.denomination.name}`}</Card.Title>
@@ -37,10 +43,7 @@ const WineCard = ({ wine }) => {
           <button
             className="btn btn-outline-light"
             id="card-shopping"
-            onClick={e => {
-              e.stopPropagation();
-              // Add your cart logic here
-            }}
+            onClick={handleAddToCart} // Call the add to cart function
           >
             <i className="fa-solid fa-shopping-cart"></i>
           </button>
