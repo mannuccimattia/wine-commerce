@@ -65,6 +65,28 @@ const SuccessPage = () => {
     return () => clearTimeout(timer);
   }, [navigate]);
 
+  useEffect(() => {
+    const orderData = JSON.parse(localStorage.getItem("orderData"));
+    if (orderData) {
+      // Salva l’ordine nel DB
+      axios
+        .post("http://localhost:3000/api/order", {
+          cliente: orderData.customerDetails,
+          carrello: orderData.cartItems,
+          shippingCost: orderData.shippingCost,
+          subtotale: orderData.cartItems.reduce(
+            (acc, item) => acc + item.prezzo * item.qty,
+            0
+          ),
+        })
+        .then(() => {
+          // Puoi anche inviare l’email qui, se vuoi
+          localStorage.removeItem("orderData");
+          localStorage.removeItem("carrello");
+        });
+    }
+  }, []);
+
   return (
     <Container className="py-5">
       <Card className="bg-dark text-white p-5 text-center">
