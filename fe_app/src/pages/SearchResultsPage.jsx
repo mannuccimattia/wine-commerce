@@ -6,42 +6,46 @@ import NoResultsWine from "../components/NoResultsWine";
 import { useSearchParams } from "react-router-dom";
 
 const SearchResultsPage = () => {
-  const [wines, setWines] = useState([]); // Stato locale semplice
-  const [loading, setLoading] = useState(false); // Bonus: loading state
+  const [wines, setWines] = useState([]);
+  const [loading, setLoading] = useState(false);
   const [searchParams] = useSearchParams();
-
-  const searchParamValue = searchParams.get("search");
-  const categoryParamValue = searchParams.get("category");
-  const sortParamValue = searchParams.get("sort");
 
   useEffect(() => {
     const fetchWines = async () => {
-      if (!searchParamValue?.trim()) {
+      const search = searchParams.get("search");
+      const category = searchParams.get("category");
+      const sortBy = searchParams.get("sortBy");
+      const minPrice = searchParams.get("minPrice");
+      const maxPrice = searchParams.get("maxPrice");
+      const region = searchParams.get("region");
+      const denomination = searchParams.get("denomination");
+
+      if (!search?.trim()) {
         setWines([]);
         return;
       }
 
       setLoading(true);
+
       try {
-        // Costruisci l'URL con tutti i parametri
-        let apiUrl = `http://localhost:3000/api/wines?search=${encodeURIComponent(
-          searchParamValue
-        )}`;
+        const params = {};
+        if (search) params.search = search;
+        if (category && category !== "all") params.category = category;
+        if (sortBy) params.sortBy = sortBy;
+        if (minPrice) params.minPrice = minPrice;
+        if (maxPrice) params.maxPrice = maxPrice;
+        if (region) params.region = region;
+        if (denomination) params.denomination = denomination;
 
-        if (categoryParamValue && categoryParamValue !== "all") {
-          apiUrl += `&category=${categoryParamValue}`;
-        }
+        console.log("🔍 Parametri inviati al backend:", params);
 
-        if (sortParamValue) {
-          apiUrl += `&sort=${sortParamValue}`;
-        }
+        const response = await axios.get("http://localhost:3000/api/wines", {
+          params,
+        });
 
-        console.log("Chiamata API:", apiUrl);
-
-        const response = await axios.get(apiUrl);
         setWines(response.data);
       } catch (error) {
-        console.error("Error:", error);
+        console.error("Errore nella richiesta:", error);
         setWines([]);
       } finally {
         setLoading(false);
@@ -49,9 +53,8 @@ const SearchResultsPage = () => {
     };
 
     fetchWines();
-  }, [searchParamValue, categoryParamValue, sortParamValue]);
+  }, [searchParams]);
 
-  // Pulisci i risultati quando il componente viene smontato
   useEffect(() => {
     return () => setWines([]);
   }, []);
@@ -68,6 +71,9 @@ const SearchResultsPage = () => {
     );
   }
 
+  const searchValue = searchParams.get("search");
+  const categoryValue = searchParams.get("category");
+
   return (
     <Container className="py-4">
       {wines.length === 0 ? (
@@ -75,8 +81,8 @@ const SearchResultsPage = () => {
       ) : (
         <Row className="g-4">
           <h1 className="text-white mb-4">
-            Risultati per "{searchParamValue}"
-            {categoryParamValue && categoryParamValue !== "all" && (
+            Risultati per "{searchValue}"
+            {categoryValue && categoryValue !== "all" && (
               <span className="fs-6 text-muted d-block">
                 nella categoria selezionata
               </span>

@@ -46,7 +46,7 @@ const WineCard = ({ wine }) => {
         />
         <div>
           {" "}
-          <CategoryBadge categoryId={wine.category} />
+          <CategoryBadge categoryId={wine.category.id} />
         </div>
         <div className="my-2 px-2 pb-2 d-flex justify-content-between align-items-center position-relative">
           <span className="text-white">€ {wine.price}</span>
