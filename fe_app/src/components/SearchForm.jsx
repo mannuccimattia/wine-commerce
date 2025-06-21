@@ -2,6 +2,7 @@ import { useContext, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import GlobalContext from "../contexts/globalContext";
+import { Alert } from "react-bootstrap"; // Import Bootstrap Alert
 
 const SearchForm = () => {
   const { homeSearch, setHomeSearch } = useContext(GlobalContext);
@@ -10,6 +11,8 @@ const SearchForm = () => {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [selectedCategoryLabel, setSelectedCategoryLabel] =
     useState("Tutte le categorie");
+  const [showAlert, setShowAlert] = useState(false); // State for alert visibility
+  const [alertMessage, setAlertMessage] = useState(""); // State for alert message
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -36,31 +39,29 @@ const SearchForm = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Se è selezionata una categoria specifica, il campo di ricerca è obbligatorio
     if (selectedCategory !== "all" && !homeSearch.trim()) {
-      alert("Inserisci un termine di ricerca per questa categoria");
+      setAlertMessage("Inserisci un termine di ricerca per questa categoria");
+      setShowAlert(true);
       return;
     }
 
-    // Se "tutte le categorie" e nessun testo → vai su /products
     if (selectedCategory === "all" && !homeSearch.trim()) {
       navigate("/products");
       return;
     }
 
-    // Altrimenti costruisci URL
     let searchUrl = `/search?search=${encodeURIComponent(homeSearch)}`;
     if (selectedCategory !== "all") {
       searchUrl += `&category=${selectedCategory}`;
     }
 
     navigate(searchUrl);
-    setHomeSearch("");
+    setHomeSearch(""); // Pulisce il campo dopo la ricerca
   };
 
   return (
     <form id="homeSearch" onSubmit={handleSubmit} className="px-3">
-      {/* Desktop Layout */}
+      {/* Desktop */}
       <div className="d-none d-md-flex align-items-stretch gap-2">
         <div className="input-group">
           <button
@@ -98,7 +99,6 @@ const SearchForm = () => {
               </li>
             ))}
           </ul>
-
           <input
             type="text"
             className="form-control"
@@ -120,9 +120,8 @@ const SearchForm = () => {
         </button>
       </div>
 
-      {/* Mobile Layout */}
+      {/* Mobile */}
       <div className="d-md-none">
-        {/* Category Dropdown - Full Width */}
         <div className="mb-2">
           <div className="dropdown w-100">
             <button
@@ -164,7 +163,6 @@ const SearchForm = () => {
           </div>
         </div>
 
-        {/* Search Input + Button */}
         <div className="d-flex gap-2">
           <input
             type="text"
@@ -186,6 +184,17 @@ const SearchForm = () => {
           </button>
         </div>
       </div>
+      {/* Bootstrap Alert */}
+      {showAlert && (
+        <Alert
+          className="mt-2"
+          variant="danger"
+          onClose={() => setShowAlert(false)}
+          dismissible
+        >
+          {alertMessage}
+        </Alert>
+      )}
     </form>
   );
 };
