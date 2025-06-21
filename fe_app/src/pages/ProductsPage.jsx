@@ -2,11 +2,9 @@ import { useEffect, useContext } from "react";
 import { Container, Row, Col } from "react-bootstrap";
 import axios from "axios";
 import WineCard from "../components/WineCard";
-import { SearchContext } from "../contexts/SearchContext";
 import Loader from "../components/Loader";
 
 const ProductsPage = () => {
-  const { searchState, setSearchState } = useContext(SearchContext);
   const { wines } = searchState;
 
   useEffect(() => {
