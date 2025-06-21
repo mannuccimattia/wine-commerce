@@ -6,8 +6,8 @@ const queryFailed = require("../functions/queryFailed");
 
 // index
 const index = (req, res) => {
-  const sqlAll = `
-      SELECT
+  const sqlBase = `
+    SELECT
       W.*,
       D.name AS denomination_name,
       C.name AS category_name,
@@ -25,29 +25,41 @@ const index = (req, res) => {
     LEFT JOIN label_conditions LC ON W.label_condition = LC.id
     LEFT JOIN bottle_conditions BC ON W.bottle_condition = BC.id
   `;
+
   const sortOrder =
     req.query.sort && req.query.sort.toLowerCase() === "desc" ? "DESC" : "ASC";
+  const searchTerm = req.query.search;
+  const categoryId = req.query.category ? parseInt(req.query.category) : null;
 
-  const sql = !req.query.search
-    ? sqlAll + ` ORDER BY W.price ASC`
-    : sqlAll +
-      `
-    WHERE W.name LIKE ?
-    OR W.vintage LIKE ?
-    OR WN.name LIKE ?
-        ORDER BY W.price ${sortOrder}
-    `;
+  // WHERE
+  let whereConditions = [];
+  let queryParams = [];
 
-  const queryParams = req.query.search
-    ? [
-        `%${req.query.search}%`,
-        `%${req.query.search}%`,
-        `%${req.query.search}%`,
-      ]
-    : [];
+  // text
+  if (searchTerm && searchTerm.trim()) {
+    whereConditions.push(
+      `(W.name LIKE ? OR W.vintage LIKE ? OR WN.name LIKE ?)`
+    );
+    queryParams.push(`%${searchTerm}%`, `%${searchTerm}%`, `%${searchTerm}%`);
+  }
 
+  // category
+  if (categoryId && categoryId !== "all") {
+    whereConditions.push(`W.category = ?`);
+    queryParams.push(categoryId);
+  }
+
+  // complete query
+  let sql = sqlBase;
+  if (whereConditions.length > 0) {
+    sql += ` WHERE ${whereConditions.join(" AND ")}`;
+  }
+  sql += ` ORDER BY W.price ${sortOrder}`;
+
+  // chiamata
   connection.query(sql, queryParams, (err, winesResult) => {
     if (err) return queryFailed(err, res);
+
     const wines = winesResult.map((wine) => {
       const win = {
         id: wine.id,
