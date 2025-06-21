@@ -1,51 +1,130 @@
 import React, { useState, useEffect } from "react";
 import { Offcanvas, Button } from "react-bootstrap";
-import { useLocation } from "react-router-dom";
 
-const CartSidebar = () => {
-  const [show, setShow] = useState(false);
+const CartSidebar = ({ show, onHide }) => {
   const [cartItems, setCartItems] = useState([]);
-  const location = useLocation();
 
-  // Mostra la sidebar ogni volta che cambia il localStorage del carrello
   useEffect(() => {
-    const handleStorageChange = () => {
+    if (show) {
       const updatedCart = JSON.parse(localStorage.getItem("carrello")) || [];
       setCartItems(updatedCart);
+    }
+  }, [show]);
 
-      if (updatedCart.length > 0) {
-        setShow(true);
-      }
-    };
+  const total = cartItems.reduce(
+    (acc, item) => acc + item.prezzo * item.qty,
+    0
+  );
 
-    window.addEventListener("storage", handleStorageChange);
-    handleStorageChange(); // Per montaggio iniziale
-
-    return () => {
-      window.removeEventListener("storage", handleStorageChange);
-    };
-  }, [location]);
+  const freeShippingThreshold = 1000;
+  const missingAmount = freeShippingThreshold - total;
 
   return (
-    <Offcanvas show={show} onHide={() => setShow(false)} placement="end">
-      <Offcanvas.Header closeButton>
-        <Offcanvas.Title>Il tuo carrello</Offcanvas.Title>
+    <Offcanvas
+      show={show}
+      onHide={onHide}
+      placement="end"
+      style={{ backgroundColor: "#121212", color: "white" }}
+      backdropClassName="bg-dark bg-opacity-75"
+    >
+      <Offcanvas.Header closeButton closeVariant="white">
+        <Offcanvas.Title style={{ color: "white" }}>
+          🛒 Il tuo carrello
+        </Offcanvas.Title>
       </Offcanvas.Header>
-      <Offcanvas.Body>
+      <Offcanvas.Body
+        style={{
+          backgroundColor: "#1e1e1e",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "space-between",
+          height: "100%",
+          paddingBottom: "1rem",
+        }}
+      >
         {cartItems.length === 0 ? (
-          <p>Il carrello è vuoto.</p>
+          <p style={{ color: "#bbb", fontStyle: "italic" }}>
+            Il carrello è vuoto.
+          </p>
         ) : (
-          cartItems.map(item => (
-            <div key={item.id} className="mb-3">
-              <strong>{item.nome}</strong> x {item.qty}<br />
-              €{(item.prezzo * item.qty).toFixed(2)}
-              <hr />
+          <>
+            <div
+              style={{ overflowY: "auto", maxHeight: "calc(100vh - 250px)" }}
+            >
+              {cartItems.map((item) => (
+                <div
+                  key={item.id}
+                  className="mb-3 p-2"
+                  style={{
+                    backgroundColor: "#2c2c2c",
+                    borderRadius: "8px",
+                    boxShadow: "0 1px 3px rgba(0,0,0,0.5)",
+                  }}
+                >
+                  <strong>{item.nome}</strong> x {item.qty}
+                  <br />
+                  <span style={{ color: "#a88b4d", fontWeight: "600" }}>
+                    €{(item.prezzo * item.qty).toFixed(2)}
+                  </span>
+                </div>
+              ))}
             </div>
-          ))
+
+            <div
+              style={{
+                borderTop: "1px solid #444",
+                paddingTop: "1rem",
+                marginTop: "1rem",
+              }}
+            >
+              <div
+                style={{
+                  fontSize: "1.2rem",
+                  fontWeight: "700",
+                  color: "#a88b4d",
+                  marginBottom: "0.5rem",
+                  textAlign: "right",
+                }}
+              >
+                Totale: €{total.toFixed(2)}
+              </div>
+
+              {total >= freeShippingThreshold ? (
+                <div
+                  style={{
+                    color: "#a88b4d",
+                    fontWeight: "600",
+                    textAlign: "center",
+                    marginBottom: "1rem",
+                  }}
+                >
+                  🎉 Spedizione gratuita!
+                </div>
+              ) : (
+                <div
+                  style={{
+                    color: "#a88b4d",
+                    fontWeight: "600",
+                    textAlign: "center",
+                    marginBottom: "1rem",
+                  }}
+                >
+                  Mancano €{missingAmount.toFixed(2)} per la spedizione gratuita
+                </div>
+              )}
+
+              <Button
+                variant="warning"
+                href="/cart"
+                className="w-100"
+                onClick={onHide}
+                style={{ fontWeight: "600" }}
+              >
+                Vai al carrello
+              </Button>
+            </div>
+          </>
         )}
-        <Button variant="dark" href="/cart" className="w-100 mt-3">
-          Vai al carrello
-        </Button>
       </Offcanvas.Body>
     </Offcanvas>
   );

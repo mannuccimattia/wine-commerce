@@ -1,8 +1,9 @@
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import GlobalContext from "../contexts/globalContext";
 import SearchForm from "./SearchForm";
 import { useCarrello } from "../contexts/cartContext";
+import CartSidebar from "./CartSidebar"; // importa CartSidebar
 
 const Header = () => {
   const { toDisable, setToDisable } = useContext(GlobalContext);
@@ -10,11 +11,18 @@ const Header = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
+  const [showSidebar, setShowSidebar] = useState(false);
+
   const handleClick = (e) => {
     e.preventDefault();
     const target = e.currentTarget.value;
-    setToDisable(target === toDisable ? null : target);
-    navigate(`/${target}`);
+    if (target === "cart") {
+      // Non navighiamo più ma apriamo sidebar
+      setShowSidebar(true);
+    } else {
+      setToDisable(target === toDisable ? null : target);
+      navigate(`/${target}`);
+    }
   };
 
   const handleLogoClick = () => {
@@ -30,7 +38,7 @@ const Header = () => {
     }
   }, [location.pathname]);
 
-  // Calculate total amount based on cart items
+  // Calcola totale carrello
   const total = carrello.reduce((acc, item) => acc + item.qty * item.prezzo, 0);
   const totalItems = carrello.reduce((acc, item) => acc + item.qty, 0);
 
@@ -96,6 +104,9 @@ const Header = () => {
       <div className="col-12">
         <SearchForm />
       </div>
+
+      {/* Sidebar carrello */}
+      <CartSidebar show={showSidebar} onHide={() => setShowSidebar(false)} />
     </>
   );
 };
