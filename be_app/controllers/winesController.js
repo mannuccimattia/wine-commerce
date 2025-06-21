@@ -73,6 +73,7 @@ const index = (req, res) => {
         bottle_size: wine.bottle_size,
         vintage: wine.vintage,
         stock: wine.stock,
+        category: wine.category,
         image_front_url: req.imagePath + wine.image_front_url,
         image_back_url: req.imagePath + wine.image_back_url,
         grape_type: wine.grape_type,
@@ -231,6 +232,7 @@ const getBestSellers = (req, res) => {
       bottle_size: wine.bottle_size,
       vintage: wine.vintage,
       stock: wine.stock,
+      category: wine.category,
       image_front_url: req.imagePath + wine.image_front_url,
       image_back_url: req.imagePath + wine.image_back_url,
       grape_type: wine.grape_type,
@@ -385,6 +387,7 @@ const premiumVintage = (req, res) => {
       bottle_size: wine.bottle_size,
       vintage: wine.vintage,
       stock: wine.stock,
+      category: wine.category,
       image_front_url: req.imagePath + wine.image_front_url,
       image_back_url: req.imagePath + wine.image_back_url,
       grape_type: wine.grape_type,
@@ -420,7 +423,7 @@ const premiumVintage = (req, res) => {
 
 //GET CATEGORIES
 const getCategories = (req, res) => {
-  const sql = "SELECT id, name FROM categories ORDER BY id";
+  const sql = "SELECT id, name, color FROM categories ORDER BY id";
   connection.query(sql, (err, results) => {
     if (err) {
       console.error("Errore nella query getCategories:", err);
