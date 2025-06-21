@@ -3,6 +3,7 @@ const router = express.Router();
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 const transporter = require("../config/emailConfig");
 const createEmailTemplate = require("../templates/orderConfirmation");
+const connection = require("../data/db");
 
 // Post order
 router.post("", (req, res) => {
@@ -75,6 +76,7 @@ router.post("", (req, res) => {
 
 // Create Stripe checkout session
 router.post("/create-checkout-session", async (req, res) => {
+
   try {
     const { cartItems, shippingCost } = req.body;
 
@@ -82,7 +84,7 @@ router.post("/create-checkout-session", async (req, res) => {
       price_data: {
         currency: "eur",
         product_data: {
-          name: item.nome,
+          name: item.name || item.nome, // usa "name" se c'è, altrimenti "nome"
         },
         unit_amount: Math.round(item.prezzo * 100),
       },

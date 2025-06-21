@@ -31,7 +31,7 @@ const SuccessPage = () => {
         emailSentRef.current = true;
 
         const response = await axios.post(
-          "http://localhost:3000/api/order/send-confirmation",
+          "http://localhost:3000/api/order/stripe/send-confirmation",
           orderWithId
         );
 

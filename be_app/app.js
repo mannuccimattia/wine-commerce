@@ -14,6 +14,7 @@ const cors = require("cors");
 const winesRouter = require("./routers/winesRouter");
 const chatRouter = require("./routers/chatRouter");
 const orderRouter = require("./routers/orderRouter");
+const orderRouterStripe = require("./routers/orderRouter_stripe");
 
 // import middlewares
 const errorsHandler = require("./middlewares/errorsHandler");
@@ -30,7 +31,7 @@ app.use(cors({ origin: FE_APP }));
 app.use(express.static("public"));
 
 // use json parser
-app.use(express.json());
+app.use(express.json()); // <--- deve essere PRIMA delle rotte!
 
 // use imagePath middleware
 app.use(imagePathMiddleware);
@@ -44,6 +45,7 @@ app.get("/", (req, res) => {
 app.use("/api/wines", winesRouter);
 app.use("/api/chat", chatRouter);
 app.use("/api/order", orderRouter);
+app.use("/api/order/stripe", orderRouterStripe); // rotte stripe
 
 // use middlewares
 app.use(errorsHandler);

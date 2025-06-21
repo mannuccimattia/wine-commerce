@@ -68,4 +68,9 @@ router.post("", (req, res) => {
   );
 });
 
+router.post("/send-confirmation", async (req, res) => {
+  // Logica per inviare email di conferma
+  res.status(200).json({ message: "Email di conferma inviata!" });
+});
+
 module.exports = router;

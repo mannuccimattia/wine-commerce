@@ -75,6 +75,43 @@ const CheckoutPage = () => {
       });
   };
 
+  // Funzione Stripe diretta
+  const handleStripeCheckout = async () => {
+    const cartItems = JSON.parse(localStorage.getItem("carrello")) || [];
+    const SPESE_SPEDIZIONE = 8.9;
+    const SOGLIA_SPEDIZIONE = 1000;
+    const subtotal = cartItems.reduce((acc, item) => acc + item.prezzo * item.qty, 0);
+    const shippingCost = subtotal > SOGLIA_SPEDIZIONE ? 0 : SPESE_SPEDIZIONE;
+
+    // Salva i dati ordine per SuccessPage
+    const orderData = {
+      cartItems,
+      shippingCost,
+      customerEmail: formData.email,
+      customerDetails: {
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        address: formData.address,
+        city: formData.city,
+        zipCode: formData.zip_code,
+      },
+    };
+    localStorage.setItem("orderData", JSON.stringify(orderData));
+
+    try {
+      const response = await axios.post(
+        "http://localhost:3000/api/order/stripe/create-checkout-session",
+        { cartItems, shippingCost },
+        { headers: { "Content-Type": "application/json" } }
+      );
+      if (response.data.url) {
+        window.location.href = response.data.url;
+      }
+    } catch {
+      alert("Errore durante il collegamento a Stripe");
+    }
+  };
+
   return (
     <Container className="py-5">
       <h2 className="text-white mb-4">Checkout</h2>
@@ -165,9 +202,10 @@ const CheckoutPage = () => {
               <Row>
                 <div className="mt-4 d-flex justify-content-center">
                   <button
-                    type="submit"
+                    type="button"
                     className="btn btn-outline-light py-3 px-5"
                     style={{ minWidth: "200px" }}
+                    onClick={handleStripeCheckout}
                   >
                     {`Paga €${(
                       (
