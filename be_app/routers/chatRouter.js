@@ -4,6 +4,28 @@ const router = express.Router();
 const connection = require("../data/db");
 const { marked } = require('marked');
 
+const wineFormat = require("../functions/wineFormat");
+
+const sqlBase = `
+  SELECT
+    W.*,
+    D.name AS denomination_name,
+    C.name AS category_name,
+    R.name AS region_name,
+    WN.name AS winemaker_name,
+    LC.name AS label_condition_name,
+    LC.rating AS label_condition_rating,
+    BC.name AS bottle_condition_name,
+    BC.rating AS bottle_condition_rating
+  FROM wines W
+  LEFT JOIN denominations D ON W.denomination = D.id
+  LEFT JOIN categories C ON W.category = C.id
+  LEFT JOIN regions R ON W.region = R.id
+  LEFT JOIN winemakers WN ON W.winemaker = WN.id
+  LEFT JOIN label_conditions LC ON W.label_condition = LC.id
+  LEFT JOIN bottle_conditions BC ON W.bottle_condition = BC.id
+`;
+
 // Config
 const OLLAMA_URL = "http://localhost:11434/api/generate";
 const MODEL_NAME = "gemma3:1b";
@@ -38,41 +60,39 @@ router.post('/', async (req, res) => {
     }
 
     // // 1. Get ALL available wines from database
-    const [wines] = await connection.promise().query(
-      'SELECT name, category, price, vintage, grape_type, region, winemaker, description, denomination FROM wines WHERE stock > 0 ORDER BY price DESC'
-    );
-
-    if (wines.length === 0) {
-      return res.json({ reply: "We're currently out of stock" });
-    }
+    const [winesResult] = await connection.promise().query(sqlBase);
+    // format data with wineFormat
+    const wines = winesResult.map(wine => wineFormat(wine, req));
 
     const wineDetails = wines.map(w => {
-
-      const fullName = `${w.winemaker} ${w.vintage} ${w.name} ${w.denomination}`;
-
+      const fullName = `${w.winemaker.name} ${w.vintage} ${w.name} ${w.denomination.name}`;
       return (
-        `
-        DETAILS OF WINE ${w.id}:
-        wine full name: ${fullName}, 
-        wine category: ${w.category}, 
-        wine region: ${w.region},
-        wine denomination: ${w.denomination},
-        price: €${w.price}. 
-        Producer: ${w.winemaker}. 
+        `Wine: ${fullName}
+        Category: ${w.category.name}
+        Region: ${w.region.name}
+        Denomination: ${w.denomination.name}
+        Price: €${w.price}
+        Producer: ${w.winemaker.name}
         Description: ${w.description}`
-      )
-    }).join('\n');
-    console.log(wineDetails)
-    const prompt = `You are a professional wine assistant. Follow these rules STRICTLY:
-    
-    1. NEVER mention you're an AI or assistant.
-    2. If asked for recommendations, suggest 1-2 wines maximum.
-    3. ALWAYS include: fullName, price, and why it matches the request.
+      );
+    }).join("\n\n");
 
-    Available wines (sorted by price descending):
+    const prompt = `
+    ROLE:
+    You are a professional wine assistant and a digital sommelier.
+
+    RULES:
+    1. ONLY recommend or describe wines from the AVAILABLE WINES list below. Do NOT invent wines or details.
+    2. NEVER mention wine IDs.
+    3. KEEP ANSWERS SHORT, focused, and directly related to the customer's request. Do NOT add background, history, or extra commentary unless specifically asked.
+    4. If the customer asks for a specific region, category, producer, denomination, price, or vintage, ONLY suggest wines from the AVAILABLE WINES list that match the requested region (Region), category (Category), producer (Producer), denomination (Denomination), price (Price), or vintage (as part of the wine's full name). If no wines match, say so and do not recommend anything else.
+
+    AVAILABLE WINES:
     ${wineDetails}
 
-    Customer request: "${message}"`;
+    CUSTOMER REQUEST:
+    "${message}"
+    `;
 
     const response = await axios.post(OLLAMA_URL, {
       model: MODEL_NAME,
