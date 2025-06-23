@@ -21,7 +21,7 @@ const notFound = require("./middlewares/notFound");
 const imagePathMiddleware = require("./middlewares/imagePath");
 
 // import stripe
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 // use CORS
 app.use(cors({ origin: FE_APP }));
@@ -30,7 +30,7 @@ app.use(cors({ origin: FE_APP }));
 app.use(express.static("public"));
 
 // use json parser
-app.use(express.json());
+app.use(express.json()); // <--- deve essere PRIMA delle rotte!
 
 // use imagePath middleware
 app.use(imagePathMiddleware);
