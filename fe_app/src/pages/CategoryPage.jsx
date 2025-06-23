@@ -5,7 +5,7 @@ import WineCard from "../components/WineCard";
 import GlobalContext from "../contexts/globalContext";
 
 const CategoryPage = () => {
-  const { id } = useParams();
+  const { slug } = useParams();
   const [wines, setWines] = useState([]);
   const [categoryName, setCategoryName] = useState("");
   const { setIsLoading } = useContext(GlobalContext);
@@ -21,7 +21,7 @@ const CategoryPage = () => {
         );
         setCategoryName(category ? category.name : "Categoria");
 
-        return axios.get(`http://localhost:3000/api/wines/category/${id}`);
+        return axios.get(`http://localhost:3000/api/wines/category/${slug}`);
       })
       .then((winesResponse) => {
         setWines(winesResponse.data);

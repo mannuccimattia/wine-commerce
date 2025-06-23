@@ -7,6 +7,8 @@ const winesController = require("../controllers/winesController");
 // routes
 router.get("/", winesController.index);
 
+router.get("/slug/:slug", winesController.showBySlug);
+
 router.get("/bestseller", winesController.getBestSellers);
 
 router.get("/premiumvintage", winesController.premiumVintage);

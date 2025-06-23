@@ -52,6 +52,7 @@ export const CarrelloProvider = ({ children }) => {
           id: wine.id,
           nome: wine.name,
           prezzo: wine.price,
+          slug: wine.slug,
           qty: quantity, // Set the initial quantity to the passed quantity
           img: wine.image_front_url,
         },

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
+import { Link } from "react-router-dom"; // 👈 Importa Link
 import "bootstrap/dist/css/bootstrap.min.css";
 
 const CategoryBadge = ({ categoryId }) => {
@@ -18,8 +19,8 @@ const CategoryBadge = ({ categoryId }) => {
   if (!category) return null;
 
   return (
-    <a
-      href={`http://localhost:5173/categoria/${categoryId}`}
+    <Link
+      to={`/categoria/${category.slug}`} // 👈 Navigazione interna
       className="badge"
       style={{
         fontSize: "0.65rem",
@@ -27,12 +28,12 @@ const CategoryBadge = ({ categoryId }) => {
         textDecoration: "none",
         lineHeight: 1.1,
         display: "inline-block",
-        backgroundColor: category.color || "#6c757d", // colore di default grigio
+        backgroundColor: category.color || "#6c757d",
         color: "#fff",
       }}
     >
       {category.name}
-    </a>
+    </Link>
   );
 };
 

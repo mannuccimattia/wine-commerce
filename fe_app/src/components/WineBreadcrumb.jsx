@@ -1,9 +1,10 @@
 import React from "react";
 import { Row, Col } from "react-bootstrap";
+import { Link } from "react-router-dom";
 
 const WineBreadcrumb = ({ category, name }) => {
   return (
-    <Row className="my-3" style={{ marginTop: "1rem", marginBottom: "1rem" }}>
+    <Row className="my-3">
       <Col>
         <nav aria-label="breadcrumb">
           <ol
@@ -19,19 +20,19 @@ const WineBreadcrumb = ({ category, name }) => {
             }}
           >
             <li className="breadcrumb-item">
-              <a href="/" style={{ color: "white", textDecoration: "none" }}>
+              <Link to="/" style={{ color: "white", textDecoration: "none" }}>
                 Home
-              </a>
+              </Link>
             </li>
             <span style={{ margin: "0 8px", color: "white" }}>/</span>
 
             <li className="breadcrumb-item">
-              <a
-                href={`/categoria/${category?.id || ""}`}
+              <Link
+                to={`/categoria/${category?.slug || ""}`}
                 style={{ color: "white", textDecoration: "none" }}
               >
                 {category?.name || "Categoria"}
-              </a>
+              </Link>
             </li>
             <span style={{ margin: "0 8px", color: "white" }}>/</span>
 

@@ -7,6 +7,7 @@ const wineFormat = (wine, req) => ({
   },
   price: wine.price,
   alcol: wine.alcol,
+  slug: wine.slug,
   bottle_size: wine.bottle_size,
   vintage: wine.vintage,
   stock: wine.stock,

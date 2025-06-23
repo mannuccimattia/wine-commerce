@@ -41,9 +41,9 @@ function App() {
           <Routes>
             <Route element={<DefaultLayout />}>
               <Route index element={<Homepage />}></Route>
-              <Route path="/wine/:id" element={<Winepage />}></Route>
+              <Route path="/wine/:slug" element={<Winepage />}></Route>
               <Route path="/products" element={<ProductsPage />} />
-              <Route path="/categoria/:id" element={<CategoryPage />} />
+              <Route path="/categoria/:slug" element={<CategoryPage />} />
 
               <Route element={<SearchLayout />}>
                 <Route path={`/search`} element={<SearchResultsPage />} />
