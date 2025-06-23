@@ -190,7 +190,7 @@ router.post("/send-confirmation", async (req, res) => {
     const emailContent = {
       from: process.env.EMAIL_USER,
       to: customerEmail,
-      subject: `Conferma Ordine #${templateData.orderID} - Bool Wines`,
+      subject: `Order Confirmation #${templateData.orderID} - Bool Wines`,
       html: createEmailTemplate(templateData),
     };
 

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Card, Alert } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import WineGlasses from "./WineGlasses";
-import { useCarrello } from "../contexts/cartContext"; // Import the context
+import { useCarrello } from "../contexts/CartContext"; // Import the context
 import CategoryBadge from "./CategoryBadge";
 
 const WineCard = ({ wine }) => {

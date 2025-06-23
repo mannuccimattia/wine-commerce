@@ -29,7 +29,7 @@ const CartSidebar = ({ show, onHide }) => {
     >
       <Offcanvas.Header closeButton closeVariant="white">
         <Offcanvas.Title style={{ color: "white" }}>
-          🛒 Il tuo carrello
+          🛒 Your cart
         </Offcanvas.Title>
       </Offcanvas.Header>
       <Offcanvas.Body
@@ -44,7 +44,7 @@ const CartSidebar = ({ show, onHide }) => {
       >
         {cartItems.length === 0 ? (
           <p style={{ color: "#bbb", fontStyle: "italic" }}>
-            Il carrello è vuoto.
+            Your cart is empty.
           </p>
         ) : (
           <>
@@ -86,7 +86,7 @@ const CartSidebar = ({ show, onHide }) => {
                   textAlign: "right",
                 }}
               >
-                Totale: €{total.toFixed(2)}
+                Total: €{total.toFixed(2)}
               </div>
 
               {total >= freeShippingThreshold ? (
@@ -98,7 +98,7 @@ const CartSidebar = ({ show, onHide }) => {
                     marginBottom: "1rem",
                   }}
                 >
-                  🎉 Spedizione gratuita!
+                  🎉 Free shipping!
                 </div>
               ) : (
                 <div
@@ -109,7 +109,7 @@ const CartSidebar = ({ show, onHide }) => {
                     marginBottom: "1rem",
                   }}
                 >
-                  Mancano €{missingAmount.toFixed(2)} per la spedizione gratuita
+                  €{missingAmount.toFixed(2)} away from free shipping
                 </div>
               )}
 
@@ -120,7 +120,7 @@ const CartSidebar = ({ show, onHide }) => {
                 onClick={onHide}
                 style={{ fontWeight: "600" }}
               >
-                Vai al carrello
+                Go to cart
               </Button>
             </div>
           </>

@@ -86,27 +86,27 @@ const CheckoutPage = () => {
     // Validazione form prima di procedere
     const newErrors = {};
     if (!formData.firstName || !validateName(formData.firstName)) {
-      newErrors.firstName = "Nome non valido.";
+      newErrors.firstName = "Please, inser a valid First Name.";
     }
     if (!formData.lastName || !validateName(formData.lastName)) {
-      newErrors.lastName = "Cognome non valido.";
+      newErrors.lastName = "Please, inser a valid Last Name.";
     }
     if (!formData.email || !validateEmail(formData.email)) {
-      newErrors.email = "Email non valida.";
+      newErrors.email = "Please, inser a valid Email Address.";
     }
     if (!formData.address) {
-      newErrors.address = "Indirizzo richiesto.";
+      newErrors.address = "Address is required";
     }
     if (!formData.city || !validateName(formData.city)) {
-      newErrors.city = "Città non valida.";
+      newErrors.city = "Please, inser a valid City Name.";
     }
     if (!formData.zip_code || !validateZipCode(formData.zip_code)) {
-      newErrors.zip_code = "CAP deve essere esattamente 5 numeri.";
+      newErrors.zip_code = "ZIP code must be exactly 5 digits.";
     }
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
-      setFormError("Per favore compila tutti i campi richiesti correttamente.");
+      setFormError("Please fill in all the required fields correctly.");
       return;
     }
 
@@ -150,7 +150,7 @@ const CheckoutPage = () => {
       }
     } catch (error) {
       console.error("Errore Stripe:", error);
-      alert("Errore durante il collegamento a Stripe");
+      alert("Error connecting to Stripe");
     }
   };
 
@@ -162,11 +162,11 @@ const CheckoutPage = () => {
         <Col md={8}>
           <Card className="bg-dark text-white p-4 mb-4">
             <Form>
-              <h4 className="mb-4">Dati di Spedizione</h4>
+              <h4 className="mb-4">Shipping Information</h4>
               <Row>
                 <Col md={6}>
                   <Form.Group className="mb-3" controlId="firstName">
-                    <Form.Label>Nome *</Form.Label>
+                    <Form.Label>First Name *</Form.Label>
                     <Form.Control
                       type="text"
                       name="firstName"
@@ -174,7 +174,7 @@ const CheckoutPage = () => {
                       onChange={handleChange}
                       required
                       isInvalid={!!errors.firstName}
-                      placeholder="Inserisci il tuo nome"
+                      placeholder="Enter your first name"
                     />
                     <Form.Control.Feedback type="invalid">
                       {errors.firstName}
@@ -183,7 +183,7 @@ const CheckoutPage = () => {
                 </Col>
                 <Col md={6}>
                   <Form.Group className="mb-3" controlId="lastName">
-                    <Form.Label>Cognome *</Form.Label>
+                    <Form.Label>Last Name *</Form.Label>
                     <Form.Control
                       type="text"
                       name="lastName"
@@ -191,7 +191,7 @@ const CheckoutPage = () => {
                       onChange={handleChange}
                       required
                       isInvalid={!!errors.lastName}
-                      placeholder="Inserisci il tuo cognome"
+                      placeholder="Enter your last name"
                     />
                     <Form.Control.Feedback type="invalid">
                       {errors.lastName}
@@ -209,7 +209,7 @@ const CheckoutPage = () => {
                   onChange={handleChange}
                   required
                   isInvalid={!!errors.email}
-                  placeholder="esempio@email.com"
+                  placeholder="example@email.com"
                 />
                 <Form.Control.Feedback type="invalid">
                   {errors.email}
@@ -217,7 +217,7 @@ const CheckoutPage = () => {
               </Form.Group>
 
               <Form.Group className="mb-3" controlId="address">
-                <Form.Label>Indirizzo *</Form.Label>
+                <Form.Label>Address *</Form.Label>
                 <Form.Control
                   type="text"
                   name="address"
@@ -225,7 +225,7 @@ const CheckoutPage = () => {
                   onChange={handleChange}
                   required
                   isInvalid={!!errors.address}
-                  placeholder="Via, numero civico"
+                  placeholder="Street, house number"
                 />
                 <Form.Control.Feedback type="invalid">
                   {errors.address}
@@ -235,7 +235,7 @@ const CheckoutPage = () => {
               <Row>
                 <Col md={8}>
                   <Form.Group className="mb-3" controlId="city">
-                    <Form.Label>Città *</Form.Label>
+                    <Form.Label>City *</Form.Label>
                     <Form.Control
                       type="text"
                       name="city"
@@ -243,7 +243,7 @@ const CheckoutPage = () => {
                       onChange={handleChange}
                       required
                       isInvalid={!!errors.city}
-                      placeholder="Nome della città"
+                      placeholder="City name"
                     />
                     <Form.Control.Feedback type="invalid">
                       {errors.city}
@@ -252,7 +252,7 @@ const CheckoutPage = () => {
                 </Col>
                 <Col md={4}>
                   <Form.Group className="mb-3" controlId="zip_code">
-                    <Form.Label>CAP *</Form.Label>
+                    <Form.Label>Zip Code *</Form.Label>
                     <Form.Control
                       type="text"
                       name="zip_code"
@@ -279,7 +279,7 @@ const CheckoutPage = () => {
                     style={{ minWidth: "200px" }}
                     onClick={handleStripeCheckout}
                   >
-                    {`Paga €${(
+                    {`Pay now €${(
                       (
                         JSON.parse(localStorage.getItem("carrello")) || []
                       ).reduce((acc, item) => acc + item.prezzo * item.qty, 0) +
@@ -294,7 +294,7 @@ const CheckoutPage = () => {
 
         <Col md={4}>
           <Card className="bg-dark text-white p-4">
-            <h4 className="mb-4">Riepilogo Ordine</h4>
+            <h4 className="mb-4">Order Summary</h4>
             <div className="mb-3">
               {(JSON.parse(localStorage.getItem("carrello")) || []).map(
                 (item, idx) => (
@@ -323,16 +323,16 @@ const CheckoutPage = () => {
             </div>
             <div className="border-top pt-3 mt-3">
               <div className="d-flex justify-content-between mb-2">
-                <span>Subtotale</span>
-                <span>€{subtotale.toFixed(2)}</span>
+                <span>Subtotal</span>
+                <span>{subtotale.toFixed(2)} €</span>
               </div>
               <div className="d-flex justify-content-between mb-2">
-                <span>Spedizione</span>
-                <span>€{subtotale ? shipping.toFixed(2) : "0.00"}</span>
+                <span>Shipping</span>
+                <span>{subtotale ? shipping.toFixed(2) : "0.00"} €</span>
               </div>
               <div className="d-flex justify-content-between mt-3 pt-3 border-top">
-                <strong>Totale</strong>
-                <strong>€{subtotale ? totale.toFixed(2) : "0.00"}</strong>
+                <strong>Total</strong>
+                <strong>{subtotale ? totale.toFixed(2) : "0.00"} €</strong>
               </div>
             </div>
           </Card>

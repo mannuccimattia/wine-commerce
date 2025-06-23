@@ -2,7 +2,7 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import GlobalContext from "../contexts/globalContext";
 import SearchForm from "./SearchForm";
-import { useCarrello } from "../contexts/cartContext";
+import { useCarrello } from "../contexts/CartContext";
 import CartSidebar from "./CartSidebar"; // importa CartSidebar
 
 const Header = () => {
