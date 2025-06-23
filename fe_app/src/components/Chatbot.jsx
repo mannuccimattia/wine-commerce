@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
+import ReactMarkdown from 'react-markdown';
 
 const Chatbot = () => {
   const [isActive, setIsActive] = useState(false);
   const [messages, setMessages] = useState([]);
-  // lo useRef viene utilizzato per accedere agli elementi DOM direttamente
+  const [loading, setLoading] = useState(false);
 
   const inputRef = useRef(null);
   const bodyRef = useRef(null);
@@ -43,6 +44,7 @@ const Chatbot = () => {
       const updatedMessages = [...messages, newMessage];
       setMessages(updatedMessages);
       inputRef.current.value = '';
+      setLoading(true); // <-- set loading to true
 
       // Prepare history for backend (all previous turns)
       const history = updatedMessages.slice(0, -1).map(msg => ({
@@ -60,6 +62,8 @@ const Chatbot = () => {
         }
       } catch (err) {
         setMessages([...updatedMessages, { sender: 'bot', text: "Errore nella risposta AI." }]);
+      } finally {
+        setLoading(false); // <-- set loading to false
       }
     }
   };
@@ -82,14 +86,20 @@ const Chatbot = () => {
         isActive &&
         <div id='chatbot-modal' className='p-2'>
           <div className='chatbot-header d-flex justify-content-between p-2 align-items-center'>
-            <h4> Chat with Us</h4>
-            <i className="fa-solid fa-xmark cursor-pointer" onClick={() => setIsActive(false)}></i>
+            <h5 className='m-0'>✨ Digital Sommelier</h5>
+            <i
+              className="fa-solid fa-minus cursor-pointer" onClick={() => setIsActive(false)}
+            ></i>
           </div>
 
           <div className='chatbot-body' ref={bodyRef}>
             {/* messaggio iniziale */}
             <div className='d-flex justify-content-start w-100'>
-              <p className='bot-msg p-1'>In che modo posso esserti utile?</p>
+              <p className='bot-msg p-1'>
+                Welcome to Boolze!<br />
+                I am your digital sommelier and assistant.<br />
+                How can I help you today?
+              </p>
             </div>
             {/* messaggi dinamici */}
             {messages.map((msg, index) => (
@@ -99,23 +109,35 @@ const Chatbot = () => {
               >
                 <p className={`${msg.sender === 'user' ? 'user-msg' : 'bot-msg'} p-1`}>
                   {msg.sender === 'bot'
-                    ? <pre style={{ margin: 0, whiteSpace: 'pre-wrap' }}>{msg.text}</pre>
+                    ? <ReactMarkdown>{msg.text}</ReactMarkdown>
                     : msg.text}
                 </p>
               </div>
             ))}
+            {/* Show "thinking..." while waiting for response */}
+            {loading && (
+              <div className="d-flex justify-content-start w-100">
+                <p className="bot-msg p-1" style={{ opacity: 0.7 }}>
+                  <i className="fa-solid fa-spinner fa-spin me-2"></i>
+                  Thinking...
+                </p>
+              </div>
+            )}
           </div>
 
           <div className='chatbot-footer d-flex justify-content-between align-items-center py-2 gap-1'>
             <input
               type="text"
+              data-bs-theme="dark"
               placeholder='Type your message here...'
               className='input-msg'
               id='input-msg'
               onKeyDown={onEnter}
               ref={inputRef}
             />
-            <button className='btn-msg' onClick={sendMessage}>
+            <button
+              className='btn-msg'
+              onClick={sendMessage}>
               <i className="fa-regular fa-paper-plane"></i>
             </button>
           </div>

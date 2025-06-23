@@ -16,6 +16,7 @@ body {
   min-height: 100vh;
   background-color: #212223 !important;
   color: #fff;
+  font-family: "Playfair Display", serif;
 }
 
 /* Stili per il contenitore root di React:
@@ -247,10 +248,11 @@ body {
 }
 
 #chatbot-modal {
+  font-family: sans-serif !important;
   font-size: 15px;
   position: fixed;
-  bottom: 30px;
-  right: 50px;
+  bottom: 28px;
+  right: 48px;
   width: 350px;
   height: 600px;
   background-color: rgba(0, 0, 0, 1);
@@ -271,6 +273,10 @@ body {
   color: #a88b4d;
   border-radius: 10px 10px 0 0;
   padding: 0 10px;
+}
+
+.chatbot-header .fa-minus:hover {
+  cursor: pointer;
 }
 
 .chatbot-body {
@@ -302,14 +308,35 @@ body {
 }
 
 .btn-msg {
-  width: 50px;
-  aspect-ratio: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  position: relative;
+  z-index: 1;
   background-color: #a88b4d;
   border-radius: 50%;
+  width: 54px;
+  height: 48px;
   cursor: pointer;
+  border: none;
+}
+
+.btn-msg,
+.btn-msg::before {
+  padding: 0;
+  margin: 0;
+}
+
+.btn-msg::before {
+  content: '';
+  position: absolute;
+  top: 0px;
+  left: -2px;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 2px solid #e9d7af;
+  border-bottom-color: transparent;
+  border-right-color: transparent;
+  animation: chatbot-rotate 2s linear infinite;
+  z-index: -1;
 }
 
 .btn-outline-light:hover {
@@ -414,11 +441,6 @@ footer img {
   max-width: 988px;
 }
 
-#homeSearch {
-  max-width: 740px;
-  margin: 0 auto;
-}
-
 .form-control {
   border-color: #fff;
 }
@@ -484,6 +506,11 @@ footer img {
   text-decoration: underline;
 }
 
+.cart-pill {
+  background-color: #a88b4d;
+  border: 1px solid white;
+}
+
 .quantity-btn {
   width: 30px;
   aspect-ratio: 1/1;
@@ -519,4 +546,77 @@ html::-webkit-scrollbar-thumb:hover,
 body::-webkit-scrollbar-thumb:hover {
   background: #cbb26a;
   /* thumb color on hover */
+}
+
+#homeSearch {
+  margin-bottom: 10px;
+}
+
+/* ******************************************** */
+/*                 MEDIA QUERIES                */
+/* ******************************************** */
+
+@media (max-width: 991.98px) {
+  .header-mobile-stack {
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 10px;
+  }
+
+  .header-mobile-stack>div {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .header-mobile-stack>.col-12.col-lg-3 {
+    justify-content: center !important;
+    align-items: center !important;
+    text-align: center;
+  }
+
+  .dropdown-toggle,
+  .dropdown-menu .dropdown-item {
+    text-align: center !important;
+    justify-content: center !important;
+    align-items: center !important;
+  }
+
+  .dropdown-menu {
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    min-width: 180px;
+  }
+}
+
+@media (max-width: 767.98px) {
+
+  .card,
+  .wine-card {
+    width: 95% !important;
+    max-width: 340px;
+    margin: 0 auto 1.2rem auto !important;
+    height: auto !important;
+    min-height: unset !important;
+    box-sizing: border-box;
+  }
+
+  .card-img-top,
+  .wine-card .card-img-top,
+  .wine-card img,
+  .card img {
+    width: 100% !important;
+    height: 160px !important;
+    max-height: 40vw;
+    object-fit: contain !important;
+    background: #fff;
+    border-radius: 10px 10px 0 0;
+    margin: 0 auto;
+    display: block;
+  }
+
+  .card-body {
+    padding: 0.8rem 1rem !important;
+  }
 }

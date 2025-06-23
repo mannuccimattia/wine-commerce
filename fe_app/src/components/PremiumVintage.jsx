@@ -33,7 +33,7 @@ const PremiumVintage = () => {
           <Spinner animation="border" variant="light" />
         </div>
       ) : (
-        <Row>
+        <Row className='border-bottom border-secondary'>
           {premiumWines.map((wine) => (
             <Col
               key={`pv-${wine.id}`}

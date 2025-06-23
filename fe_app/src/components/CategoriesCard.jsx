@@ -45,11 +45,11 @@ const CategoriesCard = () => {
             <h2 className="text-center mb-4 text-white">Our Collections</h2>
 
             {/* Grid system di Bootstrap per layout responsive */}
-            <Row>
+            <Row className='border-bottom border-secondary'>
                 {/* Mapping dell'array delle categorie per creare le card */}
                 {categories.map((category) => (
                     // Colonna per ogni categoria - occupa 3 colonne su 12 in viewport md e superiori
-                    <Col key={category.id} sm={12} md={6} lg={3} className="mb-4">
+                    <Col key={category.id} sm={12} md={6} xl={3} className="mb-4">
                         {/* Card cliccabile con effetto hover */}
                         <Card
                             className="h-100 shadow-sm hover-effect"
