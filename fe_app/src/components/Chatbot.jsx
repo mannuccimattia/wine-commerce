@@ -107,11 +107,11 @@ const Chatbot = () => {
                 key={index}
                 className={`d-flex ${msg.sender === 'user' ? 'justify-content-end' : 'justify-content-start'} w-100`}
               >
-                <p className={`${msg.sender === 'user' ? 'user-msg' : 'bot-msg'} p-1`}>
+                <div className={`${msg.sender === 'user' ? 'user-msg' : 'bot-msg'} p-1`}>
                   {msg.sender === 'bot'
                     ? <ReactMarkdown>{msg.text}</ReactMarkdown>
                     : msg.text}
-                </p>
+                </div>
               </div>
             ))}
             {/* Show "thinking..." while waiting for response */}
