@@ -4,7 +4,7 @@ import { Container, Row, Col, Image, Button } from "react-bootstrap";
 import axios from "axios";
 import GlobalContext from "../contexts/globalContext";
 import WineGlasses from "../components/WineGlasses";
-import { useCarrello } from "../contexts/cartContext";
+import { useCarrello } from "../contexts/CartContext";
 import WineBreadcrumb from "../components/WineBreadcrumb";
 
 const Winepage = () => {
@@ -124,27 +124,10 @@ const Winepage = () => {
               <h1 className="fw-semibold mb-2">
                 {`${wine.winemaker.name} ${wine.vintage} ${wine.name} ${wine.denomination.name}`}
               </h1>
-              <WineGlasses rating={wine.label_condition?.rating} />
-            </div>
-
-            {/* Price and Stock Section */}
-            <div className="mb-3">
-              <div className="mb-2">
-                <span
-                  className="fw-bold fs-3"
-                  id="price-tag"
-                  style={{ color: "#B1A44B" }}
-                >
-                  € {wine.price}
-                </span>
-              </div>
-              {wine.stock > 0 ? (
-                <small className="text-white-50">
-                  Disponibilità: {wine.stock} bottiglie
-                </small>
-              ) : (
-                <small className="text-danger">Prodotto esaurito</small>
-              )}
+              <WineGlasses
+                label={wine.label_condition.rating}
+                bottle={wine.bottle_condition.rating}
+              />
             </div>
 
             {/* Quantity and Cart Section */}
@@ -191,7 +174,7 @@ const Winepage = () => {
                   className="px-4 py-2"
                   style={{ minWidth: "200px" }}
                 >
-                  {isInCart ? "Aggiorna quantità" : "Aggiungi al carrello"}
+                  {isInCart ? "Update quantity" : "Add to cart"}
                 </Button>
               </div>
 
@@ -233,7 +216,7 @@ const Winepage = () => {
                   onClick={handleAddOrUpdateCart}
                   className="w-100 py-3"
                 >
-                  {isInCart ? "Aggiorna quantità" : "Aggiungi al carrello"}
+                  {isInCart ? "Update quantity" : "Add to cart"}
                 </Button>
               </div>
             </div>
@@ -241,48 +224,48 @@ const Winepage = () => {
             {/* Wine Details Section */}
             <div className="mb-4">
               <h5 className="mb-3 fw-bold" style={{ color: "#B1A44B" }}>
-                Dettagli del vino
+                Wine Details
               </h5>
               <Row className="g-2">
                 <Col md={6}>
                   <div className="mb-2">
-                    <strong>Produttore:</strong>{" "}
+                    <strong>Producer:</strong>{" "}
                     <span className="text-white-75">{wine.winemaker.name}</span>
                   </div>
                   <div className="mb-2">
-                    <strong>Regione:</strong>{" "}
+                    <strong>Region:</strong>{" "}
                     <span className="text-white-75">{wine.region.name}</span>
                   </div>
                   <div className="mb-2">
-                    <strong>Categoria:</strong>{" "}
+                    <strong>Category:</strong>{" "}
                     <span className="text-white-75">{wine.category.name}</span>
                   </div>
                   <div className="mb-2">
-                    <strong>Denominazione:</strong>{" "}
+                    <strong>Denominations:</strong>{" "}
                     <span className="text-white-75">
                       {wine.denomination.name}
                     </span>
                   </div>
                   <div className="mb-2">
-                    <strong>Annata:</strong>{" "}
+                    <strong>Vintage:</strong>{" "}
                     <span className="text-white-75">{wine.vintage}</span>
                   </div>
                 </Col>
                 <Col md={6}>
                   <div className="mb-2">
-                    <strong>Uvaggio:</strong>{" "}
+                    <strong>Grape Variety:</strong>{" "}
                     <span className="text-white-75">{wine.grape_type}</span>
                   </div>
                   <div className="mb-2">
-                    <strong>Gradazione:</strong>{" "}
+                    <strong>Alcohol Content %:</strong>{" "}
                     <span className="text-white-75">{wine.alcol}%</span>
                   </div>
                   <div className="mb-2">
-                    <strong>Formato:</strong>{" "}
-                    <span className="text-white-75">{wine.bottle_size}L</span>
+                    <strong>Bottle size:</strong>{" "}
+                    <span className="text-white-75">{wine.bottle_size} L</span>
                   </div>
                   <div className="mb-2">
-                    <strong>Temperatura:</strong>{" "}
+                    <strong>Serving Temperature:</strong>{" "}
                     <span className="text-white-75">{wine.temperature}°C</span>
                   </div>
                 </Col>
@@ -292,16 +275,16 @@ const Winepage = () => {
             {/* Condition Section */}
             <div className="mb-4">
               <h5 className="mb-3 fw-bold" style={{ color: "#B1A44B" }}>
-                Condizioni
+                Product Conditions
               </h5>
               <div className="mb-2">
-                <strong>Bottiglia:</strong>{" "}
+                <strong>Bottle:</strong>{" "}
                 <span className="text-white-75">
                   {wine.bottle_condition.name}
                 </span>
               </div>
               <div className="mb-2">
-                <strong>Etichetta:</strong>{" "}
+                <strong>Label:</strong>{" "}
                 <span className="text-white-75">
                   {wine.label_condition.name}
                 </span>
@@ -312,7 +295,7 @@ const Winepage = () => {
             {wine.description && (
               <div className="mb-4">
                 <h5 className="mb-3 fw-bold" style={{ color: "#B1A44B" }}>
-                  Descrizione
+                  Wine Description
                 </h5>
                 <p className="text-white-75 lh-base">{wine.description}</p>
               </div>

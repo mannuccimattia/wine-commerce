@@ -23,14 +23,14 @@ const SuccessPage = () => {
       try {
         const orderData = JSON.parse(localStorage.getItem("orderData"));
         if (!orderData) {
-          console.error("Nessun dato ordine trovato");
-          setError("Nessun dato ordine trovato.");
+          console.error("No order data found");
+          setError("No order data found.");
           return;
         }
 
         processedRef.current = true;
 
-        // 1. INSERIMENTO ORDINE
+        // 1. INSERT ORDER
         const orderPayload = {
           cliente: orderData.customerDetails,
           carrello: orderData.cartItems,
@@ -38,14 +38,14 @@ const SuccessPage = () => {
           shippingCost: parseFloat(orderData.shippingCost.toFixed(2)),
         };
 
-        console.log("Invio ordine a backend con payload:", orderPayload);
+        console.log("Sending order to backend with payload:", orderPayload);
         const orderResponse = await axios.post(
           "http://localhost:3000/api/order",
           orderPayload
         );
-        console.log("Risposta backend ordine:", orderResponse.data);
+        console.log("Backend order response:", orderResponse.data);
 
-        // 2. INVIO EMAIL
+        // 2. SEND EMAIL
         const emailPayload = {
           cartItems: orderData.cartItems.map((item) => ({
             name: item.nome,
@@ -58,27 +58,27 @@ const SuccessPage = () => {
           orderID: orderResponse.data.ordineRicevuto || `ORDER-${Date.now()}`,
         };
 
-        console.log("Dati email da inviare:", emailPayload);
+        console.log("Email data to send:", emailPayload);
 
         const emailResponse = await axios.post(
           "http://localhost:3000/api/order/send-confirmation",
           emailPayload
         );
 
-        console.log("Risposta backend email completa:", emailResponse);
+        console.log("Backend email response:", emailResponse);
 
         if (emailResponse.status === 200 && emailResponse.data) {
-          console.log("✅ Email inviata con successo");
+          console.log("✅ Email sent successfully");
           setOrderProcessed(true);
           svuotaCarrello();
           localStorage.removeItem("orderData");
         } else {
-          console.error("❌ Risposta email non valida:", emailResponse);
-          setError("C'è stato un problema nell'invio dell'email.");
+          console.error("❌ Invalid email response:", emailResponse);
+          setError("There was a problem sending the email.");
         }
       } catch (error) {
-        console.error("Errore durante l'elaborazione dell'ordine:", error);
-        setError("C'è stato un problema nell'elaborazione dell'ordine.");
+        console.error("Error processing order:", error);
+        setError("There was a problem processing your order.");
       } finally {
         setSending(false);
       }
@@ -91,7 +91,7 @@ const SuccessPage = () => {
     if (!sending) {
       const timer = setTimeout(() => {
         navigate("/");
-      }, 5000); // Ridotto a 5 secondi per test
+      }, 5000); // Reduced to 5 seconds for testing
       return () => clearTimeout(timer);
     }
   }, [sending, navigate]);
@@ -100,50 +100,52 @@ const SuccessPage = () => {
     <Container className="py-5">
       <Card className="bg-dark text-white p-5 text-center">
         {sending ? (
-          // Mostra solo il loader
+          // Show only the loader
           <>
             <i
               className="fas fa-spinner fa-spin text-warning mb-4"
               style={{ fontSize: "4rem" }}
             ></i>
-            <h2 className="mb-4">Attendi mentre l'ordine viene elaborato...</h2>
+            <h2 className="mb-4">
+              Please wait while your order is being processed...
+            </h2>
             <p className="text-muted mb-4">
-              Non chiudere la pagina. Stiamo completando il tuo ordine.
+              Do not close this page. We are completing your order.
             </p>
           </>
         ) : error ? (
-          // Mostra il messaggio di errore solo se presente
+          // Show error message only if present
           <>
             <i
               className="fas fa-times-circle text-danger mb-4"
               style={{ fontSize: "4rem" }}
             ></i>
-            <h2 className="mb-4">Errore nell'elaborazione dell'ordine</h2>
+            <h2 className="mb-4">Error processing your order</h2>
             <p className="mb-4">{error}</p>
             <p className="text-muted mb-4">
-              Verrai reindirizzato alla home page tra pochi secondi...
+              You will be redirected to the homepage shortly...
             </p>
           </>
         ) : (
-          // Mostra il messaggio di successo
+          // Show success message
           <>
             <i
               className="fas fa-check-circle text-success mb-4"
               style={{ fontSize: "4rem" }}
             ></i>
-            <h2 className="mb-4">Ordine Completato con Successo!</h2>
+            <h2 className="mb-4">Order Completed Successfully!</h2>
             <p className="mb-4">
-              Il tuo ordine è stato salvato e la conferma è stata inviata alla
-              tua email.
+              Your order has been saved and the confirmation has been sent to
+              your email.
             </p>
             <p className="text-muted mb-4">
-              Verrai reindirizzato alla home page tra pochi secondi...
+              You will be redirected to the homepage shortly...
             </p>
           </>
         )}
 
         <Link to="/" className="btn btn-outline-light">
-          Torna alla Home
+          Back to Home
         </Link>
       </Card>
     </Container>

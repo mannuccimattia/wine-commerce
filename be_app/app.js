@@ -30,7 +30,7 @@ app.use(cors({ origin: FE_APP }));
 app.use(express.static("public"));
 
 // use json parser
-app.use(express.json()); // <--- deve essere PRIMA delle rotte!
+app.use(express.json()); //
 
 // use imagePath middleware
 app.use(imagePathMiddleware);

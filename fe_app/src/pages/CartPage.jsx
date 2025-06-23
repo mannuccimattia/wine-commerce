@@ -1,6 +1,6 @@
 import { Container, Row, Col, Card, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import { useCarrello } from "../contexts/cartContext";
+import { useCarrello } from "../contexts/CartContext";
 
 const CartPage = () => {
   const { carrello, rimuoviDalCarrello, aggiornaQuantita } = useCarrello();
@@ -183,26 +183,26 @@ const CartPage = () => {
         {/* Right column - Order summary */}
         <Col lg={4}>
           <Card className="bg-dark text-white p-4">
-            <h4 className="mb-4">Riepilogo Ordine</h4>
+            <h4 className="mb-4">Order Summary</h4>
             <div className="d-flex justify-content-between mb-2">
-              <span>Subtotale</span>
-              <span>€{calculateSubtotal().toFixed(2)}</span>
+              <span>Subtotal</span>
+              <span>{calculateSubtotal().toFixed(2)} €</span>
             </div>
             <div className="d-flex justify-content-between mb-2">
-              <span>Spedizione</span>
-              <span>€{calculateShipping().toFixed(2)}</span>
+              <span>Shipping</span>
+              <span>{calculateShipping().toFixed(2)} €</span>
             </div>
             <div className="d-flex justify-content-between mt-3 pt-3 border-top">
-              <strong>Totale</strong>
-              <strong>€{calculateTotal().toFixed(2)}</strong>
+              <strong>Total</strong>
+              <strong>{calculateTotal().toFixed(2)} €</strong>
             </div>
             {calculateSubtotal() > 0 && calculateShipping() > 0 && (
               <small className="text-muted d-block mt-2">
-                Spedizione gratuita per ordini superiori a €{SOGLIA_SPEDIZIONE}
+                Free shipping for orders over €{SOGLIA_SPEDIZIONE}
               </small>
             )}
             <Link to="/checkout" className="btn btn-outline-light w-100 mt-3">
-              Procedi al Checkout
+              Checkout
             </Link>
           </Card>
         </Col>
