@@ -69,11 +69,21 @@ export const CarrelloProvider = ({ children }) => {
   };
 
   const aggiornaQuantita = (itemId, newQuantity) => {
-    if (newQuantity < 1) return; // Prevent negative quantities
+    if (newQuantity < 1) return;
     const nuovoCarrello = carrello.map((item) =>
       item.id === itemId ? { ...item, qty: newQuantity } : item
     );
     aggiornaStorage(nuovoCarrello);
+  };
+
+  //Svuota completamente il carrello -> da usare dopo aggiunta ordine
+  const svuotaCarrello = () => {
+    setCarrello([]);
+    setSubtotale(0);
+    localStorage.removeItem("carrello");
+    localStorage.removeItem("subtotale");
+    setAlertMsg("Carrello svuotato!");
+    setTimeout(() => setAlertMsg(""), 3000);
   };
 
   return (
@@ -85,6 +95,7 @@ export const CarrelloProvider = ({ children }) => {
         aggiungiAlCarrello,
         rimuoviDalCarrello,
         aggiornaQuantita,
+        svuotaCarrello, // Aggiungi la nuova funzione al provider
       }}
     >
       {children}

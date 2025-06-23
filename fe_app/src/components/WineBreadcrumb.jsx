@@ -11,7 +11,7 @@ const WineBreadcrumb = ({ category, name }) => {
             style={{ color: "white" }}
           >
             <li className="breadcrumb-item">
-              <a href="#" style={{ color: "white", textDecoration: "none" }}>
+              <a href="/" style={{ color: "white", textDecoration: "none" }}>
                 Home
               </a>
             </li>

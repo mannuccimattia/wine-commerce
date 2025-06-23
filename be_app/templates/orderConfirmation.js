@@ -1,17 +1,20 @@
 const createEmailTemplate = (orderDetails) => {
-    const { cartItems, shippingCost, total, customerEmail, customerDetails } = orderDetails;
+  const { cartItems, shippingCost, total, customerEmail, customerDetails } =
+    orderDetails;
 
-    return `
+  return `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
             <h2>Grazie per il tuo ordine!</h2>
-            <p>Gentile ${customerDetails.firstName} ${customerDetails.lastName},</p>
+            <p>Gentile ${customerDetails.firstName} ${
+    customerDetails.lastName
+  },</p>
             <p>Il tuo ordine è stato confermato ed è in fase di elaborazione.</p>
             
             <h3>Indirizzo di Spedizione:</h3>
             <p style="margin-bottom: 20px;">
                 ${customerDetails.firstName} ${customerDetails.lastName}<br>
                 ${customerDetails.address}<br>
-                ${customerDetails.city}, ${customerDetails.zipCode}
+                ${customerDetails.city}, ${customerDetails.zip_code}
             </p>
             
             <h3>Riepilogo Ordine:</h3>
@@ -21,20 +24,32 @@ const createEmailTemplate = (orderDetails) => {
                     <th style="padding: 10px; text-align: right;">Quantità</th>
                     <th style="padding: 10px; text-align: right;">Prezzo</th>
                 </tr>
-                ${cartItems.map(item => `
+                ${cartItems
+                  .map(
+                    (item) => `
                     <tr>
                         <td style="padding: 10px;">${item.nome}</td>
-                        <td style="padding: 10px; text-align: right;">${item.qty}</td>
-                        <td style="padding: 10px; text-align: right;">€${(item.prezzo * item.qty).toFixed(2)}</td>
+                        <td style="padding: 10px; text-align: right;">${
+                          item.qty
+                        }</td>
+                        <td style="padding: 10px; text-align: right;">€${(
+                          Number(item.prezzo) * item.qty
+                        ).toFixed(2)}</td>
                     </tr>
-                `).join('')}
+                `
+                  )
+                  .join("")}
                 <tr style="border-top: 2px solid #dee2e6;">
                     <td colspan="2" style="padding: 10px;"><strong>Spedizione</strong></td>
-                    <td style="padding: 10px; text-align: right;">€${shippingCost.toFixed(2)}</td>
+                    <td style="padding: 10px; text-align: right;">€${shippingCost.toFixed(
+                      2
+                    )}</td>
                 </tr>
                 <tr>
                     <td colspan="2" style="padding: 10px;"><strong>Totale</strong></td>
-                    <td style="padding: 10px; text-align: right;"><strong>€${total.toFixed(2)}</strong></td>
+                    <td style="padding: 10px; text-align: right;"><strong>€${total.toFixed(
+                      2
+                    )}</strong></td>
                 </tr>
             </table>
             

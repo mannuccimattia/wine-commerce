@@ -14,7 +14,6 @@ const cors = require("cors");
 const winesRouter = require("./routers/winesRouter");
 const chatRouter = require("./routers/chatRouter");
 const orderRouter = require("./routers/orderRouter");
-const orderRouterStripe = require("./routers/orderRouter_stripe");
 
 // import middlewares
 const errorsHandler = require("./middlewares/errorsHandler");
@@ -22,7 +21,7 @@ const notFound = require("./middlewares/notFound");
 const imagePathMiddleware = require("./middlewares/imagePath");
 
 // import stripe
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 // use CORS
 app.use(cors({ origin: FE_APP }));
@@ -45,7 +44,6 @@ app.get("/", (req, res) => {
 app.use("/api/wines", winesRouter);
 app.use("/api/chat", chatRouter);
 app.use("/api/order", orderRouter);
-app.use("/api/order/stripe", orderRouterStripe); // rotte stripe
 
 // use middlewares
 app.use(errorsHandler);

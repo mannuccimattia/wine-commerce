@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useState, useEffect } from "react";
-import { Container, Row, Col, Form, Card } from "react-bootstrap";
+import { Container, Row, Col, Form, Card, Alert } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 
 const CheckoutPage = () => {
@@ -24,6 +24,26 @@ const CheckoutPage = () => {
     zip_code: "",
   });
 
+  // Stato per gli errori di validazione
+  const [errors, setErrors] = useState({});
+  const [formError, setFormError] = useState("");
+
+  // Funzioni di validazione
+  const validateName = (name) => {
+    const nameRegex = /^[a-zA-ZÀ-ÿ\s'.-]{2,30}$/;
+    return nameRegex.test(name.trim());
+  };
+
+  const validateEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  const validateZipCode = (zipCode) => {
+    const zipRegex = /^\d{5}$/;
+    return zipRegex.test(zipCode);
+  };
+
   useEffect(() => {
     const storedSubtotale = parseFloat(localStorage.getItem("subtotale")) || 0;
     const shippingCost =
@@ -37,77 +57,99 @@ const CheckoutPage = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+
+    // Gestione speciale per i diversi campi
+    let processedValue = value;
+
+    if (name === "zip_code") {
+      // Solo numeri per il CAP, massimo 5 cifre
+      processedValue = value.replace(/\D/g, "").slice(0, 5);
+    } else if (name === "firstName" || name === "lastName" || name === "city") {
+      // Solo lettere, spazi, apostrofi e trattini per nomi e città
+      processedValue = value.replace(/[^a-zA-ZÀ-ÿ\s'.-]/g, "");
+    }
+
     setFormData((prev) => ({
       ...prev,
-      [name]: value,
+      [name]: processedValue,
     }));
+
+    // Rimuovi l'errore se il campo ora è valido
+    if (errors[name]) {
+      const newErrors = { ...errors };
+      delete newErrors[name];
+      setErrors(newErrors);
+    }
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    const cliente = { ...formData };
-    const carrello = JSON.parse(localStorage.getItem("carrello")) || [];
-    const subtotale = parseFloat(localStorage.getItem("subtotale")) || 0;
-    const shipping = subtotale > SOGLIA_SPEDIZIONE ? 0 : SPESE_SPEDIZIONE;
-    const totale = subtotale + shipping;
-
-    const orderDetail = {
-      cliente,
-      carrello,
-      subtotale: subtotale.toFixed(2),
-      shippingCost: shipping.toFixed(2),
-    };
-
-    axios
-      .post("http://localhost:3000/api/order", orderDetail)
-      .then((response) => {
-        console.log("Risposta dal server:", response.data);
-        //Svuoto carrello
-        localStorage.removeItem("carrello");
-        localStorage.removeItem("subtotale");
-        console.log("Carrello svuotato");
-        // Redirect alla pagina di successo
-        navigate("/success");
-      })
-      .catch((error) => {
-        console.error("Errore nella richiesta: ", error);
-      });
-  };
-
-  // Funzione Stripe diretta
   const handleStripeCheckout = async () => {
+    // Validazione form prima di procedere
+    const newErrors = {};
+    if (!formData.firstName || !validateName(formData.firstName)) {
+      newErrors.firstName = "Nome non valido.";
+    }
+    if (!formData.lastName || !validateName(formData.lastName)) {
+      newErrors.lastName = "Cognome non valido.";
+    }
+    if (!formData.email || !validateEmail(formData.email)) {
+      newErrors.email = "Email non valida.";
+    }
+    if (!formData.address) {
+      newErrors.address = "Indirizzo richiesto.";
+    }
+    if (!formData.city || !validateName(formData.city)) {
+      newErrors.city = "Città non valida.";
+    }
+    if (!formData.zip_code || !validateZipCode(formData.zip_code)) {
+      newErrors.zip_code = "CAP deve essere esattamente 5 numeri.";
+    }
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      setFormError("Per favore compila tutti i campi richiesti correttamente.");
+      return;
+    }
+
+    setFormError(""); // Reset del messaggio di errore
+
     const cartItems = JSON.parse(localStorage.getItem("carrello")) || [];
-    const SPESE_SPEDIZIONE = 8.9;
-    const SOGLIA_SPEDIZIONE = 1000;
-    const subtotal = cartItems.reduce((acc, item) => acc + item.prezzo * item.qty, 0);
+    const subtotal = cartItems.reduce(
+      (acc, item) => acc + item.prezzo * item.qty,
+      0
+    );
     const shippingCost = subtotal > SOGLIA_SPEDIZIONE ? 0 : SPESE_SPEDIZIONE;
 
-    // Salva i dati ordine per SuccessPage
+    // Salva TUTTI i dati ordine per SuccessPage con la struttura corretta
     const orderData = {
       cartItems,
       shippingCost,
+      subtotale: subtotal,
       customerEmail: formData.email,
       customerDetails: {
         firstName: formData.firstName,
         lastName: formData.lastName,
+        email: formData.email,
         address: formData.address,
         city: formData.city,
-        zipCode: formData.zip_code,
+        zip_code: formData.zip_code,
       },
     };
+
+    // Salva i dati nel localStorage per la success page
     localStorage.setItem("orderData", JSON.stringify(orderData));
 
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/order/stripe/create-checkout-session",
-        { cartItems, shippingCost },
+        "http://localhost:3000/api/order/create-checkout-session",
+        { cartItems, shippingCost, subtotale: subtotal },
         { headers: { "Content-Type": "application/json" } }
       );
+
       if (response.data.url) {
         window.location.href = response.data.url;
       }
-    } catch {
+    } catch (error) {
+      console.error("Errore Stripe:", error);
       alert("Errore durante il collegamento a Stripe");
     }
   };
@@ -115,86 +157,116 @@ const CheckoutPage = () => {
   return (
     <Container className="py-5">
       <h2 className="text-white mb-4">Checkout</h2>
+      {formError && <Alert variant="danger">{formError}</Alert>}
       <Row>
         <Col md={8}>
           <Card className="bg-dark text-white p-4 mb-4">
-            <Form onSubmit={handleSubmit}>
+            <Form>
               <h4 className="mb-4">Dati di Spedizione</h4>
               <Row>
                 <Col md={6}>
                   <Form.Group className="mb-3" controlId="firstName">
-                    <Form.Label>Nome</Form.Label>
+                    <Form.Label>Nome *</Form.Label>
                     <Form.Control
                       type="text"
                       name="firstName"
                       value={formData.firstName}
                       onChange={handleChange}
                       required
+                      isInvalid={!!errors.firstName}
+                      placeholder="Inserisci il tuo nome"
                     />
+                    <Form.Control.Feedback type="invalid">
+                      {errors.firstName}
+                    </Form.Control.Feedback>
                   </Form.Group>
                 </Col>
                 <Col md={6}>
                   <Form.Group className="mb-3" controlId="lastName">
-                    <Form.Label>Cognome</Form.Label>
+                    <Form.Label>Cognome *</Form.Label>
                     <Form.Control
                       type="text"
                       name="lastName"
                       value={formData.lastName}
                       onChange={handleChange}
                       required
+                      isInvalid={!!errors.lastName}
+                      placeholder="Inserisci il tuo cognome"
                     />
+                    <Form.Control.Feedback type="invalid">
+                      {errors.lastName}
+                    </Form.Control.Feedback>
                   </Form.Group>
                 </Col>
               </Row>
 
               <Form.Group className="mb-3" controlId="email">
-                <Form.Label>Email</Form.Label>
+                <Form.Label>Email *</Form.Label>
                 <Form.Control
                   type="email"
                   name="email"
                   value={formData.email}
                   onChange={handleChange}
                   required
+                  isInvalid={!!errors.email}
+                  placeholder="esempio@email.com"
                 />
+                <Form.Control.Feedback type="invalid">
+                  {errors.email}
+                </Form.Control.Feedback>
               </Form.Group>
 
               <Form.Group className="mb-3" controlId="address">
-                <Form.Label>Indirizzo</Form.Label>
+                <Form.Label>Indirizzo *</Form.Label>
                 <Form.Control
                   type="text"
                   name="address"
                   value={formData.address}
                   onChange={handleChange}
                   required
+                  isInvalid={!!errors.address}
+                  placeholder="Via, numero civico"
                 />
+                <Form.Control.Feedback type="invalid">
+                  {errors.address}
+                </Form.Control.Feedback>
               </Form.Group>
 
               <Row>
                 <Col md={8}>
                   <Form.Group className="mb-3" controlId="city">
-                    <Form.Label>Città</Form.Label>
+                    <Form.Label>Città *</Form.Label>
                     <Form.Control
                       type="text"
                       name="city"
                       value={formData.city}
                       onChange={handleChange}
                       required
+                      isInvalid={!!errors.city}
+                      placeholder="Nome della città"
                     />
+                    <Form.Control.Feedback type="invalid">
+                      {errors.city}
+                    </Form.Control.Feedback>
                   </Form.Group>
                 </Col>
                 <Col md={4}>
                   <Form.Group className="mb-3" controlId="zip_code">
-                    <Form.Label>CAP</Form.Label>
+                    <Form.Label>CAP *</Form.Label>
                     <Form.Control
                       type="text"
                       name="zip_code"
                       value={formData.zip_code}
                       onChange={handleChange}
                       required
-                      pattern="\d{5}"
-                      inputMode="numeric"
+                      isInvalid={!!errors.zip_code}
+                      placeholder="12345"
                       maxLength={5}
+                      inputMode="numeric"
                     />
+                    <Form.Control.Feedback type="invalid">
+                      {errors.zip_code}
+                    </Form.Control.Feedback>
                   </Form.Group>
                 </Col>
               </Row>
@@ -223,7 +295,6 @@ const CheckoutPage = () => {
         <Col md={4}>
           <Card className="bg-dark text-white p-4">
             <h4 className="mb-4">Riepilogo Ordine</h4>
-            {/* Visualizza immagini prodotti */}
             <div className="mb-3">
               {(JSON.parse(localStorage.getItem("carrello")) || []).map(
                 (item, idx) => (
