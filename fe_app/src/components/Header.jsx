@@ -50,17 +50,24 @@ const Header = () => {
       >
         <div className="container-fluid d-flex justify-content-between align-items-center">
           {/* Logo */}
-          <Link className="navbar-brand" to="/" onClick={handleLogoClick}>
-            <img
-              src="\imgs\wordmarks\boolze-high-resolution-wordmark.png"
-              alt="Bool Wines Logo"
-              height="40"
-              className="me-2"
-            />
-          </Link>
+          <div className="col-12 col-lg-3">
+            <Link className="navbar-brand" to="/" onClick={handleLogoClick}>
+              <img
+                src="\imgs\wordmarks\boolze-high-resolution-wordmark.png"
+                alt="Bool Wines Logo"
+                height="40"
+                className="me-2"
+              />
+            </Link>
+          </div>
+
+          {/* Searchbar */}
+          <div className="col-12 col-lg-6 justify-content-center">
+            <SearchForm />
+          </div>
 
           {/* Cart Section */}
-          <div className="d-flex align-items-center">
+          <div className="col-12 col-lg-3 d-flex justify-content-end align-items-center">
             {/* Desktop - Show amount */}
             <button
               className="btn btn-outline-light position-relative d-none d-md-inline-block"
@@ -100,10 +107,6 @@ const Header = () => {
           </div>
         </div>
       </nav>
-
-      <div className="col-12">
-        <SearchForm />
-      </div>
 
       {/* Sidebar carrello */}
       <CartSidebar show={showSidebar} onHide={() => setShowSidebar(false)} />

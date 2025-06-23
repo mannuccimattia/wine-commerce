@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import axios from 'axios';
 
 const Chatbot = () => {
   const [isActive, setIsActive] = useState(false);
@@ -32,15 +33,34 @@ const Chatbot = () => {
     }
   }, [messages]);
 
-  const sendMessage = () => {
+  const sendMessage = async () => {
     const value = inputRef.current.value.trim();
     if (value !== '') {
       const newMessage = {
         sender: 'user',
         text: value
       };
-      setMessages([...messages, newMessage]);
+      const updatedMessages = [...messages, newMessage];
+      setMessages(updatedMessages);
       inputRef.current.value = '';
+
+      // Prepare history for backend (all previous turns)
+      const history = updatedMessages.slice(0, -1).map(msg => ({
+        role: msg.sender === 'user' ? 'user' : 'assistant',
+        content: msg.text
+      }));
+
+      try {
+        const res = await axios.post('http://localhost:3000/api/chat', {
+          history,
+          message: value
+        });
+        if (res.data.reply) {
+          setMessages([...updatedMessages, { sender: 'bot', text: res.data.reply }]);
+        }
+      } catch (err) {
+        setMessages([...updatedMessages, { sender: 'bot', text: "Errore nella risposta AI." }]);
+      }
     }
   };
 
@@ -78,7 +98,9 @@ const Chatbot = () => {
                 className={`d-flex ${msg.sender === 'user' ? 'justify-content-end' : 'justify-content-start'} w-100`}
               >
                 <p className={`${msg.sender === 'user' ? 'user-msg' : 'bot-msg'} p-1`}>
-                  {msg.text}
+                  {msg.sender === 'bot'
+                    ? <pre style={{ margin: 0, whiteSpace: 'pre-wrap' }}>{msg.text}</pre>
+                    : msg.text}
                 </p>
               </div>
             ))}

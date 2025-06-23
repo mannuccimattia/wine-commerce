@@ -1,13 +1,11 @@
-import React from "react";
 import { Container, Row, Col, Card, Button } from "react-bootstrap";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useCarrello } from "../contexts/cartContext";
 
 const CartPage = () => {
   const { carrello, rimuoviDalCarrello, aggiornaQuantita } = useCarrello();
   const SPESE_SPEDIZIONE = 8.9;
   const SOGLIA_SPEDIZIONE = 1000;
-  const navigate = useNavigate();
 
   // Calculate subtotal
   const calculateSubtotal = () => {
@@ -30,9 +28,9 @@ const CartPage = () => {
     return (
       <Container className="py-5">
         <div className="text-center text-white">
-          <h2 className="mb-4">Il tuo carrello è vuoto</h2>
+          <h2 className="mb-4">You cart is empty</h2>
           <Link to="/products" className="btn btn-outline-light">
-            Continua lo Shopping
+            Continue shopping
           </Link>
         </div>
       </Container>
@@ -42,7 +40,7 @@ const CartPage = () => {
   // Main rendering of the cart
   return (
     <Container className="py-5">
-      <h2 className="text-white mb-4">Carrello</h2>
+      <h2 className="text-white mb-4">Your cart</h2>
       <Row>
         {/* Left column - Product list */}
         <Col lg={8}>
@@ -51,29 +49,64 @@ const CartPage = () => {
               <Card.Body>
                 {/* Desktop view: single row layout */}
                 <div className="d-none d-lg-flex justify-content-between align-items-center">
-                  <div className="d-flex align-items-center">
-                    {item.img && (
-                      <img
-                        src={item.img}
-                        alt={item.nome}
+                  <div className="col-7" id="cart-item-link">
+                    <div className="d-flex align-items-center">
+                      <Link
+                        to={`/wine/${item.id}`}
                         style={{
-                          width: "80px",
-                          height: "80px",
-                          objectFit: "cover",
-                          marginRight: "15px",
-                          borderRadius: "4px",
+                          textDecoration: "none",
+                          color: "inherit",
+                          display: "flex",
+                          alignItems: "center",
                         }}
-                      />
-                    )}
-                    <Link
-                      to={`/wine/${item.id}`}
-                      style={{ textDecoration: "none", color: "inherit" }}
-                    >
-                      <h5 className="mb-1">{item.nome}</h5>
-                      <p className="mb-1">€ {item.prezzo}</p>
-                    </Link>
+                      >
+                        <img
+                          src={item.img}
+                          alt={item.nome}
+                          style={{
+                            width: "80px",
+                            height: "80px",
+                            objectFit: "cover",
+                            marginRight: "15px",
+                            borderRadius: "4px",
+                          }}
+                        />
+                        <div>
+                          <h5 className="mb-1">{item.nome}</h5>
+                          <div className="mb-1">€ {item.prezzo}</div>
+                        </div>
+                      </Link>
+                    </div>
                   </div>
-                  <div className="d-flex align-items-center">
+
+                  <div className="col-2 d-flex justify-content-center align-items-center">
+                    <Button
+                      className="quantity-btn me-1"
+                      variant="outline-light"
+                      size="sm"
+                      onClick={() => aggiornaQuantita(item.id, item.qty - 1)}
+                      disabled={item.qty === 1}
+                    >
+                      <i className="fa-solid fa-minus"></i>
+                    </Button>
+                    <span className="mx-2">x {item.qty}</span>
+                    <Button
+                      className="quantity-btn ms-1"
+                      variant="outline-light"
+                      size="sm"
+                      onClick={() => aggiornaQuantita(item.id, item.qty + 1)}
+                    >
+                      <i className="fa-solid fa-plus"></i>
+                    </Button>
+                  </div>
+
+                  <div className="col-2 text-end">
+                    <p className="mb-0 fw-bold">
+                      € {(item.prezzo * item.qty).toFixed(2)}
+                    </p>
+                  </div>
+
+                  <div className="col-1 text-end">
                     <Button
                       variant="link"
                       className="text-danger p-0"
@@ -82,27 +115,6 @@ const CartPage = () => {
                       <i className="fas fa-trash fa-lg"></i>
                     </Button>
                   </div>
-                  <div className="d-flex align-items-center">
-                    <Button
-                      variant="outline-light"
-                      size="sm"
-                      onClick={() => aggiornaQuantita(item.id, item.qty - 1)}
-                      disabled={item.qty === 1}
-                    >
-                      -
-                    </Button>
-                    <span className="mx-2">x{item.qty}</span>
-                    <Button
-                      variant="outline-light"
-                      size="sm"
-                      onClick={() => aggiornaQuantita(item.id, item.qty + 1)}
-                    >
-                      +
-                    </Button>
-                  </div>
-                  <p className="mb-0 fw-bold">
-                    € {(item.prezzo * item.qty).toFixed(2)}
-                  </p>
                 </div>
 
                 {/* Mobile view: stacked layout */}

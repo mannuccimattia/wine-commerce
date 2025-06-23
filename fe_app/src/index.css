@@ -175,7 +175,7 @@ body {
   transition: 0.3s;
 }
 
-#card-shopping:hover ~ #card-shopping-tooltip {
+#card-shopping:hover~#card-shopping-tooltip {
   opacity: 1;
 }
 
@@ -203,23 +203,51 @@ body {
 }
 
 #chatbot {
+  position: fixed;
+  bottom: 30px;
+  right: 50px;
   width: 70px;
   height: 70px;
   background-color: #a88b4d;
   box-shadow: 3px 3px rgba(0, 0, 0, 0.3);
   border-radius: 50%;
   font-size: 38px;
-  position: fixed;
-  bottom: 30px;
-  right: 50px;
   z-index: 1000;
   display: flex;
   justify-content: center;
   align-items: center;
   cursor: pointer;
+  /* No border here, handled by pseudo-element */
+  overflow: visible;
+}
+
+#chatbot::before {
+  content: '';
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 71px;
+  height: 71px;
+  border-radius: 50%;
+  border: 2px solid #e9d7af;
+  border-bottom-color: transparent;
+  border-right-color: transparent;
+  animation: chatbot-rotate 2s linear infinite;
+  z-index: -1;
+}
+
+@keyframes chatbot-rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 #chatbot-modal {
+  font-size: 15px;
   position: fixed;
   bottom: 30px;
   right: 50px;
@@ -254,6 +282,10 @@ body {
   border-radius: 0 0 15px 15px;
   padding: 10px;
   overflow: auto;
+  scrollbar-width: none;
+  /* Hides scrollbar in Firefox */
+  -ms-overflow-style: none;
+  /* Hides scrollbar in IE and Edge */
 }
 
 .chatbot-body::-webkit-scrollbar {
@@ -265,7 +297,7 @@ body {
   background: transparent;
 }
 
-.chatbot-body > div > p {
+.chatbot-body>div>p {
   max-width: 90%;
 }
 
@@ -287,44 +319,42 @@ body {
 
 .input-msg {
   width: 100%;
-  height: 50px;
   border-radius: 30px;
-  padding: 10px;
+  padding: 10px 20px;
   box-sizing: border-box;
   border: none;
   outline: none;
+  margin-top: 5px;
 }
 
-.bot-msg {
-  align-self: flex-start;
-  justify-self: flex-start;
-}
-
+.bot-msg,
 .user-msg {
-  align-self: flex-end;
-  justify-self: flex-end;
+  padding: 5px 10px !important;
+  margin-bottom: 10px;
 }
 
 .bot-msg {
-  background-color: #ffffff;
-  color: #000;
+  background-color: #171718;
+  color: #fff;
   border-radius: 15px 15px 15px 0;
-  padding: 10px 15px;
-  margin-bottom: 10px;
+
 }
 
 .user-msg {
   background-color: #dcf8c6;
   color: #000;
   border-radius: 15px 15px 0 15px;
-  padding: 10px 15px;
-  margin-bottom: 10px;
 }
 
 .app-wrapper {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+}
+
+.fa-paper-plane {
+  color: #fff;
+  translate: -5%;
 }
 
 main {
@@ -346,7 +376,7 @@ footer .social-icons {
   gap: 1rem;
 }
 
-footer a > i {
+footer a>i {
   color: #aeb2b6;
 }
 
@@ -363,8 +393,8 @@ footer img {
   font-size: 16px !important;
 }
 
-#details div > strong,
-#condizioni p > strong {
+#details div>strong,
+#condizioni p>strong {
   color: gray;
 }
 
@@ -372,12 +402,6 @@ footer img {
   font-family: "Lora", "Cormorant", serif;
   font-size: 1.2rem;
   line-height: 1.6;
-}
-
-#descr::before,
-#descr::after {
-  content: "~";
-  margin: 0 10px;
 }
 
 #price-tag {
@@ -395,12 +419,13 @@ footer img {
   margin: 0 auto;
 }
 
+.form-control {
+  border-color: #fff;
+}
+
 .form-control:focus {
   box-shadow: none;
   border-color: inherit;
-  /* Optional - keeps the border color unchanged */
-  /* outline: none; */
-  /* Removes browser default outline (not recommended for accessibility) */
 }
 
 .loader {
@@ -439,10 +464,59 @@ footer img {
   transition: 0.3s;
 }
 
-.pill:hover ~ #pt-hover {
+.pill:hover~#pt-hover {
   opacity: 1;
 }
 
 .breadcrumb-divider {
   --bs-breadcrumb-divider: "@";
+}
+
+.dropdown-item {
+  color: #fff;
+}
+
+.dropdown-item:hover {
+  background-color: #a88b4d;
+}
+
+#cart-item-link:hover a h5 {
+  text-decoration: underline;
+}
+
+.quantity-btn {
+  width: 30px;
+  aspect-ratio: 1/1;
+  padding: 0;
+  margin: 0;
+}
+
+/* Custom thin scrollbar for the whole page */
+html,
+body {
+  scrollbar-width: thin;
+  /* Firefox */
+  scrollbar-color: #a88b4d #212223;
+  /* thumb color, track color */
+}
+
+/* Webkit browsers (Chrome, Edge, Safari) */
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  width: 8px;
+  background: #212223;
+  /* track color */
+}
+
+html::-webkit-scrollbar-thumb,
+body::-webkit-scrollbar-thumb {
+  background: #a88b4d;
+  /* thumb color */
+  border-radius: 8px;
+}
+
+html::-webkit-scrollbar-thumb:hover,
+body::-webkit-scrollbar-thumb:hover {
+  background: #cbb26a;
+  /* thumb color on hover */
 }

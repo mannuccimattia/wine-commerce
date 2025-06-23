@@ -4,9 +4,31 @@ const router = express.Router();
 const connection = require("../data/db");
 const { marked } = require('marked');
 
+const wineFormat = require("../functions/wineFormat");
+
+const sqlBase = `
+  SELECT
+    W.*,
+    D.name AS denomination_name,
+    C.name AS category_name,
+    R.name AS region_name,
+    WN.name AS winemaker_name,
+    LC.name AS label_condition_name,
+    LC.rating AS label_condition_rating,
+    BC.name AS bottle_condition_name,
+    BC.rating AS bottle_condition_rating
+  FROM wines W
+  LEFT JOIN denominations D ON W.denomination = D.id
+  LEFT JOIN categories C ON W.category = C.id
+  LEFT JOIN regions R ON W.region = R.id
+  LEFT JOIN winemakers WN ON W.winemaker = WN.id
+  LEFT JOIN label_conditions LC ON W.label_condition = LC.id
+  LEFT JOIN bottle_conditions BC ON W.bottle_condition = BC.id
+`;
+
 // Config
 const OLLAMA_URL = "http://localhost:11434/api/generate";
-const MODEL_NAME = "gemma3:1b";
+const MODEL_NAME = "gemma3:4b-it-qat";
 
 // Model verification middleware
 router.use(async (req, res, next) => {
@@ -32,56 +54,83 @@ router.use(async (req, res, next) => {
 // Chat endpoint
 router.post('/', async (req, res) => {
   try {
-    const { message } = req.body;
+    const { history = [], message } = req.body;
+
+    // Gemma 3 template formatting (history)
+    function formatGemmaHistory(messages) {
+      let result = '';
+      messages.forEach((msg, i) => {
+        const last = i === messages.length - 1;
+        if (msg.role === "user" || msg.role === "system") {
+          result += `<start_of_turn>user\n${msg.content}<end_of_turn>\n`;
+          if (last) result += `<start_of_turn>model\n`;
+        } else if (msg.role === "assistant") {
+          result += `<start_of_turn>model\n${msg.content}`;
+          if (!last) result += `<end_of_turn>\n`;
+        }
+      });
+      return result;
+    }
+
+    const conversation = formatGemmaHistory(history);
+
     if (!message?.trim()) {
       return res.status(400).json({ error: "Empty message" });
     }
 
-    // // 1. Get ALL available wines from database
-    const [wines] = await connection.promise().query(
-      'SELECT name, category, price, vintage, grape_type, region, winemaker, description, denomination FROM wines WHERE stock > 0 ORDER BY price DESC'
-    );
+    // Get ALL available wines from database
+    const [winesResult] = await connection.promise().query(sqlBase);
 
-    if (wines.length === 0) {
-      return res.json({ reply: "We're currently out of stock" });
-    }
+    // format data with wineFormat
+    const wines = winesResult.map(wine => wineFormat(wine, req));
 
     const wineDetails = wines.map(w => {
+      const fullName = `${w.winemaker.name} ${w.vintage} ${w.name} ${w.denomination.name}`;
+      return ( // NON modificare l'indentazione del return
+        `Wine: ${fullName}
+Category: ${w.category.name}
+Region: ${w.region.name}
+Denomination: ${w.denomination.name}
+Price: €${w.price}
+Producer: ${w.winemaker.name}
+Description: ${w.description}`
+      );
+    }).join("\n\n");
 
-      const fullName = `${w.winemaker} ${w.vintage} ${w.name} ${w.denomination}`;
+    const prompt = `
+    ROLE:
+    You are a professional wine assistant and a digital sommelier.
 
-      return (
-        `
-        DETAILS OF WINE ${w.id}:
-        wine full name: ${fullName}, 
-        wine category: ${w.category}, 
-        wine region: ${w.region},
-        wine denomination: ${w.denomination},
-        price: €${w.price}. 
-        Producer: ${w.winemaker}. 
-        Description: ${w.description}`
-      )
-    }).join('\n');
-    console.log(wineDetails)
-    const prompt = `You are a professional wine assistant. Follow these rules STRICTLY:
-    
-    1. NEVER mention you're an AI or assistant.
-    2. If asked for recommendations, suggest 1-2 wines maximum.
-    3. ALWAYS include: fullName, price, and why it matches the request.
+    RULES:
+    1. ONLY recommend or describe wines from the AVAILABLE WINES list below. Do NOT invent wines or details.
+    2. NEVER mention wine IDs.
+    3. KEEP ANSWERS SHORT, focused, and directly related to the customer's request. Do NOT ask unnecessary follow-up questions unless the customer’s request is unclear.
+    4. If the customer asks for a specific region, category, producer, denomination, price, or vintage, ONLY suggest wines from the AVAILABLE WINES list that match the requested region (Region), category (Category), producer (Producer), denomination (Denomination), price (Price), or vintage (as part of the wine's full name). If no wines match, say so and do not recommend anything else.
+    5. Format your answer as plain text with no unnecessary indentation, markdown, or trailing symbols. Use simple line breaks for clarity.
+    6. NEVER mention quantities or avilability. Treat stocks as unlimited.
 
-    Available wines (sorted by price descending):
+    IMPORTANT: You MUST ONLY use information from the AVAILABLE WINES list below. Do NOT use any outside knowledge or invent styles, flavors, or wine types.
+
+    AVAILABLE WINES:
     ${wineDetails}
 
-    Customer request: "${message}"`;
+    CONVERSATION SO FAR:
+    ${conversation}<start_of_turn>user
+    ${message}
+    <end_of_turn>
+    <start_of_turn>model
+    `;
 
     const response = await axios.post(OLLAMA_URL, {
       model: MODEL_NAME,
       prompt: prompt,
       stream: false,
       options: {
-        temperature: 0,
+        temperature: 1,
+        top_k: 64,
+        top_p: 0.95,
         num_predict: 256,
-        stop: []
+        stop: ["<end_of_turn>"]
       }
     });
 
