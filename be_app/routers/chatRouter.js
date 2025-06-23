@@ -28,7 +28,7 @@ const sqlBase = `
 
 // Config
 const OLLAMA_URL = "http://localhost:11434/api/generate";
-const MODEL_NAME = "gemma3:1b";
+const MODEL_NAME = "gemma3:4b-it-qat";
 
 // Model verification middleware
 router.use(async (req, res, next) => {
@@ -54,26 +54,46 @@ router.use(async (req, res, next) => {
 // Chat endpoint
 router.post('/', async (req, res) => {
   try {
-    const { message } = req.body;
+    const { history = [], message } = req.body;
+
+    // Gemma 3 template formatting (history)
+    function formatGemmaHistory(messages) {
+      let result = '';
+      messages.forEach((msg, i) => {
+        const last = i === messages.length - 1;
+        if (msg.role === "user" || msg.role === "system") {
+          result += `<start_of_turn>user\n${msg.content}<end_of_turn>\n`;
+          if (last) result += `<start_of_turn>model\n`;
+        } else if (msg.role === "assistant") {
+          result += `<start_of_turn>model\n${msg.content}`;
+          if (!last) result += `<end_of_turn>\n`;
+        }
+      });
+      return result;
+    }
+
+    const conversation = formatGemmaHistory(history);
+
     if (!message?.trim()) {
       return res.status(400).json({ error: "Empty message" });
     }
 
-    // // 1. Get ALL available wines from database
+    // Get ALL available wines from database
     const [winesResult] = await connection.promise().query(sqlBase);
+
     // format data with wineFormat
     const wines = winesResult.map(wine => wineFormat(wine, req));
 
     const wineDetails = wines.map(w => {
       const fullName = `${w.winemaker.name} ${w.vintage} ${w.name} ${w.denomination.name}`;
-      return (
+      return ( // NON modificare l'indentazione del return
         `Wine: ${fullName}
-        Category: ${w.category.name}
-        Region: ${w.region.name}
-        Denomination: ${w.denomination.name}
-        Price: €${w.price}
-        Producer: ${w.winemaker.name}
-        Description: ${w.description}`
+Category: ${w.category.name}
+Region: ${w.region.name}
+Denomination: ${w.denomination.name}
+Price: €${w.price}
+Producer: ${w.winemaker.name}
+Description: ${w.description}`
       );
     }).join("\n\n");
 
@@ -84,14 +104,21 @@ router.post('/', async (req, res) => {
     RULES:
     1. ONLY recommend or describe wines from the AVAILABLE WINES list below. Do NOT invent wines or details.
     2. NEVER mention wine IDs.
-    3. KEEP ANSWERS SHORT, focused, and directly related to the customer's request. Do NOT add background, history, or extra commentary unless specifically asked.
+    3. KEEP ANSWERS SHORT, focused, and directly related to the customer's request. Do NOT ask unnecessary follow-up questions unless the customer’s request is unclear.
     4. If the customer asks for a specific region, category, producer, denomination, price, or vintage, ONLY suggest wines from the AVAILABLE WINES list that match the requested region (Region), category (Category), producer (Producer), denomination (Denomination), price (Price), or vintage (as part of the wine's full name). If no wines match, say so and do not recommend anything else.
+    5. Format your answer as plain text with no unnecessary indentation, markdown, or trailing symbols. Use simple line breaks for clarity.
+    6. NEVER mention quantities or avilability. Treat stocks as unlimited.
+
+    IMPORTANT: You MUST ONLY use information from the AVAILABLE WINES list below. Do NOT use any outside knowledge or invent styles, flavors, or wine types.
 
     AVAILABLE WINES:
     ${wineDetails}
 
-    CUSTOMER REQUEST:
-    "${message}"
+    CONVERSATION SO FAR:
+    ${conversation}<start_of_turn>user
+    ${message}
+    <end_of_turn>
+    <start_of_turn>model
     `;
 
     const response = await axios.post(OLLAMA_URL, {
@@ -99,9 +126,11 @@ router.post('/', async (req, res) => {
       prompt: prompt,
       stream: false,
       options: {
-        temperature: 0,
+        temperature: 1,
+        top_k: 64,
+        top_p: 0.95,
         num_predict: 256,
-        stop: []
+        stop: ["<end_of_turn>"]
       }
     });
 
