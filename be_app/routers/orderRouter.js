@@ -6,7 +6,7 @@ const createEmailTemplate = require("../templates/orderConfirmation");
 const connection = require("../data/db");
 
 // UTIL: Inserimento ordine e items
-const insertOrder = (req, res, status = "pending") => {
+const insertOrder = (req, res, status = "stripe_completed") => {
   const cliente = req.body.cliente;
   const carrello = req.body.carrello;
   const shipping_price = req.body.shippingCost || 0;
@@ -69,9 +69,8 @@ const insertOrder = (req, res, status = "pending") => {
 
 // POST /order
 router.post("/", (req, res) => {
-  const paymentMethod = req.body.paymentMethod || "stripe"; // o "manual"
-  const status = paymentMethod === "manual" ? "payment_completed" : "pending";
-  insertOrder(req, res, status);
+  // Status sempre stripe_completed indipendentemente dal metodo di pagamento
+  insertOrder(req, res, "stripe_completed");
 });
 
 // Create Stripe checkout session
