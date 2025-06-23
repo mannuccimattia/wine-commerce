@@ -154,7 +154,7 @@ const SearchLayout = () => {
   const FiltersContent = () => (
     <>
       <div className="d-flex justify-content-between align-items-center mb-4">
-        <h5 className="mb-0">Seleziona filtri</h5>
+        <h5 className="mb-0">Choose filters</h5>
         <Button
           variant="outline-light"
           size="sm"
@@ -166,7 +166,7 @@ const SearchLayout = () => {
       </div>
 
       <div className="mb-4">
-        <h6>Ordina per</h6>
+        <h6>Order by</h6>
         <Form.Select
           value={filters.sortBy}
           onChange={handleSortChange}
@@ -264,7 +264,7 @@ const SearchLayout = () => {
             <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
               <path d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z" />
             </svg>
-            Filtri
+            Filters
           </Button>
         </div>
 
@@ -284,7 +284,7 @@ const SearchLayout = () => {
           className="d-lg-none"
         >
           <Offcanvas.Header closeButton className="bg-dark text-white">
-            <Offcanvas.Title>Filtri</Offcanvas.Title>
+            <Offcanvas.Title>Filters</Offcanvas.Title>
           </Offcanvas.Header>
           <Offcanvas.Body className="bg-dark text-white">
             <FiltersContent />
@@ -294,7 +294,7 @@ const SearchLayout = () => {
                 className="w-100"
                 onClick={() => setShowFilters(false)}
               >
-                Chiudi
+                Close
               </Button>
             </div>
           </Offcanvas.Body>

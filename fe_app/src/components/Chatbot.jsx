@@ -115,7 +115,9 @@ const Chatbot = () => {
               onKeyDown={onEnter}
               ref={inputRef}
             />
-            <button className='btn-msg' onClick={sendMessage}>
+            <button
+              className='btn-msg'
+              onClick={sendMessage}>
               <i className="fa-regular fa-paper-plane"></i>
             </button>
           </div>

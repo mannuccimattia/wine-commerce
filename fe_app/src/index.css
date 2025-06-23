@@ -249,8 +249,8 @@ body {
 #chatbot-modal {
   font-size: 15px;
   position: fixed;
-  bottom: 30px;
-  right: 50px;
+  bottom: 28px;
+  right: 48px;
   width: 350px;
   height: 600px;
   background-color: rgba(0, 0, 0, 1);
@@ -302,14 +302,35 @@ body {
 }
 
 .btn-msg {
-  width: 50px;
-  aspect-ratio: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  position: relative;
+  z-index: 1;
   background-color: #a88b4d;
   border-radius: 50%;
+  width: 54px;
+  height: 48px;
   cursor: pointer;
+  border: none;
+}
+
+.btn-msg,
+.btn-msg::before {
+  padding: 0;
+  margin: 0;
+}
+
+.btn-msg::before {
+  content: '';
+  position: absolute;
+  top: 0px;
+  left: -2px;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 2px solid #e9d7af;
+  border-bottom-color: transparent;
+  border-right-color: transparent;
+  animation: chatbot-rotate 2s linear infinite;
+  z-index: -1;
 }
 
 .btn-outline-light:hover {
