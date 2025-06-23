@@ -69,7 +69,7 @@ const WineCard = ({ wine }) => {
           onClose={() => setShowAlert(false)}
           dismissible
         >
-          Prodotto aggiunto al carrello!
+          ({wine.name} x1) Added to cart!
         </Alert>
       )}
     </Card>

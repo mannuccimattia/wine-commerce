@@ -224,15 +224,15 @@ body {
 #chatbot::before {
   content: '';
   position: absolute;
-  top: -4px;
-  left: -4px;
-  width: 78px;
-  height: 78px;
+  top: 0px;
+  left: 0px;
+  width: 71px;
+  height: 71px;
   border-radius: 50%;
   border: 2px solid #e9d7af;
   border-bottom-color: transparent;
   border-right-color: transparent;
-  animation: chatbot-rotate 1.2s linear infinite;
+  animation: chatbot-rotate 2s linear infinite;
   z-index: -1;
 }
 
@@ -404,12 +404,6 @@ footer img {
   line-height: 1.6;
 }
 
-#descr::before,
-#descr::after {
-  content: "~";
-  margin: 0 10px;
-}
-
 #price-tag {
   font-family: Arial, Helvetica, sans-serif;
   font-size: 22px;
@@ -425,12 +419,13 @@ footer img {
   margin: 0 auto;
 }
 
+.form-control {
+  border-color: #fff;
+}
+
 .form-control:focus {
   box-shadow: none;
   border-color: inherit;
-  /* Optional - keeps the border color unchanged */
-  /* outline: none; */
-  /* Removes browser default outline (not recommended for accessibility) */
 }
 
 .loader {
@@ -475,4 +470,53 @@ footer img {
 
 .breadcrumb-divider {
   --bs-breadcrumb-divider: "@";
+}
+
+.dropdown-item {
+  color: #fff;
+}
+
+.dropdown-item:hover {
+  background-color: #a88b4d;
+}
+
+#cart-item-link:hover a h5 {
+  text-decoration: underline;
+}
+
+.quantity-btn {
+  width: 30px;
+  aspect-ratio: 1/1;
+  padding: 0;
+  margin: 0;
+}
+
+/* Custom thin scrollbar for the whole page */
+html,
+body {
+  scrollbar-width: thin;
+  /* Firefox */
+  scrollbar-color: #a88b4d #212223;
+  /* thumb color, track color */
+}
+
+/* Webkit browsers (Chrome, Edge, Safari) */
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  width: 8px;
+  background: #212223;
+  /* track color */
+}
+
+html::-webkit-scrollbar-thumb,
+body::-webkit-scrollbar-thumb {
+  background: #a88b4d;
+  /* thumb color */
+  border-radius: 8px;
+}
+
+html::-webkit-scrollbar-thumb:hover,
+body::-webkit-scrollbar-thumb:hover {
+  background: #cbb26a;
+  /* thumb color on hover */
 }

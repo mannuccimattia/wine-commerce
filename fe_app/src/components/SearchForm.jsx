@@ -10,7 +10,7 @@ const SearchForm = () => {
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [selectedCategoryLabel, setSelectedCategoryLabel] =
-    useState("Tutte le categorie");
+    useState("All categories");
   const [showAlert, setShowAlert] = useState(false); // State for alert visibility
   const [alertMessage, setAlertMessage] = useState(""); // State for alert message
 
@@ -79,7 +79,7 @@ const SearchForm = () => {
       <div className="d-none d-md-flex align-items-stretch gap-2">
         <div className="input-group">
           <button
-            className="btn btn-outline-secondary dropdown-toggle"
+            className="btn btn-outline-light dropdown-toggle"
             type="button"
             data-bs-toggle="dropdown"
             aria-expanded="false"
@@ -87,16 +87,16 @@ const SearchForm = () => {
           >
             {selectedCategoryLabel}
           </button>
-          <ul className="dropdown-menu">
+          <ul className="dropdown-menu bg-dark">
             <li>
               <button
                 type="button"
                 className="dropdown-item"
                 onClick={() =>
-                  handleCategoryChange("all", "Tutte le categorie")
+                  handleCategoryChange("all", "All categories")
                 }
               >
-                Tutte le categorie
+                All categories
               </button>
             </li>
             {categories.map((category) => (
@@ -116,6 +116,7 @@ const SearchForm = () => {
           <input
             type="text"
             className="form-control"
+            data-bs-theme="dark"
             placeholder="Search by name, year or producer"
             value={homeSearch}
             onChange={handleInputChange}
@@ -154,10 +155,10 @@ const SearchForm = () => {
                   type="button"
                   className="dropdown-item"
                   onClick={() =>
-                    handleCategoryChange("all", "Tutte le categorie")
+                    handleCategoryChange("all", "All categories")
                   }
                 >
-                  Tutte le categorie
+                  All categories
                 </button>
               </li>
               {categories.map((category) => (
