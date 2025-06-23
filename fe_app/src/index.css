@@ -16,6 +16,7 @@ body {
   min-height: 100vh;
   background-color: #212223 !important;
   color: #fff;
+  font-family: "Playfair Display", serif;
 }
 
 /* Stili per il contenitore root di React:
@@ -247,6 +248,7 @@ body {
 }
 
 #chatbot-modal {
+  font-family: sans-serif !important;
   font-size: 15px;
   position: fixed;
   bottom: 28px;
@@ -271,6 +273,10 @@ body {
   color: #a88b4d;
   border-radius: 10px 10px 0 0;
   padding: 0 10px;
+}
+
+.chatbot-header .fa-minus:hover {
+  cursor: pointer;
 }
 
 .chatbot-body {
@@ -503,6 +509,11 @@ footer img {
 
 #cart-item-link:hover a h5 {
   text-decoration: underline;
+}
+
+.cart-pill {
+  background-color: #a88b4d;
+  border: 1px solid white;
 }
 
 .quantity-btn {

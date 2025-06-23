@@ -121,6 +121,7 @@ const SearchForm = () => {
             value={homeSearch}
             onChange={handleInputChange}
             aria-label="Search input"
+            style={{ fontFamily: "sans-serif" }}
           />
         </div>
 
@@ -182,6 +183,7 @@ const SearchForm = () => {
           <input
             type="text"
             className="form-control"
+            data-bs-theme="dark"
             placeholder="Search by name, year or producer"
             value={homeSearch}
             onChange={handleInputChange}
