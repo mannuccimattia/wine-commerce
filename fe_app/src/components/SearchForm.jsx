@@ -141,7 +141,7 @@ const SearchForm = () => {
         <div className="mb-2">
           <div className="dropdown w-100">
             <button
-              className="btn btn-outline-secondary dropdown-toggle w-100 text-start"
+              className="btn btn-outline-light dropdown-toggle w-100 text-start"
               type="button"
               data-bs-toggle="dropdown"
               aria-expanded="false"
@@ -150,7 +150,7 @@ const SearchForm = () => {
               <i className="fa-solid fa-filter me-2"></i>
               {selectedCategoryLabel}
             </button>
-            <ul className="dropdown-menu w-100">
+            <ul className="dropdown-menu w-100  bg-dark">
               <li>
                 <button
                   type="button"
@@ -188,7 +188,7 @@ const SearchForm = () => {
             value={homeSearch}
             onChange={handleInputChange}
             aria-label="Search input"
-            style={{ minHeight: "44px" }}
+            style={{ minHeight: "44px", fontFamily: "sans-serif" }}
           />
           <button
             type="submit"

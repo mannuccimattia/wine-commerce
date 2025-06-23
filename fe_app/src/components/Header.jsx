@@ -48,7 +48,7 @@ const Header = () => {
         className="navbar navbar-dark m-3"
         style={{ backgroundColor: "#212223" }}
       >
-        <div className="container-fluid d-flex justify-content-between align-items-center">
+        <div className="container-fluid d-flex justify-content-between align-items-center header-mobile-stack">
           {/* Logo */}
           <div className="col-12 col-lg-3">
             <Link className="navbar-brand" to="/" onClick={handleLogoClick}>
