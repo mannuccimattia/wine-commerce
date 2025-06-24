@@ -152,7 +152,7 @@ const SearchLayout = () => {
   };
 
   const FiltersContent = () => (
-    <>
+    <div style={{ fontFamily: "sans-serif" }}>
       <div className="d-flex justify-content-between align-items-center mb-4">
         <h5 className="mb-0">Choose filters</h5>
         <Button
@@ -164,27 +164,26 @@ const SearchLayout = () => {
           Reset
         </Button>
       </div>
-
+      <hr />
       <div className="mb-4">
-        <h6>Order by</h6>
         <Form.Select
           value={filters.sortBy}
           onChange={handleSortChange}
           className="bg-dark text-white border-secondary"
         >
-          <option value="">Seleziona ordinamento</option>
-          <option value="price-asc">Prezzo: dal più economico</option>
-          <option value="price-desc">Prezzo: dal più caro</option>
-          <option value="year-asc">Annata: dalla più vecchia</option>
-          <option value="year-desc">Annata: dalla più recente</option>
+          <option value="">Order by</option>
+          <option value="price-asc">Price (asc)</option>
+          <option value="price-desc">Price (desc)</option>
+          <option value="year-asc">Vintage (asc)</option>
+          <option value="year-desc">Vintage (desc)</option>
         </Form.Select>
       </div>
-
+      <hr />
       <div className="mb-4">
-        <h6>Fascia di prezzo</h6>
+        <h6>Price</h6>
         <div className="row g-2">
           <div className="col-6">
-            <Form.Label className="small">Min €</Form.Label>
+            <Form.Label className="small text-secondary">Min €</Form.Label>
             <Form.Control
               type="number"
               min="0"
@@ -196,7 +195,7 @@ const SearchLayout = () => {
             />
           </div>
           <div className="col-6">
-            <Form.Label className="small">Max €</Form.Label>
+            <Form.Label className="small text-secondary">Max €</Form.Label>
             <Form.Control
               type="number"
               max="5000"
@@ -209,21 +208,17 @@ const SearchLayout = () => {
           </div>
         </div>
         <div className="text-center mt-2">
-          <small className="text-muted">
-            €{minPriceInput} - €{maxPriceInput}
-          </small>
         </div>
       </div>
-
+      <hr />
       <div className="mb-4">
-        <h6>Denominazione</h6>
         <Form.Group controlId="denominations">
           <Form.Select
-            className="bg-dark text-white border-secondary"
+            className="bg-dark text-white"
             value={filters.denomination}
             onChange={handleDenominationChange}
           >
-            <option value="">Seleziona una denominazione</option>
+            <option value="">Denomination</option>
             {denominations.map(({ id, name }) => (
               <option key={id} value={name}>
                 {name}
@@ -232,9 +227,9 @@ const SearchLayout = () => {
           </Form.Select>
         </Form.Group>
       </div>
-
+      <hr />
       <div>
-        <h6>Regione</h6>
+        <h6>Region</h6>
         <div className="d-flex flex-wrap">
           {regions.map(({ id, name }) => (
             <Button
@@ -249,7 +244,7 @@ const SearchLayout = () => {
           ))}
         </div>
       </div>
-    </>
+    </div>
   );
 
   return (

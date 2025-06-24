@@ -343,11 +343,11 @@ const NotFound4Page = () => {
           404
         </div>
         <div className="error-title" role="heading" aria-level={2}>
-          Pagina non trovata
+          Page not found
         </div>
         <div className="error-message">
-          Ci dispiace, la pagina che stai cercando non è disponibile. Torna alla
-          pagina principale e riprova.
+          We're sorry. It looks like the page you're looking for doesn't exist.<br></br>
+          Get back to home page and try again.
         </div>
 
         <button
@@ -356,7 +356,7 @@ const NotFound4Page = () => {
           onClick={handleGoHome}
           aria-label="Torna alla homepage"
         >
-          Torna alla homepage
+          Get back
         </button>
       </div>
     </div>

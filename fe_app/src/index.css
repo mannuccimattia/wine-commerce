@@ -339,9 +339,14 @@ body {
   z-index: -1;
 }
 
+.btn-outline-light {
+  border-color: #a88b4d;
+}
+
 .btn-outline-light:hover {
   background-color: #a88b4d;
   color: #fff;
+  border-color: #a88b4d;
 }
 
 .input-msg {
@@ -442,13 +447,29 @@ footer img {
 }
 
 .form-control {
-  border-color: #fff;
+  border-color: #a88b4d;
 }
 
-.form-control:focus {
-  box-shadow: none;
-  border-color: inherit;
+aside .form-select,
+aside .form-control,
+aside .btn-outline-light {
+  border-color: #584823 !important;
 }
+
+aside>div .form-select:focus,
+aside>div .form-control:focus,
+aside .btn-primary {
+  box-shadow: none;
+  border-color: #a88b4d !important;
+}
+
+aside .btn-primary,
+aside .btn-primary:hover {
+  background-color: #a88b4d;
+  box-shadow: none;
+}
+
+
 
 .loader {
   width: 48px;
@@ -498,8 +519,9 @@ footer img {
   color: #fff;
 }
 
-.dropdown-item:hover {
-  background-color: #a88b4d;
+.dropdown-item:hover,
+select>option:hover {
+  background-color: #a88b4d !important;
 }
 
 #cart-item-link:hover a h5 {
@@ -548,13 +570,14 @@ body::-webkit-scrollbar-thumb:hover {
   /* thumb color on hover */
 }
 
-#homeSearch {
-  margin-bottom: 10px;
-}
-
 #card-price {
   font-size: 1.3rem;
   color: #a88b4d;
+}
+
+.select-light:active {
+  background-color: #a88b4d;
+
 }
 
 /* ******************************************** */
@@ -596,9 +619,13 @@ body::-webkit-scrollbar-thumb:hover {
   }
 
   .dropdown-menu {
-    left: 50% !important;
+    left: 11% !important;
     transform: translateX(-50%) !important;
     min-width: 180px;
+  }
+
+  #homeSearch {
+    margin-bottom: 10px;
   }
 
 }
