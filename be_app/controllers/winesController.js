@@ -7,12 +7,13 @@ const queryFailed = require("../functions/queryFailed");
 // import function wineFormat
 const wineFormat = require("../functions/wineFormat");
 
-// sql base 
+// sql base
 const sqlBase = `
   SELECT
     W.*,
     D.name AS denomination_name,
     C.name AS category_name,
+    C.slug as category_slug,
     R.name AS region_name,
     WN.name AS winemaker_name,
     LC.name AS label_condition_name,
@@ -30,7 +31,6 @@ const sqlBase = `
 
 // index
 const index = (req, res) => {
-
   // Estrazione parametri dalla query
   const searchTerm = req.query.search?.trim();
   const categoryId = req.query.category ? parseInt(req.query.category) : null;
@@ -142,7 +142,7 @@ const index = (req, res) => {
     }
 
     // Mappatura risultati
-    const wines = winesResult.map(wine => wineFormat(wine, req));
+    const wines = winesResult.map((wine) => wineFormat(wine, req));
 
     // Risposta
     res.status(200).json(wines);
@@ -177,6 +177,7 @@ const getBestSellers = (req, res) => {
       W.*,
       D.name AS denomination_name,
       C.name AS category_name,
+      C.slug as category_slug,
       R.name AS region_name,
       WN.name AS winemaker_name,
       LC.name AS label_condition_name,
@@ -200,7 +201,7 @@ const getBestSellers = (req, res) => {
   connection.query(bestSellersSql, (err, winesResult) => {
     if (err) return queryFailed(err, res);
 
-    const wines = winesResult.map(wine => wineFormat(wine, req));
+    const wines = winesResult.map((wine) => wineFormat(wine, req));
 
     res.json(wines);
   });
@@ -219,7 +220,7 @@ const getWineFromCategory = (req, res) => {
   connection.query(sql, [categoryID], (err, winesResult) => {
     if (err) return queryFailed(err, res);
 
-    const wines = winesResult.map(wine => wineFormat(wine, req));
+    const wines = winesResult.map((wine) => wineFormat(wine, req));
 
     res.json(wines);
   });
@@ -240,7 +241,7 @@ const premiumVintage = (req, res) => {
   connection.query(premiumVintageSql, (err, winesResult) => {
     if (err) return queryFailed(err, res);
 
-    const wines = winesResult.map(wine => wineFormat(wine, req));
+    const wines = winesResult.map((wine) => wineFormat(wine, req));
 
     res.json(wines);
   });
@@ -248,7 +249,8 @@ const premiumVintage = (req, res) => {
 
 //GET CATEGORIES
 const getCategories = (req, res) => {
-  const sql = "SELECT id, name, color FROM categories ORDER BY id";
+  const sql =
+    "SELECT id, name, color, slug, description, image FROM categories ORDER BY id";
   connection.query(sql, (err, results) => {
     if (err) {
       console.error("Errore nella query getCategories:", err);
@@ -284,6 +286,41 @@ const getRegions = (req, res) => {
   });
 };
 
+const showBySlug = (req, res) => {
+  const { slug } = req.params;
+
+  const wineSql = `${sqlBase} WHERE W.slug = ?`;
+
+  connection.query(wineSql, [slug], (err, wineResult) => {
+    if (err) return queryFailed(err, res);
+
+    if (wineResult.length === 0) {
+      return res.status(404).json({ error: "Wine not found" });
+    }
+
+    const wine = wineResult[0];
+
+    res.json(wineFormat(wine, req));
+  });
+};
+
+const getWineFromCategoryBySlug = (req, res) => {
+  const categorySlug = req.params.slug;
+
+  const sql = `
+    ${sqlBase}
+    WHERE C.slug = ?
+    ORDER BY W.price ASC
+  `;
+
+  connection.query(sql, [categorySlug], (err, winesResult) => {
+    if (err) return queryFailed(err, res);
+
+    const wines = winesResult.map((wine) => wineFormat(wine, req));
+    res.json(wines);
+  });
+};
+
 module.exports = {
   index,
   show,
@@ -293,4 +330,6 @@ module.exports = {
   getCategories,
   getDenominations,
   getRegions,
+  showBySlug,
+  getWineFromCategoryBySlug,
 };

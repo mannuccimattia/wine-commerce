@@ -8,7 +8,13 @@ const SearchForm = () => {
   const { homeSearch, setHomeSearch } = useContext(GlobalContext);
   const navigate = useNavigate();
   const [categories, setCategories] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState("all");
+  // const [selectedCategory, setSelectedCategory] = useState("all");
+  const [selectedCategory, setSelectedCategory] = useState({
+    id: "all",
+    name: "All categories",
+    slug: null,
+  });
+
   const [selectedCategoryLabel, setSelectedCategoryLabel] =
     useState("All categories");
   const [showAlert, setShowAlert] = useState(false); // State for alert visibility
@@ -31,9 +37,9 @@ const SearchForm = () => {
 
   const handleInputChange = (e) => setHomeSearch(e.target.value);
 
-  const handleCategoryChange = (id, label) => {
-    setSelectedCategory(id);
-    setSelectedCategoryLabel(label);
+  const handleCategoryChange = (id, name, slug = null) => {
+    setSelectedCategory({ id, name, slug });
+    setSelectedCategoryLabel(name);
   };
 
   const handleSubmit = (e) => {
@@ -43,7 +49,7 @@ const SearchForm = () => {
 
     // Se categoria diversa da "all" e campo di ricerca vuoto, naviga pagina categoria
     if (selectedCategory !== "all" && !trimmedSearch) {
-      navigate(`/categoria/${selectedCategory}`);
+      navigate(`/categoria/${selectedCategory.slug}`);
       setHomeSearch(""); // opzionale, pulisce input
       return;
     }
@@ -93,7 +99,7 @@ const SearchForm = () => {
                 type="button"
                 className="dropdown-item"
                 onClick={() =>
-                  handleCategoryChange("all", "All categories")
+                  handleCategoryChange("all", "All categories", null)
                 }
               >
                 All categories
@@ -105,7 +111,11 @@ const SearchForm = () => {
                   type="button"
                   className="dropdown-item"
                   onClick={() =>
-                    handleCategoryChange(category.id, category.name)
+                    handleCategoryChange(
+                      category.id,
+                      category.name,
+                      category.slug
+                    )
                   }
                 >
                   {category.name}
@@ -156,7 +166,7 @@ const SearchForm = () => {
                   type="button"
                   className="dropdown-item"
                   onClick={() =>
-                    handleCategoryChange("all", "All categories")
+                    handleCategoryChange("all", "All categories", null)
                   }
                 >
                   All categories
@@ -168,7 +178,11 @@ const SearchForm = () => {
                     type="button"
                     className="dropdown-item"
                     onClick={() =>
-                      handleCategoryChange(category.id, category.name)
+                      handleCategoryChange(
+                        category.id,
+                        category.name,
+                        category.slug
+                      )
                     }
                   >
                     {category.name}

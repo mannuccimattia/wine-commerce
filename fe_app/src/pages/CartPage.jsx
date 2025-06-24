@@ -52,7 +52,7 @@ const CartPage = () => {
                   <div className="col-7" id="cart-item-link">
                     <div className="d-flex align-items-center">
                       <Link
-                        to={`/wine/${item.id}`}
+                        to={`/wine/${item.slug}`}
                         style={{
                           textDecoration: "none",
                           color: "inherit",
@@ -134,7 +134,7 @@ const CartPage = () => {
                       />
                     )}
                     <Link
-                      to={`/wine/${item.id}`}
+                      to={`/wine/${item.slug}`}
                       style={{ textDecoration: "none", color: "inherit" }}
                     >
                       <h5 className="mb-1">{item.nome}</h5>

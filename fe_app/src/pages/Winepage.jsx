@@ -8,7 +8,7 @@ import { useCarrello } from "../contexts/CartContext";
 import WineBreadcrumb from "../components/WineBreadcrumb";
 
 const Winepage = () => {
-  const { id } = useParams();
+  const { slug } = useParams();
   const [wine, setWine] = useState(null);
   const { setIsLoading } = useContext(GlobalContext);
   const [mainImage, setMainImage] = useState(null);
@@ -20,8 +20,9 @@ const Winepage = () => {
     const fetchWine = async () => {
       setIsLoading(true);
       try {
+        // Usa /slug/:slug per la ricerca con slug
         const response = await axios.get(
-          `http://localhost:3000/api/wines/${id}`
+          `http://localhost:3000/api/wines/slug/${slug}`
         );
         setWine(response.data);
         setMainImage(response.data.image_front_url);
@@ -31,6 +32,8 @@ const Winepage = () => {
         );
         if (existingProduct) {
           setQuantity(existingProduct.qty);
+        } else {
+          setQuantity(1);
         }
       } catch (error) {
         console.error("Error:", error);
@@ -39,7 +42,7 @@ const Winepage = () => {
       }
     };
     fetchWine();
-  }, [id, carrello]);
+  }, [slug, carrello, setIsLoading]);
 
   const handleQuantityChange = (change) => {
     setQuantity((prev) => {
@@ -275,31 +278,27 @@ const Winepage = () => {
             {/* Condition Section */}
             <div className="mb-4">
               <h5 className="mb-3 fw-bold" style={{ color: "#B1A44B" }}>
-                Product Conditions
+                Condition
               </h5>
-              <div className="mb-2">
-                <strong>Bottle:</strong>{" "}
-                <span className="text-white-75">
-                  {wine.bottle_condition.name}
-                </span>
-              </div>
-              <div className="mb-2">
-                <strong>Label:</strong>{" "}
-                <span className="text-white-75">
-                  {wine.label_condition.name}
-                </span>
-              </div>
+              <Row className="g-2">
+                <Col md={6}>
+                  <div>
+                    <strong>Label Condition:</strong>{" "}
+                    <span className="text-white-75">
+                      {wine.label_condition.description}
+                    </span>
+                  </div>
+                </Col>
+                <Col md={6}>
+                  <div>
+                    <strong>Bottle Condition:</strong>{" "}
+                    <span className="text-white-75">
+                      {wine.bottle_condition.description}
+                    </span>
+                  </div>
+                </Col>
+              </Row>
             </div>
-
-            {/* Description Section */}
-            {wine.description && (
-              <div className="mb-4">
-                <h5 className="mb-3 fw-bold" style={{ color: "#B1A44B" }}>
-                  Wine Description
-                </h5>
-                <p className="text-white-75 lh-base">{wine.description}</p>
-              </div>
-            )}
           </div>
         </Col>
       </Row>
