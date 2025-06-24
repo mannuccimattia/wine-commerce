@@ -26,7 +26,7 @@ const Bestseller = () => {
 
   return (
     <div className="container my-5">
-      <h2 className="text-center mb-4 text-white">Bestseller</h2>
+      <h2 className="text-center mb-4 text-white">Bestsellers</h2>
 
       {loading ? (
         <div className="text-center">

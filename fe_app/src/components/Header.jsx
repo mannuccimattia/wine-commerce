@@ -50,27 +50,26 @@ const Header = () => {
       >
         <div className="container-fluid d-flex justify-content-between align-items-center header-mobile-stack">
           {/* Logo */}
-          <div className="col-12 col-lg-3">
-            <Link className="navbar-brand" to="/" onClick={handleLogoClick}>
+          <div className="col-12 col-lg-3 col-xl-2">
+            <Link className="navbar-brand me-0" to="/" onClick={handleLogoClick}>
               <img
                 src="\imgs\wordmarks\boolze-high-resolution-wordmark.png"
                 alt="Bool Wines Logo"
                 height="40"
-                className="me-2"
               />
             </Link>
           </div>
 
           {/* Searchbar */}
-          <div className="col-12 col-lg-6 justify-content-center">
+          <div className="col-12 col-lg-6 col-xl-8 justify-content-center">
             <SearchForm />
           </div>
 
           {/* Cart Section */}
-          <div className="col-12 col-lg-3 d-flex justify-content-end align-items-center">
+          <div className="col-12 col-lg-3 col-xl-2 d-flex justify-content-end align-items-center">
             {/* Desktop - Show amount */}
             <button
-              className="btn btn-outline-light position-relative d-none d-md-inline-block"
+              className="btn btn-outline-light position-relative"
               value="cart"
               onClick={handleClick}
               disabled={toDisable === "cart"}
@@ -83,26 +82,6 @@ const Header = () => {
                 </span>
               )}
               {total > 0 && <span className="ms-2">€{total.toFixed(2)}</span>}
-            </button>
-
-            {/* Mobile - Icon only */}
-            <button
-              className="btn btn-outline-light position-relative d-md-none p-2"
-              value="cart"
-              onClick={handleClick}
-              disabled={toDisable === "cart"}
-              style={{ minWidth: "44px", minHeight: "44px" }}
-            >
-              <i className="fa-solid fa-cart-shopping"></i>
-              {totalItems > 0 && (
-                <span
-                  className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-white text-black"
-                  style={{ fontSize: "0.75rem" }}
-                >
-                  {totalItems}
-                  <span className="visually-hidden">items in cart</span>
-                </span>
-              )}
             </button>
           </div>
         </div>

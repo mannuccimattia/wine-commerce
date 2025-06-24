@@ -20,7 +20,7 @@ const CategoryBadge = ({ categoryId }) => {
   return (
     <a
       href={`http://localhost:5173/categoria/${categoryId}`}
-      className="badge"
+      className="badge cat-badge"
       style={{
         fontSize: "0.65rem",
         padding: "0.15em 0.4em",

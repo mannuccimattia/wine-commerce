@@ -32,7 +32,6 @@ const WineCard = ({ wine }) => {
         variant="top"
         src={activeImage}
         alt={wine.name}
-        style={{ height: "300px", objectFit: "cover" }}
         onMouseOver={() => setActiveImage(wine.image_back_url)}
         onMouseOut={() => setActiveImage(wine.image_front_url)}
       />
@@ -45,11 +44,10 @@ const WineCard = ({ wine }) => {
           bottle={wine.bottle_condition.rating}
         />
         <div>
-          {" "}
           <CategoryBadge categoryId={wine.category.id} />
         </div>
         <div className="my-2 px-2 pb-2 d-flex justify-content-between align-items-center position-relative">
-          <span className="text-white">€ {wine.price}</span>
+          <span id="card-price" className="text-white">€ {wine.price}</span>
           <button
             className="btn btn-outline-light"
             id="card-shopping"
