@@ -155,18 +155,18 @@ const CheckoutPage = () => {
   };
 
   return (
-    <Container className="py-5">
-      <h2 className="text-white mb-4">Checkout</h2>
+    <Container className="py-3">
       {formError && <Alert variant="danger">{formError}</Alert>}
       <Row>
-        <Col md={8}>
+        <h2 className="text-white ms-2 mb-3 ">Checkout</h2>
+        <Col sm={12} md={6} xl={8}>
           <Card className="bg-dark text-white p-4 mb-4">
             <Form>
-              <h4 className="mb-4">Shipping Information</h4>
+              <h4 className="mb-4 text-gold">Shipping Information</h4>
               <Row>
-                <Col md={6}>
+                <Col md={12} xl={6}>
                   <Form.Group className="mb-3" controlId="firstName">
-                    <Form.Label>First Name *</Form.Label>
+                    <Form.Label><small>First Name *</small></Form.Label>
                     <Form.Control
                       type="text"
                       name="firstName"
@@ -181,9 +181,10 @@ const CheckoutPage = () => {
                     </Form.Control.Feedback>
                   </Form.Group>
                 </Col>
-                <Col md={6}>
+
+                <Col md={12} xl={6}>
                   <Form.Group className="mb-3" controlId="lastName">
-                    <Form.Label>Last Name *</Form.Label>
+                    <Form.Label><small>Last Name *</small></Form.Label>
                     <Form.Control
                       type="text"
                       name="lastName"
@@ -198,44 +199,46 @@ const CheckoutPage = () => {
                     </Form.Control.Feedback>
                   </Form.Group>
                 </Col>
-              </Row>
 
-              <Form.Group className="mb-3" controlId="email">
-                <Form.Label>Email *</Form.Label>
-                <Form.Control
-                  type="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  required
-                  isInvalid={!!errors.email}
-                  placeholder="example@email.com"
-                />
-                <Form.Control.Feedback type="invalid">
-                  {errors.email}
-                </Form.Control.Feedback>
-              </Form.Group>
+                <Col md={12}>
+                  <Form.Group className="mb-3" controlId="email">
+                    <Form.Label><small>Email *</small></Form.Label>
+                    <Form.Control
+                      type="email"
+                      name="email"
+                      value={formData.email}
+                      onChange={handleChange}
+                      required
+                      isInvalid={!!errors.email}
+                      placeholder="example@email.com"
+                    />
+                    <Form.Control.Feedback type="invalid">
+                      {errors.email}
+                    </Form.Control.Feedback>
+                  </Form.Group>
+                </Col>
 
-              <Form.Group className="mb-3" controlId="address">
-                <Form.Label>Address *</Form.Label>
-                <Form.Control
-                  type="text"
-                  name="address"
-                  value={formData.address}
-                  onChange={handleChange}
-                  required
-                  isInvalid={!!errors.address}
-                  placeholder="Street, house number"
-                />
-                <Form.Control.Feedback type="invalid">
-                  {errors.address}
-                </Form.Control.Feedback>
-              </Form.Group>
+                <Col md={12}>
+                  <Form.Group className="mb-3" controlId="address">
+                    <Form.Label><small>Address *</small></Form.Label>
+                    <Form.Control
+                      type="text"
+                      name="address"
+                      value={formData.address}
+                      onChange={handleChange}
+                      required
+                      isInvalid={!!errors.address}
+                      placeholder="Street, house number"
+                    />
+                    <Form.Control.Feedback type="invalid">
+                      {errors.address}
+                    </Form.Control.Feedback>
+                  </Form.Group>
+                </Col>
 
-              <Row>
-                <Col md={8}>
+                <Col md={12} xl={6}>
                   <Form.Group className="mb-3" controlId="city">
-                    <Form.Label>City *</Form.Label>
+                    <Form.Label><small>City *</small></Form.Label>
                     <Form.Control
                       type="text"
                       name="city"
@@ -250,9 +253,9 @@ const CheckoutPage = () => {
                     </Form.Control.Feedback>
                   </Form.Group>
                 </Col>
-                <Col md={4}>
+                <Col md={12} xl={6}>
                   <Form.Group className="mb-3" controlId="zip_code">
-                    <Form.Label>Zip Code *</Form.Label>
+                    <Form.Label><small>Zip Code *</small></Form.Label>
                     <Form.Control
                       type="text"
                       name="zip_code"
@@ -271,7 +274,7 @@ const CheckoutPage = () => {
                 </Col>
               </Row>
 
-              <Row>
+              <Col md={12}>
                 <div className="mt-4 d-flex justify-content-center">
                   <button
                     type="button"
@@ -287,41 +290,43 @@ const CheckoutPage = () => {
                     ).toFixed(2)}`}
                   </button>
                 </div>
-              </Row>
+              </Col>
+
             </Form>
           </Card>
         </Col>
 
-        <Col md={4}>
-          <Card className="bg-dark text-white p-4">
-            <h4 className="mb-4">Order Summary</h4>
-            <div className="mb-3">
+        <Col sm={12} md={6} xl={4}>
+          <Card className="bg-dark p-4">
+            <h4 className="mb-4 text-gold">Order Summary</h4>
+            <div className="mb-3 text-white">
               {(JSON.parse(localStorage.getItem("carrello")) || []).map(
                 (item, idx) => (
                   <div key={idx} className="d-flex align-items-center mb-2">
-                    <img
-                      src={item.img}
-                      alt={item.nome}
-                      style={{
-                        width: "50px",
-                        height: "50px",
-                        objectFit: "cover",
-                        marginRight: "10px",
-                        borderRadius: "5px",
-                      }}
-                    />
-                    <div>
-                      <div>{item.nome}</div>
+                    <div className="col-4">
+                      <img
+                        src={item.img}
+                        alt={item.nome}
+                        style={{
+                          width: "100%",
+                          aspectRatio: 1 / 1,
+                          objectFit: "cover",
+                          marginRight: "10px",
+                          borderRadius: "5px",
+                        }}
+                      />
+                    </div>
+                    <div className="col-8 ms-2">
+                      <div>{item.nome} <small className="text-gold">x{item.qty}</small></div>
                       <div>
-                        {" "}
-                        € {item.prezzo} x {item.qty}
+                        € {item.prezzo * item.qty}
                       </div>
                     </div>
                   </div>
                 )
               )}
             </div>
-            <div className="border-top pt-3 mt-3">
+            <div className="border-top pt-3 mt-3 text-white">
               <div className="d-flex justify-content-between mb-2">
                 <span>Subtotal</span>
                 <span>{subtotale.toFixed(2)} €</span>

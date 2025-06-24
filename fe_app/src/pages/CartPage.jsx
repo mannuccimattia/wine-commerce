@@ -64,8 +64,8 @@ const CartPage = () => {
                           src={item.img}
                           alt={item.nome}
                           style={{
-                            width: "80px",
-                            height: "80px",
+                            width: "100%",
+                            aspectRatio: 1 / 1,
                             objectFit: "cover",
                             marginRight: "15px",
                             borderRadius: "4px",

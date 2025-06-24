@@ -98,7 +98,7 @@ const CartSidebar = ({ show, onHide }) => {
                     marginBottom: "1rem",
                   }}
                 >
-                  🎉 Free shipping!
+                  <small>🎉 Free shipping!</small>
                 </div>
               ) : (
                 <div

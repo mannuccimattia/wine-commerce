@@ -163,6 +163,10 @@ body {
   font-size: 0.9rem;
 }
 
+.text-gold {
+  color: #a88b4d;
+}
+
 .provenance-tier-wrapper {
   height: 80px;
   padding-top: 40px;
@@ -646,9 +650,6 @@ body::-webkit-scrollbar-thumb:hover {
   .wine-card .card-img-top,
   .wine-card img,
   .card img {
-    width: 100% !important;
-    height: 160px !important;
-    max-height: 40vw;
     object-fit: contain !important;
     background: #fff;
     border-radius: 10px 10px 0 0;
