@@ -44,7 +44,7 @@ const CategoryPage = () => {
                 wine={{
                   ...wine,
                   image_url: wine.image_front_url,
-                  price: parseFloat(wine.price),
+                  price: wine.price,
                 }}
               />
             </div>

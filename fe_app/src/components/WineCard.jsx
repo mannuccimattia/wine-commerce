@@ -47,10 +47,9 @@ const WineCard = ({ wine }) => {
           <CategoryBadge categoryId={wine.category.id} />
         </div>
         <div className="my-2 px-2 pb-2 d-flex justify-content-between align-items-center position-relative">
-          <span id="card-price" className="text-white">€ {wine.price}</span>
+          <span className="text-white card-price">€ {wine.price}</span>
           <button
             className="btn btn-outline-light"
-            id="card-shopping"
             onClick={handleAddToCart} // Call the add to cart function
           >
             <i className="fa-solid fa-shopping-cart"></i>

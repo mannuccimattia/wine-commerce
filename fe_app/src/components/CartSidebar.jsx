@@ -64,7 +64,7 @@ const CartSidebar = ({ show, onHide }) => {
                   <strong>{item.nome}</strong> x {item.qty}
                   <br />
                   <span style={{ color: "#a88b4d", fontWeight: "600" }}>
-                    €{(item.prezzo * item.qty).toFixed(2)}
+                    € {(item.prezzo * item.qty).toFixed(2)}
                   </span>
                 </div>
               ))}
@@ -86,7 +86,7 @@ const CartSidebar = ({ show, onHide }) => {
                   textAlign: "right",
                 }}
               >
-                Total: €{total.toFixed(2)}
+                Total: € {total.toFixed(2)}
               </div>
 
               {total >= freeShippingThreshold ? (
@@ -109,7 +109,7 @@ const CartSidebar = ({ show, onHide }) => {
                     marginBottom: "1rem",
                   }}
                 >
-                  €{missingAmount.toFixed(2)} away from free shipping
+                  € {missingAmount.toFixed(2)} away from free shipping
                 </div>
               )}
 
