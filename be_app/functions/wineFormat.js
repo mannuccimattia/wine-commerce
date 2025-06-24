@@ -4,6 +4,7 @@ const wineFormat = (wine, req) => ({
   category: {
     id: wine.category,
     name: wine.category_name,
+    slug: wine.category_slug,
   },
   price: wine.price,
   alcol: wine.alcol,

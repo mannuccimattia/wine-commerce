@@ -13,6 +13,7 @@ const sqlBase = `
     W.*,
     D.name AS denomination_name,
     C.name AS category_name,
+    C.slug as category_slug,
     R.name AS region_name,
     WN.name AS winemaker_name,
     LC.name AS label_condition_name,
@@ -176,6 +177,7 @@ const getBestSellers = (req, res) => {
       W.*,
       D.name AS denomination_name,
       C.name AS category_name,
+      C.slug as category_slug,
       R.name AS region_name,
       WN.name AS winemaker_name,
       LC.name AS label_condition_name,
@@ -247,7 +249,8 @@ const premiumVintage = (req, res) => {
 
 //GET CATEGORIES
 const getCategories = (req, res) => {
-  const sql = "SELECT id, name, color, slug FROM categories ORDER BY id";
+  const sql =
+    "SELECT id, name, color, slug, description, image FROM categories ORDER BY id";
   connection.query(sql, (err, results) => {
     if (err) {
       console.error("Errore nella query getCategories:", err);
@@ -301,6 +304,23 @@ const showBySlug = (req, res) => {
   });
 };
 
+const getWineFromCategoryBySlug = (req, res) => {
+  const categorySlug = req.params.slug;
+
+  const sql = `
+    ${sqlBase}
+    WHERE C.slug = ?
+    ORDER BY W.price ASC
+  `;
+
+  connection.query(sql, [categorySlug], (err, winesResult) => {
+    if (err) return queryFailed(err, res);
+
+    const wines = winesResult.map((wine) => wineFormat(wine, req));
+    res.json(wines);
+  });
+};
+
 module.exports = {
   index,
   show,
@@ -311,4 +331,5 @@ module.exports = {
   getDenominations,
   getRegions,
   showBySlug,
+  getWineFromCategoryBySlug,
 };

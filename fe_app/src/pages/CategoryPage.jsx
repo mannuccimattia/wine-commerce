@@ -3,39 +3,54 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import WineCard from "../components/WineCard";
 import GlobalContext from "../contexts/globalContext";
+import WineBreadcrumb from "../components/WineBreadcrumb";
 
 const CategoryPage = () => {
   const { slug } = useParams();
   const [wines, setWines] = useState([]);
-  const [categoryName, setCategoryName] = useState("");
+  const [category, setCategory] = useState(null);
   const { setIsLoading } = useContext(GlobalContext);
 
   useEffect(() => {
-    setIsLoading(true);
+    const fetchData = async () => {
+      try {
+        setIsLoading(true);
 
-    axios
-      .get(`http://localhost:3000/api/wines/getcategories`)
-      .then((categoriesResponse) => {
-        const category = categoriesResponse.data.find(
-          (cat) => cat.id === parseInt(id)
+        // 1. Get all categories
+        const categoriesResponse = await axios.get(
+          "http://localhost:3000/api/wines/getcategories"
         );
-        setCategoryName(category ? category.name : "Categoria");
 
-        return axios.get(`http://localhost:3000/api/wines/category/${slug}`);
-      })
-      .then((winesResponse) => {
+        // 2. Find the category that matches the slug
+        const foundCategory = categoriesResponse.data.find(
+          (cat) => cat.slug === slug
+        );
+        setCategory(foundCategory || null);
+
+        // 3. Get the wines for this category
+        const winesResponse = await axios.get(
+          `http://localhost:3000/api/wines/categoria/${slug}`
+        );
         setWines(winesResponse.data);
+      } catch (error) {
+        console.error("Error loading category or wines:", error);
+        setCategory(null);
+        setWines([]);
+      } finally {
         setIsLoading(false);
-      })
-      .catch((error) => {
-        console.error("Error loading data:", error);
-        setIsLoading(false);
-      });
-  }, [id]);
+      }
+    };
+
+    fetchData();
+  }, [slug, setIsLoading]);
 
   return (
     <div className="container my-5">
-      <h2 className="text-center mb-4">{categoryName}</h2>
+      <WineBreadcrumb category={category} />
+
+      <h2 className="text-center mb-4">
+        {category ? category.name : "Category"}
+      </h2>
       <div className="row gy-4">
         {wines.length > 0 ? (
           wines.map((wine) => (
@@ -50,7 +65,7 @@ const CategoryPage = () => {
             </div>
           ))
         ) : (
-          <p className="text-center">No product found.</p>
+          <p className="text-center">No products found.</p>
         )}
       </div>
     </div>
