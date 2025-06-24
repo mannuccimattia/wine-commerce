@@ -75,14 +75,13 @@ const Winepage = () => {
     <Container className="py-4" id="winepage-container">
       <WineBreadcrumb category={wine.category} name={wine.name} />
       <Row className="gx-4">
-        <Col lg={6}>
+        <Col md={6}>
           <div className="position-sticky" style={{ top: "2rem" }}>
             <Image
               src={mainImage}
               alt={wine.name}
               fluid
               className="rounded shadow-lg mb-3"
-              style={{ maxHeight: "600px", width: "100%", objectFit: "cover" }}
             />
             <div style={{ display: "flex", gap: "12px", marginTop: "10px" }}>
               <Image
@@ -127,10 +126,13 @@ const Winepage = () => {
               <h1 className="fw-semibold mb-2">
                 {`${wine.winemaker.name} ${wine.vintage} ${wine.name} ${wine.denomination.name}`}
               </h1>
-              <WineGlasses
-                label={wine.label_condition.rating}
-                bottle={wine.bottle_condition.rating}
-              />
+              <div className="position-relative pt-price">
+                <WineGlasses
+                  label={wine.label_condition.rating}
+                  bottle={wine.bottle_condition.rating}
+                />
+                <span className="price-in-detail">€ {wine.price}</span>
+              </div>
             </div>
 
             {/* Quantity and Cart Section */}

@@ -75,28 +75,28 @@ const SearchResultsPage = () => {
   const categoryValue = searchParams.get("category");
 
   return (
-    <Container className="py-4">
+    <>
       {wines.length === 0 ? (
         <NoResultsWine />
       ) : (
         <Row className="g-4">
-          <h1 className="text-white mb-4">
-            Risultati per "{searchValue}"
+          <h4 className="text-white mb-4">
+            Results for "{searchValue}"
             {categoryValue && categoryValue !== "all" && (
-              <span className="fs-6 text-muted d-block">
-                nella categoria selezionata
+              <span className="fs-6 text-white d-block">
+                within chosen category
               </span>
             )}
-          </h1>
+          </h4>
 
           {wines.map((wine) => (
-            <Col key={wine.id} xs={12} sm={6} md={4} xl={4} xxl={3}>
+            <Col key={wine.id} sm={12} md={6} xl={4}>
               <WineCard wine={wine} />
             </Col>
           ))}
         </Row>
       )}
-    </Container>
+    </>
   );
 };
 

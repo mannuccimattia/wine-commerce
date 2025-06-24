@@ -1,16 +1,3 @@
-/* Reset CSS globale per rimuovere margini e padding di default 
-   e assicurare un comportamento coerente del box-sizing */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-/* Stili base per html e body:
-   - min-height 100vh assicura che occupino l'intera altezza della viewport
-   - background-color imposta il colore di sfondo scuro
-   - !important sovrascrive eventuali stili di Bootstrap
-   - color: #fff imposta il testo in bianco per leggibilità */
 html,
 body {
   min-height: 100vh;
@@ -19,18 +6,11 @@ body {
   font-family: "Playfair Display", serif;
 }
 
-/* Stili per il contenitore root di React:
-   - min-height assicura che occupi almeno l'intera viewport
-   - background-color mantiene la coerenza del colore di sfondo */
 #root {
   min-height: 100vh;
   background-color: #212223;
 }
 
-/* Stili per il contenitore principale della homepage:
-   - background-color mantiene la coerenza del colore di sfondo
-   - min-height assicura che occupi almeno l'intera viewport
-   - padding aggiunge spazio interno per il contenuto */
 .homepage-background {
   background-color: #212223;
   min-height: 100vh;
@@ -95,25 +75,16 @@ body {
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
 }
 
-/* Stili per le card in tema scuro:
-   - background-color semi-trasparente per un effetto vetro
-   - border sottile per definire i bordi delle card */
 .card {
   background-color: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-/* Stili per il testo nelle card:
-   - colore bianco per massima leggibilità
-   - si applica sia al body che al titolo delle card */
 .card-body,
 .card-title {
   color: #fff;
 }
 
-/* Stile per il testo secondario nelle card:
-   - colore bianco leggermente trasparente per differenziare 
-   - il testo secondario dal testo principale */
 .card-text {
   color: rgba(255, 255, 255, 0.8);
 }
@@ -163,21 +134,13 @@ body {
   font-size: 0.9rem;
 }
 
-#provenance-tier-wrapper {
+.text-gold {
+  color: #a88b4d;
+}
+
+.provenance-tier-wrapper {
   height: 80px;
   padding-top: 40px;
-}
-
-#card-shopping-tooltip {
-  position: absolute;
-  right: 70px;
-  color: #a88b4d;
-  opacity: 0;
-  transition: 0.3s;
-}
-
-#card-shopping:hover~#card-shopping-tooltip {
-  opacity: 1;
 }
 
 .card-shopping-alert {
@@ -339,9 +302,14 @@ body {
   z-index: -1;
 }
 
+.btn-outline-light {
+  border-color: #a88b4d;
+}
+
 .btn-outline-light:hover {
   background-color: #a88b4d;
   color: #fff;
+  border-color: #a88b4d;
 }
 
 .input-msg {
@@ -420,21 +388,10 @@ footer img {
   font-size: 16px !important;
 }
 
-#details div>strong,
-#condizioni p>strong {
-  color: gray;
-}
-
 #descr {
   font-family: "Lora", "Cormorant", serif;
   font-size: 1.2rem;
   line-height: 1.6;
-}
-
-#price-tag {
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 22px;
-  color: #a88b4d;
 }
 
 #winepage-container {
@@ -442,13 +399,29 @@ footer img {
 }
 
 .form-control {
-  border-color: #fff;
+  border-color: #a88b4d;
 }
 
-.form-control:focus {
-  box-shadow: none;
-  border-color: inherit;
+aside .form-select,
+aside .form-control,
+aside .btn-outline-light {
+  border-color: #584823 !important;
 }
+
+aside>div .form-select:focus,
+aside>div .form-control:focus,
+aside .btn-primary {
+  box-shadow: none;
+  border-color: #a88b4d !important;
+}
+
+aside .btn-primary,
+aside .btn-primary:hover {
+  background-color: #a88b4d;
+  box-shadow: none;
+}
+
+
 
 .loader {
   width: 48px;
@@ -472,11 +445,11 @@ footer img {
 }
 
 .pill,
-#pt-hover {
+.pt-hover {
   font-size: 0.8em;
 }
 
-#pt-hover {
+.pt-hover {
   position: absolute;
   top: 5px;
   padding-left: 5px;
@@ -486,7 +459,7 @@ footer img {
   transition: 0.3s;
 }
 
-.pill:hover~#pt-hover {
+.pill:hover~.pt-hover {
   opacity: 1;
 }
 
@@ -498,11 +471,12 @@ footer img {
   color: #fff;
 }
 
-.dropdown-item:hover {
-  background-color: #a88b4d;
+.dropdown-item:hover,
+select>option:hover {
+  background-color: #a88b4d !important;
 }
 
-#cart-item-link:hover a h5 {
+.cart-item-link:hover a h5 {
   text-decoration: underline;
 }
 
@@ -518,45 +492,81 @@ footer img {
   margin: 0;
 }
 
+.card-price {
+  font-size: 1.3rem;
+  color: #a88b4d;
+}
+
+.price-in-detail {
+  position: absolute;
+  top: 50%;
+  right: 25%;
+  translate: 0 -20%;
+  font-size: 24px;
+}
+
+.price-in-detail::after {
+  content: "cad.";
+  font-size: 12px;
+  color: gray;
+  margin-left: 5px;
+}
+
+.select-light:active {
+  background-color: #a88b4d;
+
+}
+
+.col-qty span {
+  min-width: 30px;
+  text-align: center;
+}
+
 /* Custom thin scrollbar for the whole page */
 html,
 body {
   scrollbar-width: thin;
-  /* Firefox */
   scrollbar-color: #a88b4d #212223;
-  /* thumb color, track color */
 }
 
-/* Webkit browsers (Chrome, Edge, Safari) */
 html::-webkit-scrollbar,
 body::-webkit-scrollbar {
   width: 8px;
   background: #212223;
-  /* track color */
 }
 
 html::-webkit-scrollbar-thumb,
 body::-webkit-scrollbar-thumb {
   background: #a88b4d;
-  /* thumb color */
   border-radius: 8px;
 }
 
 html::-webkit-scrollbar-thumb:hover,
 body::-webkit-scrollbar-thumb:hover {
   background: #cbb26a;
-  /* thumb color on hover */
-}
-
-#homeSearch {
-  margin-bottom: 10px;
 }
 
 /* ******************************************** */
 /*                 MEDIA QUERIES                */
 /* ******************************************** */
 
+@media (max-width: 1199.98px) {
+  .quantity-btn {
+    min-width: 30px;
+  }
+
+  .col-price {
+    font-size: small;
+  }
+}
+
+
 @media (max-width: 991.98px) {
+
+  #homeSearch {
+    width: 100vw;
+  }
+
   .header-mobile-stack {
     flex-direction: column !important;
     align-items: center !important;
@@ -584,9 +594,13 @@ body::-webkit-scrollbar-thumb:hover {
   }
 
   .dropdown-menu {
-    left: 50% !important;
+    left: 11% !important;
     transform: translateX(-50%) !important;
     min-width: 180px;
+  }
+
+  #homeSearch {
+    margin-bottom: 10px;
   }
 }
 
@@ -606,9 +620,6 @@ body::-webkit-scrollbar-thumb:hover {
   .wine-card .card-img-top,
   .wine-card img,
   .card img {
-    width: 100% !important;
-    height: 160px !important;
-    max-height: 40vw;
     object-fit: contain !important;
     background: #fff;
     border-radius: 10px 10px 0 0;
@@ -616,7 +627,88 @@ body::-webkit-scrollbar-thumb:hover {
     display: block;
   }
 
+  .card>.category-img {
+    object-fit: cover !important;
+  }
+
   .card-body {
     padding: 0.8rem 1rem !important;
+  }
+
+  .collection-card .card-img-top {
+    height: 100% !important;
+    width: 100% !important;
+    border-radius: 10px 10px 0 0;
+    background: #fff;
+    margin: 0;
+    display: block;
+  }
+
+  .pt-hover {
+    display: none;
+  }
+
+  .provenance-tier-wrapper {
+    height: min-content;
+    padding-top: 0;
+  }
+
+  .cat-badge {
+    position: absolute;
+    bottom: 26%;
+    right: 6%;
+  }
+
+  .pt-price {
+    margin-top: 20px;
+  }
+
+  .price-in-detail {
+    top: 0;
+  }
+
+  .cat-badge {
+    bottom: 17%;
+  }
+
+  .dropdown-menu {
+    translate: 39% 0;
+  }
+
+  .card-body .col-qty,
+  .card-body .col-price {
+    margin-top: 10px;
+  }
+
+  .col-trash {
+    position: absolute;
+    top: 25%;
+    right: 2%;
+  }
+
+  .cart-item-link a h5 {
+    font-size: small;
+  }
+
+  .col-qty.justify-content-center {
+    justify-content: start !important;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .price-in-detail {
+    right: 10%;
+  }
+
+  #chatbot {
+    right: 5%;
+  }
+
+  .carousel-caption h3 {
+    font-size: 2rem;
+  }
+
+  .carousel-caption p {
+    font-size: 0.8rem !important;
   }
 }

@@ -28,10 +28,9 @@ const WineGlasses = ({ label, bottle }) => {
   }
 
   return (
-    <div className="position-relative" id="provenance-tier-wrapper">
+    <div className="position-relative provenance-tier-wrapper">
       <div
         className="mb-2 px-2 py-1 border border-secondary pill rounded-pill bg-transparent text-secondary d-inline-flex align-items-center"
-        id=""
       >
         <span
           className="fw-bold"
@@ -39,7 +38,7 @@ const WineGlasses = ({ label, bottle }) => {
         <div className="ms-2">{icon}</div>
       </div>
       {window.location.pathname !== "/wine/:id" &&
-        <div id="pt-hover" className="rounded-pill px-2 py-1">
+        <div className="pt-hover rounded-pill px-2 py-1">
           {msg}
         </div>
       }

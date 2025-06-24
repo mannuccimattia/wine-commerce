@@ -89,7 +89,6 @@ const SearchForm = () => {
             type="button"
             data-bs-toggle="dropdown"
             aria-expanded="false"
-            style={{ minWidth: "180px" }}
           >
             {selectedCategoryLabel}
           </button>

@@ -21,7 +21,7 @@ const CategoryBadge = ({ categoryId }) => {
   return (
     <Link
       to={`/categoria/${category.slug}`} // 👈 Navigazione interna
-      className="badge"
+      className="badge cat-badge"
       style={{
         fontSize: "0.65rem",
         padding: "0.15em 0.4em",
