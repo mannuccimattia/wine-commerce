@@ -476,7 +476,7 @@ select>option:hover {
   background-color: #a88b4d !important;
 }
 
-#cart-item-link:hover a h5 {
+.cart-item-link:hover a h5 {
   text-decoration: underline;
 }
 
@@ -517,6 +517,11 @@ select>option:hover {
 
 }
 
+.col-qty span {
+  min-width: 30px;
+  text-align: center;
+}
+
 /* Custom thin scrollbar for the whole page */
 html,
 body {
@@ -544,6 +549,17 @@ body::-webkit-scrollbar-thumb:hover {
 /* ******************************************** */
 /*                 MEDIA QUERIES                */
 /* ******************************************** */
+
+@media (max-width: 1199.98px) {
+  .quantity-btn {
+    min-width: 30px;
+  }
+
+  .col-price {
+    font-size: small;
+  }
+}
+
 
 @media (max-width: 991.98px) {
 
@@ -586,7 +602,6 @@ body::-webkit-scrollbar-thumb:hover {
   #homeSearch {
     margin-bottom: 10px;
   }
-
 }
 
 @media (max-width: 767.98px) {
@@ -658,6 +673,25 @@ body::-webkit-scrollbar-thumb:hover {
 
   .dropdown-menu {
     translate: 39% 0;
+  }
+
+  .card-body .col-qty,
+  .card-body .col-price {
+    margin-top: 10px;
+  }
+
+  .col-trash {
+    position: absolute;
+    top: 25%;
+    right: 2%;
+  }
+
+  .cart-item-link a h5 {
+    font-size: small;
+  }
+
+  .col-qty.justify-content-center {
+    justify-content: start !important;
   }
 }
 

@@ -48,9 +48,9 @@ const CartPage = () => {
             <Card key={item.id} className="mb-3 bg-dark text-white">
               <Card.Body>
                 {/* Desktop view: single row layout */}
-                <div className="d-none d-lg-flex justify-content-between align-items-center">
-                  <div className="col-7" id="cart-item-link">
-                    <div className="d-flex align-items-center">
+                <div className="row justify-content-between align-items-center">
+                  <div className="col-11 col-md-7 cart-item-link">
+                    <div className="row">
                       <Link
                         to={`/wine/${item.id}`}
                         style={{
@@ -60,26 +60,27 @@ const CartPage = () => {
                           alignItems: "center",
                         }}
                       >
-                        <img
-                          src={item.img}
-                          alt={item.nome}
-                          style={{
-                            width: "100%",
-                            aspectRatio: 1 / 1,
-                            objectFit: "cover",
-                            marginRight: "15px",
-                            borderRadius: "4px",
-                          }}
-                        />
-                        <div>
+                        <div className="col-4">
+                          <img
+                            src={item.img}
+                            alt={item.nome}
+                            style={{
+                              width: "100%",
+                              aspectRatio: 1 / 1,
+                              objectFit: "cover",
+                              marginRight: "15px",
+                              borderRadius: "4px",
+                            }}
+                          />
+                        </div>
+                        <div className="col-8 px-2">
                           <h5 className="mb-1">{item.nome}</h5>
-                          <div className="mb-1">€ {item.prezzo}</div>
                         </div>
                       </Link>
                     </div>
                   </div>
 
-                  <div className="col-2 d-flex justify-content-center align-items-center">
+                  <div className="col-6 col-md-2 col-qty d-flex justify-content-center align-items-center">
                     <Button
                       className="quantity-btn me-1"
                       variant="outline-light"
@@ -89,7 +90,7 @@ const CartPage = () => {
                     >
                       <i className="fa-solid fa-minus"></i>
                     </Button>
-                    <span className="mx-2">x {item.qty}</span>
+                    <span>x {item.qty}</span>
                     <Button
                       className="quantity-btn ms-1"
                       variant="outline-light"
@@ -100,13 +101,13 @@ const CartPage = () => {
                     </Button>
                   </div>
 
-                  <div className="col-2 text-end">
+                  <div className="col-6 col-md-2 col-price text-end">
                     <p className="mb-0 fw-bold">
                       € {(item.prezzo * item.qty).toFixed(2)}
                     </p>
                   </div>
 
-                  <div className="col-1 text-end">
+                  <div className="col-md-1 col-trash text-end">
                     <Button
                       variant="link"
                       className="text-danger p-0"
@@ -117,7 +118,7 @@ const CartPage = () => {
                   </div>
                 </div>
 
-                {/* Mobile view: stacked layout */}
+                {/* Mobile view: stacked layout
                 <div className="d-flex d-lg-none justify-content-between align-items-center">
                   <div className="d-flex align-items-center">
                     {item.img && (
@@ -149,9 +150,9 @@ const CartPage = () => {
                       <i className="fas fa-trash fa-lg"></i>
                     </Button>
                   </div>
-                </div>
+                </div> */}
 
-                {/* Quantity and total price for mobile view */}
+                {/* Quantity and total price for mobile view
                 <div className="d-flex d-lg-none justify-content-between align-items-center mt-3">
                   <div className="d-flex align-items-center">
                     <Button
@@ -174,7 +175,7 @@ const CartPage = () => {
                   <p className="mb-0 fw-bold">
                     € {(item.prezzo * item.qty).toFixed(2)}
                   </p>
-                </div>
+                </div> */}
               </Card.Body>
             </Card>
           ))}
