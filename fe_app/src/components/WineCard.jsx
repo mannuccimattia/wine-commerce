@@ -43,7 +43,7 @@ const WineCard = ({ wine }) => {
           label={wine.label_condition.rating}
           bottle={wine.bottle_condition.rating}
         />
-        <div>
+        <div className="ms-1">
           <CategoryBadge categoryId={wine.category.id} />
         </div>
         <div className="my-2 px-2 pb-2 d-flex justify-content-between align-items-center position-relative">

@@ -117,65 +117,6 @@ const CartPage = () => {
                     </Button>
                   </div>
                 </div>
-
-                {/* Mobile view: stacked layout
-                <div className="d-flex d-lg-none justify-content-between align-items-center">
-                  <div className="d-flex align-items-center">
-                    {item.img && (
-                      <img
-                        src={item.img}
-                        alt={item.nome}
-                        style={{
-                          width: "80px",
-                          height: "80px",
-                          objectFit: "cover",
-                          marginRight: "15px",
-                          borderRadius: "4px",
-                        }}
-                      />
-                    )}
-                    <Link
-                      to={`/wine/${item.id}`}
-                      style={{ textDecoration: "none", color: "inherit" }}
-                    >
-                      <h5 className="mb-1">{item.nome}</h5>
-                    </Link>
-                  </div>
-                  <div className="d-flex align-items-center">
-                    <Button
-                      variant="link"
-                      className="text-danger p-0"
-                      onClick={() => rimuoviDalCarrello(item.id)}
-                    >
-                      <i className="fas fa-trash fa-lg"></i>
-                    </Button>
-                  </div>
-                </div> */}
-
-                {/* Quantity and total price for mobile view
-                <div className="d-flex d-lg-none justify-content-between align-items-center mt-3">
-                  <div className="d-flex align-items-center">
-                    <Button
-                      variant="outline-light"
-                      size="sm"
-                      onClick={() => aggiornaQuantita(item.id, item.qty - 1)}
-                      disabled={item.qty === 1}
-                    >
-                      -
-                    </Button>
-                    <span className="mx-2">x{item.qty}</span>
-                    <Button
-                      variant="outline-light"
-                      size="sm"
-                      onClick={() => aggiornaQuantita(item.id, item.qty + 1)}
-                    >
-                      +
-                    </Button>
-                  </div>
-                  <p className="mb-0 fw-bold">
-                    € {(item.prezzo * item.qty).toFixed(2)}
-                  </p>
-                </div> */}
               </Card.Body>
             </Card>
           ))}
