@@ -8,7 +8,7 @@ const SearchLayout = () => {
 
   const [filters, setFilters] = useState({
     minPrice: parseInt(searchParams.get("minPrice")) || 0,
-    maxPrice: parseInt(searchParams.get("maxPrice")) || 5000,
+    maxPrice: parseInt(searchParams.get("maxPrice")) || 1500,
     sortBy: searchParams.get("sortBy") || "",
     denomination: searchParams.get("denomination") || "",
     region: searchParams.get("region") || "",
@@ -116,14 +116,14 @@ const SearchLayout = () => {
   const resetFilters = () => {
     const resetFilters = {
       minPrice: 0,
-      maxPrice: 5000,
+      maxPrice: 1500,
       sortBy: "",
       denomination: "",
       region: "",
     };
     setFilters(resetFilters);
     setMinPriceInput(0);
-    setMaxPriceInput(5000);
+    setMaxPriceInput(1500);
 
     const currentParams = new URLSearchParams(searchParams);
     const preservedParams = new URLSearchParams();
@@ -187,23 +187,25 @@ const SearchLayout = () => {
             <Form.Control
               type="number"
               min="0"
-              step="50"
+              step="100"
               value={minPriceInput}
               onChange={handleMinPriceChange}
-              className="bg-dark text-white border-secondary"
+              className="bg-dark text-white border-secondary custom-number-input"
               size="sm"
+              onKeyDown={e => e.preventDefault()}
             />
           </div>
           <div className="col-6">
             <Form.Label className="small text-secondary">Max €</Form.Label>
             <Form.Control
               type="number"
-              max="5000"
-              step="50"
+              max="1500"
+              step="100"
               value={maxPriceInput}
               onChange={handleMaxPriceChange}
-              className="bg-dark text-white border-secondary"
+              className="bg-dark text-white border-secondary custom-number-input"
               size="sm"
+              onKeyDown={e => e.preventDefault()}
             />
           </div>
         </div>

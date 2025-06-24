@@ -60,6 +60,7 @@ const CategoriesCard = () => {
                 {/* Immagine della categoria */}
                 <Card.Img
                   variant="top"
+                  className="category-img rounded-top"
                   src={category.image}
                   alt={category.name}
                   style={{
@@ -107,7 +108,9 @@ const CategoriesCard = () => {
   return (
     <div className="container my-5">
       <h2 className="text-center mb-4 text-white">Our Collections</h2>
-      <Row>
+      <Row
+        className="border-bottom border-secondary"
+      >
         {categories.map((category) => (
           <Col key={category.id} sm={12} md={6} lg={3} className="mb-4">
             <Card
@@ -117,6 +120,7 @@ const CategoriesCard = () => {
             >
               <Card.Img
                 variant="top"
+                className="category-img rounded-top"
                 src={
                   category.image ||
                   "/imgs/logo/boolze-high-resolution-logo-grayscale-transparent-cut.png"
@@ -129,23 +133,10 @@ const CategoriesCard = () => {
                 }}
               />
               <Card.Body className="d-flex flex-column">
-                <Card.Title className="text-center">{category.name}</Card.Title>
+                <Card.Title className="text-center text-gold">{category.name}</Card.Title>
                 <Card.Text className="text-center">
                   {category.description || "Discover our selection"}
                 </Card.Text>
-                {category.color && (
-                  <div className="text-center mt-auto">
-                    <span
-                      className="badge rounded-pill px-3 py-2"
-                      style={{
-                        backgroundColor: category.color,
-                        color: "#fff",
-                      }}
-                    >
-                      {category.name}
-                    </span>
-                  </div>
-                )}
               </Card.Body>
             </Card>
           </Col>

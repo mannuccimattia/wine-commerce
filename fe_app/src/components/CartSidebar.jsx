@@ -109,7 +109,9 @@ const CartSidebar = ({ show, onHide }) => {
                     marginBottom: "1rem",
                   }}
                 >
-                  € {missingAmount.toFixed(2)} away from free shipping
+                  <small>
+                    € {missingAmount.toFixed(2)} away from free shipping
+                  </small>
                 </div>
               )}
 

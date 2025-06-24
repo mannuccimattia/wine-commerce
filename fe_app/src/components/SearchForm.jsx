@@ -8,7 +8,6 @@ const SearchForm = () => {
   const { homeSearch, setHomeSearch } = useContext(GlobalContext);
   const navigate = useNavigate();
   const [categories, setCategories] = useState([]);
-  // const [selectedCategory, setSelectedCategory] = useState("all");
   const [selectedCategory, setSelectedCategory] = useState({
     id: "all",
     name: "All categories",
@@ -44,34 +43,33 @@ const SearchForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
     const trimmedSearch = homeSearch.trim();
 
     // Se categoria diversa da "all" e campo di ricerca vuoto, naviga pagina categoria
-    if (selectedCategory !== "all" && !trimmedSearch) {
+    if (selectedCategory.id !== "all" && !trimmedSearch) {
       navigate(`/categoria/${selectedCategory.slug}`);
       setHomeSearch(""); // opzionale, pulisce input
       return;
     }
 
     // Se categoria "all" e campo di ricerca vuoto, vai a prodotti generici
-    if (selectedCategory === "all" && !trimmedSearch) {
+    if (selectedCategory.id === "all" && !trimmedSearch) {
       navigate("/products");
       return;
     }
 
     // Se categoria diversa da "all" e c'è testo, fai la ricerca con filtro categoria
-    if (selectedCategory !== "all" && trimmedSearch) {
+    if (selectedCategory.id !== "all" && trimmedSearch) {
       const searchUrl = `/search?search=${encodeURIComponent(
         trimmedSearch
-      )}&category=${selectedCategory}`;
+      )}&category=${selectedCategory.id}`;
       navigate(searchUrl);
       setHomeSearch("");
       return;
     }
 
     // Se categoria "all" e c'è testo, ricerca generica senza categoria
-    if (selectedCategory === "all" && trimmedSearch) {
+    if (selectedCategory.id === "all" && trimmedSearch) {
       const searchUrl = `/search?search=${encodeURIComponent(trimmedSearch)}`;
       navigate(searchUrl);
       setHomeSearch("");
