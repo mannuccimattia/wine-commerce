@@ -287,7 +287,7 @@ const Winepage = () => {
                   <div>
                     <strong>Label Condition:</strong>{" "}
                     <span className="text-white-75">
-                      {wine.label_condition.description}
+                      {wine.label_condition.name}
                     </span>
                   </div>
                 </Col>
@@ -295,12 +295,21 @@ const Winepage = () => {
                   <div>
                     <strong>Bottle Condition:</strong>{" "}
                     <span className="text-white-75">
-                      {wine.bottle_condition.description}
+                      {wine.bottle_condition.name}
                     </span>
                   </div>
                 </Col>
               </Row>
             </div>
+            {/* Description Section */}
+            {wine.description && (
+              <div className="mb-4">
+                <h5 className="mb-3 fw-bold" style={{ color: "#B1A44B" }}>
+                  Wine Description
+                </h5>
+                <p className="text-white-75 lh-base">{wine.description}</p>
+              </div>
+            )}
           </div>
         </Col>
       </Row>
