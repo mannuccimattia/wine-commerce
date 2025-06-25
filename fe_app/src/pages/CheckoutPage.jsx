@@ -170,6 +170,7 @@ const CheckoutPage = () => {
                     <Form.Control
                       type="text"
                       name="firstName"
+                      data-bs-theme="dark"
                       value={formData.firstName}
                       onChange={handleChange}
                       required
@@ -188,6 +189,7 @@ const CheckoutPage = () => {
                     <Form.Control
                       type="text"
                       name="lastName"
+                      data-bs-theme="dark"
                       value={formData.lastName}
                       onChange={handleChange}
                       required
@@ -206,6 +208,7 @@ const CheckoutPage = () => {
                     <Form.Control
                       type="email"
                       name="email"
+                      data-bs-theme="dark"
                       value={formData.email}
                       onChange={handleChange}
                       required
@@ -224,6 +227,7 @@ const CheckoutPage = () => {
                     <Form.Control
                       type="text"
                       name="address"
+                      data-bs-theme="dark"
                       value={formData.address}
                       onChange={handleChange}
                       required
@@ -242,6 +246,7 @@ const CheckoutPage = () => {
                     <Form.Control
                       type="text"
                       name="city"
+                      data-bs-theme="dark"
                       value={formData.city}
                       onChange={handleChange}
                       required
@@ -259,6 +264,7 @@ const CheckoutPage = () => {
                     <Form.Control
                       type="text"
                       name="zip_code"
+                      data-bs-theme="dark"
                       value={formData.zip_code}
                       onChange={handleChange}
                       required
