@@ -730,4 +730,8 @@ body::-webkit-scrollbar-thumb:hover {
   .input-msg {
     font-size: larger;
   }
+
+  .cat-badge {
+    bottom: 19%;
+  }
 }
