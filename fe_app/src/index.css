@@ -711,4 +711,23 @@ body::-webkit-scrollbar-thumb:hover {
   .carousel-caption p {
     font-size: 0.8rem !important;
   }
+
+  #chatbot-modal {
+    right: 5px;
+    bottom: 5px;
+  }
+}
+
+@media (max-width: 349.98px) {
+  #chatbot-modal {
+    right: -20px;
+    bottom: -60px;
+    transform: scale(0.8);
+  }
+
+  .bot-msg,
+  .user-msg,
+  .input-msg {
+    font-size: larger;
+  }
 }
