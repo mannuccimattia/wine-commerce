@@ -404,7 +404,10 @@ footer img {
 
 aside .form-select,
 aside .form-control,
-aside .btn-outline-light {
+aside .btn-outline-light,
+.offcanvas .form-select,
+.offcanvas .form-control,
+.offcanvas .btn-outline-light {
   border-color: #584823 !important;
 }
 
@@ -421,7 +424,10 @@ aside .btn-primary:hover {
   box-shadow: none;
 }
 
-
+.offcanvas button.w-100 {
+  background-color: #a88b4d;
+  color: #fff;
+}
 
 .loader {
   width: 48px;

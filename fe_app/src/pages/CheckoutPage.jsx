@@ -86,19 +86,19 @@ const CheckoutPage = () => {
     // Validazione form prima di procedere
     const newErrors = {};
     if (!formData.firstName || !validateName(formData.firstName)) {
-      newErrors.firstName = "Please, inser a valid First Name.";
+      newErrors.firstName = "Please, insert a valid First Name.";
     }
     if (!formData.lastName || !validateName(formData.lastName)) {
-      newErrors.lastName = "Please, inser a valid Last Name.";
+      newErrors.lastName = "Please, insert a valid Last Name.";
     }
     if (!formData.email || !validateEmail(formData.email)) {
-      newErrors.email = "Please, inser a valid Email Address.";
+      newErrors.email = "Please, insert a valid Email Address.";
     }
     if (!formData.address) {
       newErrors.address = "Address is required";
     }
     if (!formData.city || !validateName(formData.city)) {
-      newErrors.city = "Please, inser a valid City Name.";
+      newErrors.city = "Please, insert a valid City Name.";
     }
     if (!formData.zip_code || !validateZipCode(formData.zip_code)) {
       newErrors.zip_code = "ZIP code must be exactly 5 digits.";

@@ -287,7 +287,7 @@ const SearchLayout = () => {
             <FiltersContent />
             <div className="mt-4">
               <Button
-                variant="secondary"
+                variant="outline-light"
                 className="w-100"
                 onClick={() => setShowFilters(false)}
               >

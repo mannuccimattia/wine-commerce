@@ -7,7 +7,7 @@ const WineGlasses = ({ label, bottle }) => {
   switch (avg) {
     case 1:
       icon = "🏺";
-      msg = "A relic with soul. Time has etched its story.";
+      msg = "A relic bearing history's touch.";
       break;
     case 2:
       icon = "🍷";
